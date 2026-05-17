@@ -1,6 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
+import { Link } from '@/i18n/routing';
+import { PayButton } from '@/components/pay-button';
 
 export default async function PaymentsPage() {
   const t = await getTranslations('payments');
@@ -19,7 +21,14 @@ export default async function PaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">{t('title')}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
+        {user?.role === 'parent' && (
+          <Link href="/dashboard/register" className="btn-primary h-10 px-4">
+            تسجيل طفل
+          </Link>
+        )}
+      </div>
 
       {isExec && (
         <div className="grid gap-4 sm:grid-cols-3">
@@ -56,11 +65,16 @@ export default async function PaymentsPage() {
               </p>
             </div>
             {p.status === 'paid' ? (
-              <span className="rounded-full bg-green-vibrant/15 px-3 py-1 text-xs font-medium text-green-vibrant">
-                {t('paid')}
-              </span>
+              <Link
+                href={`/dashboard/payments/${p.id as string}/invoice`}
+                className="rounded-full bg-green-vibrant/15 px-3 py-1 text-xs font-medium text-green-vibrant"
+              >
+                {t('invoice')}
+              </Link>
+            ) : p.status === 'pending' ? (
+              <PayButton paymentId={p.id as string} label={t('pay')} />
             ) : (
-              <button className="btn-primary h-9 px-4">{t('pay')}</button>
+              <span className="text-xs text-muted-foreground">{p.status as string}</span>
             )}
           </div>
         ))}

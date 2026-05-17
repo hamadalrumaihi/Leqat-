@@ -41,6 +41,7 @@ export const NAV: NavItem[] = [
     roles: ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor', 'parent'],
   },
   { href: '/dashboard/consent', key: 'consent', roles: ['parent'] },
+  { href: '/dashboard/register', key: 'registerChild', roles: ['parent'] },
   {
     href: '/dashboard/schedule',
     key: 'schedule',
