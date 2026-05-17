@@ -21,7 +21,7 @@ export default async function ChatPage() {
 
   const { data: messages } = await supabase
     .from('chat_messages')
-    .select('id, body, sender_id, is_announcement, moderation, created_at, profiles(full_name_ar)')
+    .select('id, body, sender_id, is_announcement, moderation, media_path, media_kind, created_at, profiles(full_name_ar)')
     .eq('channel_id', channel.id)
     .order('created_at', { ascending: true })
     .limit(100);
@@ -32,6 +32,8 @@ export default async function ChatPage() {
     senderId: m.sender_id as string,
     pinned: m.is_announcement as boolean,
     moderation: m.moderation as string,
+    mediaPath: (m.media_path as string) ?? null,
+    mediaKind: (m.media_kind as string) ?? null,
     createdAt: m.created_at as string,
     senderName:
       (m.profiles as unknown as { full_name_ar: string } | null)?.full_name_ar ?? '—',
@@ -45,6 +47,7 @@ export default async function ChatPage() {
       <h1 className="text-2xl font-bold">{channel.title_ar ?? t('groupChat')}</h1>
       <ChatRoom
         channelId={channel.id}
+        groupId={(channel.group_id as string) ?? ''}
         meId={user!.id}
         initial={initial}
         canModerate={canModerate}
