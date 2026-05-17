@@ -1,8 +1,10 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { dualDate } from '@/lib/utils';
 
 export default async function SchedulePage() {
   const t = await getTranslations('schedule');
+  const locale = (await getLocale()) as 'ar' | 'en';
   const supabase = await createClient();
 
   const { data: sessions } = await supabase
@@ -28,7 +30,9 @@ export default async function SchedulePage() {
                 <h2 className="font-semibold text-primary">
                   {t('week')} {String(s.week_no)}
                 </h2>
-                <span className="text-sm text-muted-foreground">{String(s.date)}</span>
+                <span className="text-xs text-muted-foreground">
+                  {dualDate(s.date as string, locale)}
+                </span>
               </div>
               <ol className="space-y-2">
                 {stations.map((st, i) => (

@@ -14,6 +14,22 @@ export function toNumerals(value: number | string, pref: 'arabic' | 'latin' = 'a
   return s.replace(/\d/g, (d) => arabicDigits[Number(d)]);
 }
 
+/** Gregorian + Hijri side by side, e.g. "٦ سبتمبر ٢٠٢٥ · ١٤ ربيع الأول ١٤٤٧". */
+export function dualDate(input: string | Date, locale: 'ar' | 'en' = 'ar') {
+  const d = typeof input === 'string' ? new Date(input) : input;
+  if (isNaN(d.getTime())) return String(input);
+  const greg = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-QA' : 'en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(d);
+  const hijri = new Intl.DateTimeFormat(
+    locale === 'ar' ? 'ar-QA-u-ca-islamic' : 'en-GB-u-ca-islamic',
+    { day: 'numeric', month: 'long', year: 'numeric' },
+  ).format(d);
+  return `${greg} · ${hijri}`;
+}
+
 export const ROLE_LABELS: Record<string, { ar: string; en: string }> = {
   executive: { ar: 'مشرف تنفيذي عام', en: 'Executive Supervisor' },
   program_supervisor: { ar: 'مشرف برنامج تنفيذي', en: 'Program Supervisor' },

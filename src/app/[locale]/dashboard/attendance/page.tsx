@@ -1,9 +1,11 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { dualDate } from '@/lib/utils';
 import { AttendanceList } from '@/components/attendance-list';
 
 export default async function AttendancePage() {
   const t = await getTranslations('attendance');
+  const locale = (await getLocale()) as 'ar' | 'en';
   const supabase = await createClient();
 
   // Most recent session in a group the current user can access (RLS scoped).
@@ -55,7 +57,7 @@ export default async function AttendancePage() {
       <div>
         <h1 className="text-2xl font-bold">{t('title')}</h1>
         <p className="text-sm text-muted-foreground">
-          {group?.name_ar} · {String(session.date)}
+          {group?.name_ar} · {dualDate(session.date as string, locale)}
         </p>
       </div>
       <AttendanceList sessionId={session.id} roster={roster} />

@@ -170,3 +170,56 @@ on conflict do nothing;
 insert into gallery_albums (group_id, title_ar, title_en, is_highlight)
 values ('b0000000-0000-0000-0000-0000000000b1','الأسبوع الأول','Week 1', false)
 on conflict do nothing;
+
+-- ════════════════════════════════════════════════════════════════
+--  v2 layers seed (stories, recognition, slips, feedback, inventory)
+-- ════════════════════════════════════════════════════════════════
+
+insert into stories (title_ar, title_en, body_ar, value_ar, age_grp, quotient, created_by) values
+  ('قصة الإحسان في الطريق','Kindness on the road','قصة تربوية قصيرة عن الإحسان للمارة وكبار السن.','الإحسان','fityan','SQ','11111111-1111-1111-1111-111111111111'),
+  ('الفريق الواحد','One team','قصة عن التعاون والعمل الجماعي في الرياضة.','التعاون','fityan','EQ','11111111-1111-1111-1111-111111111111')
+on conflict do nothing;
+
+-- More chat history for a realistic demo
+insert into chat_messages (channel_id, sender_id, body, moderation) values
+  ('e0000000-0000-0000-0000-0000000000e1','66666666-6666-6666-6666-666666666666','جزاكم الله خيرًا، سيحضر إن شاء الله.','approved'),
+  ('e0000000-0000-0000-0000-0000000000e1','44444444-4444-4444-4444-444444444444','تذكير: يوم السبت رحلة قصيرة، يرجى التوقيع على إذن المشاركة.','approved')
+on conflict do nothing;
+
+-- Recognition tokens for the seeded student (private wall)
+insert into recognition_tokens (student_id, awarded_by, value_ar, note_ar) values
+  ('d0000000-0000-0000-0000-0000000000d1','44444444-4444-4444-4444-444444444444','الإحسان','ساعد زميله دون أن يُطلب منه.'),
+  ('d0000000-0000-0000-0000-0000000000d1','55555555-5555-5555-5555-555555555555','التعاون','قاد فريقه بروح إيجابية.')
+on conflict do nothing;
+
+-- A trip permission slip + the parent's e-signature
+do $$
+declare slip uuid;
+begin
+  insert into permission_slips (program_id, title_ar, body_ar, due_date, created_by)
+  values ('a0000000-0000-0000-0000-0000000000a1','إذن مشاركة في رحلة تعليمية',
+          'أوافق على مشاركة ابني في الرحلة التعليمية وأقر بصحة البيانات الطبية.',
+          date '2025-10-01','22222222-2222-2222-2222-222222222222')
+  returning id into slip;
+
+  insert into permission_slip_signatures (slip_id, student_id, parent_id, signed_name)
+  values (slip,'d0000000-0000-0000-0000-0000000000d1','66666666-6666-6666-6666-666666666666','ولي الأمر')
+  on conflict do nothing;
+end $$;
+
+-- Parent satisfaction pulse on week 1
+do $$
+declare s1 uuid;
+begin
+  select id into s1 from sessions where group_id = 'b0000000-0000-0000-0000-0000000000b1' and week_no = 1;
+  insert into session_feedback (session_id, parent_id, rating, comment)
+  values (s1,'66666666-6666-6666-6666-666666666666',5,'يوم رائع، شكرًا لكم.')
+  on conflict do nothing;
+end $$;
+
+-- Inventory
+insert into inventory_items (name_ar, name_en, total_qty) values
+  ('كرات قدم','Footballs',12),
+  ('سترات سباحة','Swim vests',15),
+  ('نسخ الكتاب المقرر','Assigned book copies',20)
+on conflict do nothing;

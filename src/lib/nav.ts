@@ -28,6 +28,11 @@ export const NAV: NavItem[] = [
     key: 'reports',
     roles: ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor', 'parent'],
   },
+  {
+    href: '/dashboard/progress',
+    key: 'myChild',
+    roles: ['executive', 'program_supervisor', 'group_supervisor', 'assistant_supervisor', 'parent', 'student'],
+  },
   { href: '/dashboard/chat', key: 'chat', roles: ALL },
   { href: '/dashboard/books', key: 'books', roles: ALL },
   {
