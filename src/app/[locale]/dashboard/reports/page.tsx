@@ -1,5 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { getCurrentUser } from '@/lib/auth';
+import { Link } from '@/i18n/routing';
+import { ReportAdvance } from '@/components/report-advance';
 
 const STAGE_KEY: Record<string, string> = {
   draft: 'stageDraft',
@@ -9,9 +12,18 @@ const STAGE_KEY: Record<string, string> = {
   approved: 'stageApproved',
 };
 
+// next stage → { role allowed, Arabic action label }
+const ADVANCE: Record<string, { role: string; label: string }> = {
+  draft: { role: 'group_supervisor', label: 'رفع إلى مدير البرنامج' },
+  submitted_manager: { role: 'program_manager', label: 'رفع إلى مشرف البرنامج' },
+  submitted_supervisor: { role: 'program_supervisor', label: 'رفع إلى التنفيذي' },
+  submitted_executive: { role: 'executive', label: 'اعتماد التقرير' },
+};
+
 export default async function ReportsPage() {
   const t = await getTranslations('reports');
   const supabase = await createClient();
+  const user = await getCurrentUser();
 
   const { data: reports } = await supabase
     .from('reports')
@@ -19,9 +31,21 @@ export default async function ReportsPage() {
     .order('created_at', { ascending: false })
     .limit(50);
 
+  const canEdit =
+    user?.role === 'group_supervisor' ||
+    user?.role === 'assistant_supervisor' ||
+    user?.role === 'executive';
+
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">{t('title')}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
+        {canEdit && (
+          <Link href="/dashboard/reports/new" className="btn-primary h-10 px-4">
+            تقرير جديد
+          </Link>
+        )}
+      </div>
       {(reports ?? []).length === 0 && (
         <div className="card p-8 text-center text-muted-foreground">—</div>
       )}
@@ -54,6 +78,17 @@ export default async function ReportsPage() {
                 </span>
               ))}
             </div>
+            {(() => {
+              const step = ADVANCE[r.stage as string];
+              if (!step) return null;
+              const allowed = user?.role === step.role || user?.role === 'executive';
+              if (!allowed) return null;
+              return (
+                <div className="mt-4 border-t pt-3">
+                  <ReportAdvance reportId={r.id as string} label={step.label} />
+                </div>
+              );
+            })()}
           </article>
         ))}
       </div>
