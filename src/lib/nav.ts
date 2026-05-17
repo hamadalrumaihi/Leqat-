@@ -64,6 +64,21 @@ export const NAV: NavItem[] = [
   },
   { href: '/dashboard/feedback', key: 'feedback', roles: ['parent'] },
   {
+    href: '/dashboard/digest',
+    key: 'digest',
+    roles: ['parent', 'group_supervisor', 'executive'],
+  },
+  {
+    href: '/dashboard/inventory',
+    key: 'inventory',
+    roles: ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'],
+  },
+  {
+    href: '/dashboard/substitute',
+    key: 'substitute',
+    roles: ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'],
+  },
+  {
     href: '/dashboard/schedule',
     key: 'schedule',
     roles: ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'student', 'parent'],
