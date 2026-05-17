@@ -23,7 +23,7 @@ export function AchievementsChart() {
 
   return (
     <div className="card p-6">
-      <div className="flex h-56 items-end justify-between gap-2">
+      <div className="flex items-end justify-between gap-2">
         {DATA.map(([year, value]) => (
           <div key={year} className="flex flex-1 flex-col items-center gap-2">
             <span className="text-xs font-medium text-primary">
@@ -31,7 +31,7 @@ export function AchievementsChart() {
             </span>
             <div
               className="w-full rounded-t bg-gradient-to-t from-green-deep to-green-vibrant transition-all"
-              style={{ height: `${(value / max) * 100}%` }}
+              style={{ height: `${Math.max((value / max) * 200, 4)}px` }}
             />
             <span className="latin-term text-[11px] text-muted-foreground">{year}</span>
           </div>

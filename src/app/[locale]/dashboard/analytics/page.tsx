@@ -35,7 +35,7 @@ export default async function AnalyticsPage() {
 
       <div className="card p-6">
         <h2 className="mb-4 font-semibold">تغطية الأبعاد / Quotient coverage</h2>
-        <div className="flex h-40 items-end gap-6">
+        <div className="flex items-end gap-6">
           {Object.entries(qc).map(([q, v]) => {
             const max = Math.max(...Object.values(qc), 1);
             return (
@@ -43,7 +43,7 @@ export default async function AnalyticsPage() {
                 <span className="text-sm font-medium">{v}</span>
                 <div
                   className="w-full rounded-t bg-primary"
-                  style={{ height: `${(v / max) * 100}%`, minHeight: 4 }}
+                  style={{ height: `${Math.max((v / max) * 140, 4)}px` }}
                 />
                 <span className="latin-term text-xs text-muted-foreground">{q}</span>
               </div>
