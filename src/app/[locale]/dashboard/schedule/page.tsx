@@ -9,7 +9,7 @@ export default async function SchedulePage() {
 
   const { data: sessions } = await supabase
     .from('sessions')
-    .select('id, week_no, date, status, stations(id, order_index, title_ar, duration_min, quotient, skill, value_ar)')
+    .select('id, week_no, date, status, stations(id, order_index, title_ar, duration_min, quotient, skill, value_ar, materials_ar)')
     .order('week_no', { ascending: true });
 
   return (
@@ -57,6 +57,24 @@ export default async function SchedulePage() {
                   </li>
                 ))}
               </ol>
+              {(() => {
+                const mats = stations
+                  .map((st) => (st.materials_ar as string) ?? '')
+                  .filter(Boolean);
+                if (mats.length === 0) return null;
+                return (
+                  <div className="mt-3 rounded-md bg-muted/60 p-3">
+                    <p className="mb-1 text-xs font-semibold">
+                      قائمة المواد المجمّعة — Materials checklist
+                    </p>
+                    <ul className="space-y-1 text-xs text-muted-foreground">
+                      {mats.map((m, i) => (
+                        <li key={i}>☐ {m}</li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })()}
             </div>
           );
         })}

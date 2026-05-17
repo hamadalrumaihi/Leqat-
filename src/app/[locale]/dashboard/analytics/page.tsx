@@ -16,6 +16,12 @@ export default async function AnalyticsPage() {
   for (const r of reports ?? [])
     for (const q of (r.quotient_tags as string[]) ?? []) qc[q] = (qc[q] ?? 0) + 1;
 
+  const { data: fb } = await supabase.from('session_feedback').select('rating');
+  const fbCount = (fb ?? []).length;
+  const fbAvg = fbCount
+    ? Math.round(((fb ?? []).reduce((a, r) => a + Number(r.rating), 0) / fbCount) * 10) / 10
+    : 0;
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t('analytics')}</h1>
@@ -24,6 +30,13 @@ export default async function AnalyticsPage() {
         <div className="card p-5">
           <p className="text-sm text-muted-foreground">نسبة الحضور</p>
           <p className="mt-1 text-3xl font-bold text-green-vibrant">{rate}%</p>
+        </div>
+        <div className="card p-5">
+          <p className="text-sm text-muted-foreground">رضا أولياء الأمور</p>
+          <p className="mt-1 text-3xl font-bold text-accent">
+            {fbAvg ? `${fbAvg}/5` : '—'}
+          </p>
+          <p className="text-xs text-muted-foreground">{fbCount} تقييم</p>
         </div>
         {(['present', 'absent', 'late', 'excused'] as const).map((k) => (
           <div key={k} className="card p-5">
