@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 155 30% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 155 30% 12%;
+    --border: 150 12% 86%;
+    --input: 150 12% 86%;
+    --ring: 142 45% 45%;
+    --primary: 148 49% 24%;            /* deep green — اشتداد الشخصية */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 142 40% 92%;
+    --secondary-foreground: 148 49% 18%;
+    --muted: 150 14% 95%;
+    --muted-foreground: 155 10% 40%;
+    --accent: 134 42% 45%;             /* vibrant green — التمكين */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 156 28% 7%;
+    --foreground: 150 10% 92%;
+    --card: 156 26% 10%;
+    --card-foreground: 150 10% 92%;
+    --border: 150 12% 20%;
+    --input: 150 12% 20%;
+    --ring: 142 45% 50%;
+    --primary: 134 42% 48%;
+    --primary-foreground: 156 28% 7%;
+    --secondary: 150 18% 16%;
+    --secondary-foreground: 150 10% 92%;
+    --muted: 150 14% 16%;
+    --muted-foreground: 150 8% 60%;
+    --accent: 134 42% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'ss01';
+  }
+  /* Bidi: keep Latin technical terms (SQ/EQ) clean inside Arabic text */
+  [dir='rtl'] .latin-term {
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium
+           transition-colors focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-primary-foreground hover:opacity-90 h-11 px-5;
+  }
+  .btn-outline {
+    @apply btn border border-input bg-background hover:bg-muted h-11 px-5;
+  }
+  .btn-ghost {
+    @apply btn hover:bg-muted h-10 px-3;
+  }
+  .input {
+    @apply h-11 w-full rounded-md border border-input bg-background px-3 text-sm
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium;
+  }
+}

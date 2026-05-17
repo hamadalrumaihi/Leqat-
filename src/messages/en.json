@@ -1,0 +1,200 @@
+{
+  "brand": {
+    "name": "Le.Qat",
+    "full": "Life Engineer Educational Program",
+    "tagline": "Engineering life through values"
+  },
+  "nav": {
+    "home": "Home",
+    "philosophy": "Philosophy",
+    "ageGroups": "Age Groups",
+    "programs": "Programs",
+    "achievements": "Achievements",
+    "library": "Library",
+    "contact": "Contact",
+    "login": "Log in",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "logout": "Log out",
+    "language": "العربية",
+    "theme": "Theme"
+  },
+  "home": {
+    "heroTitle": "Engineering life through values",
+    "heroSubtitle": "A Qatar-based character-building program for ages 5–18, university students, and parents — since 2017.",
+    "vision": "Our Vision 2030",
+    "visionText": "To be the leading educational program in building a balanced character — spiritually, emotionally, intellectually, and physically.",
+    "mission": "Our Mission",
+    "missionText": "Designing educational programs that form values and strengthen character through the REPEAT framework and the four quotients.",
+    "whyTitle": "Why Life Engineer",
+    "manifesto": [
+      "Because life is preserved by values",
+      "Because character is built, not born",
+      "Because every child is a human-in-progress",
+      "We engineer life through values"
+    ],
+    "cta": "Register now",
+    "ctaSecondary": "Explore programs"
+  },
+  "quotients": {
+    "title": "The Four Quotients",
+    "subtitle": "The program's philosophy is built on four quotients and the REPEAT framework",
+    "SQ": { "name": "Spiritual (SQ)", "value": "Ihsan" },
+    "EQ": { "name": "Emotional (EQ)", "value": "Self-discipline" },
+    "IQ": { "name": "Intellectual (IQ)", "value": "Learning" },
+    "PQ": { "name": "Physical (PQ)", "value": "Health" },
+    "repeat": "REPEAT — an educational method that repeats a value until it settles as behaviour."
+  },
+  "palette": {
+    "mastery": "Mastery",
+    "formation": "Formation",
+    "valuesForming": "Values forming",
+    "characterStrengthening": "Character strengthening",
+    "empowerment": "Empowerment & launch"
+  },
+  "ageGroups": {
+    "title": "Age Groups",
+    "baraem": "Baraem (5–6)",
+    "nashia": "Nashia (7–9)",
+    "fityan": "Fityan (10–14)",
+    "shabab": "Shabab (15–18) — boys",
+    "university": "University students",
+    "parents": "Parents"
+  },
+  "packages": {
+    "title": "Program Packages",
+    "items": [
+      "Semester programs (10 weeks)",
+      "Summer & spring activities",
+      "International educational trips",
+      "Community projects",
+      "Media production",
+      "Consulting & training",
+      "Designing programs for institutions"
+    ]
+  },
+  "achievements": {
+    "title": "Achievements in Numbers",
+    "participants": "Semester participants 2017–2025",
+    "trips": "International educational trips",
+    "tripsList": "Malaysia · South Africa · Saudi Arabia · China · Azerbaijan · France · Switzerland · Germany · Kuwait · Oman"
+  },
+  "library": {
+    "title": "Library",
+    "note": "Available for non-commercial use",
+    "audio": "Audio publications"
+  },
+  "contact": {
+    "title": "Contact us",
+    "whatsapp": "WhatsApp: 72054558",
+    "instagram": "Instagram: @le.qat"
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "registerTitle": "Create a parent account",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "phone": "Phone number",
+    "submit": "Continue",
+    "noAccount": "No account?",
+    "haveAccount": "Have an account?",
+    "error": "Could not complete the request. Check your details.",
+    "demoAccounts": "Demo accounts (password: Leqat@2025)"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "attendance": "Attendance",
+    "reports": "Reports",
+    "chat": "Chat",
+    "books": "Digital Library",
+    "gallery": "Gallery",
+    "schedule": "Schedule & Stations",
+    "payments": "Payments & Registration",
+    "analytics": "Analytics",
+    "staff": "Staff",
+    "myChild": "My child",
+    "settings": "Settings"
+  },
+  "attendance": {
+    "title": "Attendance",
+    "tapHint": "Tap a student to cycle their status",
+    "present": "Present",
+    "absent": "Absent",
+    "late": "Late",
+    "excused": "Excused",
+    "save": "Save attendance",
+    "saved": "Saved",
+    "offline": "Offline — will sync later",
+    "openSession": "Open today's session",
+    "noSession": "No session today"
+  },
+  "reports": {
+    "title": "Reports",
+    "covered": "What we covered today",
+    "highlights": "Group highlights",
+    "childNotes": "Per-child private notes",
+    "quotientTags": "Quotient coverage",
+    "skillTags": "21st-century skills",
+    "submit": "Submit report",
+    "stageDraft": "Draft",
+    "stageSubmitted": "Submitted",
+    "stageApproved": "Approved"
+  },
+  "chat": {
+    "title": "Chat",
+    "groupChat": "Group chat",
+    "direct": "Direct message",
+    "placeholder": "Type a message…",
+    "send": "Send",
+    "voiceNote": "Voice note",
+    "pinned": "Pinned announcement",
+    "pickup": "Pickup status",
+    "pickupSelf": "I'm on my way",
+    "pickupDriver": "Driver coming",
+    "pickupMaid": "Maid coming",
+    "pickupDelayed": "Delayed",
+    "moderationPending": "Awaiting supervisor approval"
+  },
+  "books": {
+    "title": "Digital Library",
+    "assigned": "Assigned to your group",
+    "due": "Due date",
+    "progress": "Reading progress",
+    "open": "Open book",
+    "audio": "Listen"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "consentNotice": "Your child's photos appear only with your prior consent.",
+    "upload": "Upload photos",
+    "noConsent": "No photo consent on file"
+  },
+  "schedule": {
+    "title": "Schedule & Stations",
+    "week": "Week",
+    "station": "Station",
+    "duration": "Duration",
+    "materials": "Materials needed",
+    "cloneWeek": "Clone last week's plan",
+    "export": "Export to calendar"
+  },
+  "payments": {
+    "title": "Payments & Registration",
+    "amount": "Amount",
+    "status": "Status",
+    "paid": "Paid",
+    "pending": "Pending",
+    "pay": "Pay now",
+    "invoice": "Download invoice",
+    "tiers": "Tiers & discounts"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "comingSoon": "Coming soon"
+  }
+}
