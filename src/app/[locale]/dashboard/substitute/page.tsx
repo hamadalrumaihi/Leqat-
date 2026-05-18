@@ -2,6 +2,7 @@ import { getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { audit } from '@/lib/auth';
 import { dualDate } from '@/lib/utils';
+import { SubstituteLink } from '@/components/substitute-link';
 
 export default async function SubstitutePage() {
   const locale = (await getLocale()) as 'ar' | 'en';
@@ -40,6 +41,8 @@ export default async function SubstitutePage() {
           عرض للقراءة فقط · {group?.name_ar} · {dualDate(session.date as string, locale)}
         </p>
       </div>
+
+      <SubstituteLink sessionId={session.id as string} />
 
       <section className="card p-5">
         <h2 className="mb-3 font-semibold">خطة الجلسة</h2>
