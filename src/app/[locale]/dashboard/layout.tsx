@@ -16,6 +16,7 @@ export default async function DashboardLayout({
 
   const t = await getTranslations('dashboard');
   const tn = await getTranslations('nav');
+  const tb = await getTranslations('brand');
   const isAr = locale === 'ar';
 
   const sectionLabel: Record<string, string> = {
@@ -38,7 +39,7 @@ export default async function DashboardLayout({
   return (
     <DashboardChrome
       groups={groups}
-      brand="لِ.قات"
+      brand={tb('name')}
       roleLabel={roleLabel}
       userName={name}
       welcome={t('welcome')}

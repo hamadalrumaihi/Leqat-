@@ -84,10 +84,10 @@ export function DashboardChrome({
 
   const SidebarHeader = (
     <div className="flex items-center gap-2 border-b p-4">
-      <Logo className="h-9 w-9" />
-      <div>
-        <p className="text-sm font-bold text-primary">{brand}</p>
-        <p className="text-[11px] text-muted-foreground">{roleLabel}</p>
+      <Logo className="h-9 w-9 shrink-0" />
+      <div className="min-w-0">
+        <p className="truncate text-sm font-bold text-primary">{brand}</p>
+        <p className="truncate text-[11px] text-muted-foreground">{roleLabel}</p>
       </div>
     </div>
   );
@@ -116,12 +116,12 @@ export function DashboardChrome({
               'absolute inset-y-0 start-0 flex w-72 max-w-[80%] flex-col bg-card shadow-xl transition-transform',
             )}
           >
-            <div className="flex items-center justify-between border-b p-4">
-              <div className="flex items-center gap-2">
-                <Logo className="h-8 w-8" />
-                <span className="font-bold text-primary">{brand}</span>
+            <div className="flex items-center justify-between gap-2 border-b p-4">
+              <div className="flex min-w-0 items-center gap-2">
+                <Logo className="h-8 w-8 shrink-0" />
+                <span className="truncate font-bold text-primary">{brand}</span>
               </div>
-              <button onClick={() => setOpen(false)} aria-label="close" className="btn-ghost">
+              <button onClick={() => setOpen(false)} aria-label="close" className="btn-ghost shrink-0">
                 <X className="h-5 w-5" />
               </button>
             </div>

@@ -12,6 +12,7 @@ const WHATSAPP_REGISTER =
 
 export function SiteHeader() {
   const t = useTranslations('nav');
+  const tb = useTranslations('brand');
   const locale = useLocale();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
@@ -30,8 +31,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur">
       <div className="container flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2">
-          <Logo className="h-9 w-9" />
-          <span className="text-lg font-bold text-primary">لِ.قات</span>
+          <Logo className="h-9 w-9 shrink-0" />
+          <span className="text-lg font-bold text-primary">{tb('name')}</span>
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">

@@ -182,8 +182,8 @@ export default async function Home({
         <div className="container grid gap-8 py-14 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <Logo className="h-10 w-10" />
-              <span className="text-lg font-bold">لِ.قات</span>
+              <Logo className="h-10 w-10 shrink-0" />
+              <span className="text-lg font-bold">{t('brand.name')}</span>
             </div>
             <p className="mt-3 text-sm text-primary-foreground/80">{t('brand.full')}</p>
           </div>

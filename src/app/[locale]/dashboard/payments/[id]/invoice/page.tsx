@@ -30,7 +30,7 @@ export default async function InvoicePage({
       <div className="card space-y-4 p-8">
         <div className="flex items-center justify-between border-b pb-4">
           <div>
-            <p className="text-xl font-bold text-primary">لِ.قات — Le.Qat</p>
+            <p className="text-xl font-bold text-primary">برنامج مهندس الحياة — Life Engineer Program</p>
             <p className="text-sm text-muted-foreground">فاتورة — Invoice</p>
           </div>
           <div className="text-end text-sm">
