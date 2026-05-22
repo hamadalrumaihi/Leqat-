@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { createProgramAction, updateProgramAction } from '@/app/[locale]/dashboard/programs/actions';
 import { QUOTIENT_VALUE } from '@/lib/utils';
+import { VISIBLE_AGE_GROUPS, AGE_LABEL_AR } from '@/lib/age-groups';
 
 const QUOTIENTS = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
 
@@ -91,12 +92,9 @@ export function CreateProgram() {
       <div>
         <label className="label">الفئة</label>
         <select name="age_grp" className="input">
-          <option value="baraem">براعم</option>
-          <option value="nashia">ناشئة</option>
-          <option value="fityan">فتيان</option>
-          <option value="shabab">شباب</option>
-          <option value="university">الجامعيون</option>
-          <option value="parents">الوالدون</option>
+          {VISIBLE_AGE_GROUPS.map((g) => (
+            <option key={g} value={g}>{AGE_LABEL_AR[g]}</option>
+          ))}
         </select>
       </div>
       <QuotientValue quotient="" valueAr="" valueEn="" />
