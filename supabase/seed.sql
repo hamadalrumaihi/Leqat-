@@ -6,19 +6,52 @@
 -- ── Test auth users ─────────────────────────────────────────────
 -- The handle_new_user trigger creates a matching profiles row; we
 -- upsert afterwards to set bilingual names and exact roles.
+--
+-- NOTE: the token columns below are set to '' (not left NULL) because
+-- GoTrue scans them as Go strings and errors on NULL → string. The
+-- matching auth.identities rows (inserted just after) are also
+-- required for email/password sign-in to succeed.
 insert into auth.users
   (instance_id, id, aud, role, email, encrypted_password,
    email_confirmed_at, raw_app_meta_data, raw_user_meta_data,
-   created_at, updated_at)
+   created_at, updated_at,
+   confirmation_token, recovery_token, email_change_token_new,
+   email_change_token_current, email_change, phone_change,
+   phone_change_token, reauthentication_token)
 values
-  ('00000000-0000-0000-0000-000000000000','11111111-1111-1111-1111-111111111111','authenticated','authenticated','exec@leqat.qa',   crypt('Leqat@2025', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المشرف التنفيذي العام","role":"executive"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000','22222222-2222-2222-2222-222222222222','authenticated','authenticated','psup@leqat.qa',   crypt('Leqat@2025', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"مشرف البرنامج التنفيذي","role":"program_supervisor"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000','33333333-3333-3333-3333-333333333333','authenticated','authenticated','pmgr@leqat.qa',   crypt('Leqat@2025', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"مدير البرنامج","role":"program_manager"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000','44444444-4444-4444-4444-444444444444','authenticated','authenticated','gsup@leqat.qa',   crypt('Leqat@2025', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"مشرف المجموعة","role":"group_supervisor"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000','55555555-5555-5555-5555-555555555555','authenticated','authenticated','asup@leqat.qa',   crypt('Leqat@2025', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المشرف المساعد","role":"assistant_supervisor"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000','66666666-6666-6666-6666-666666666666','authenticated','authenticated','parent@leqat.qa', crypt('Leqat@2025', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"ولي الأمر","role":"parent"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000','77777777-7777-7777-7777-777777777777','authenticated','authenticated','student@leqat.qa',crypt('Leqat@2025', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"الطالب","role":"student"}', now(), now())
+  ('00000000-0000-0000-0000-000000000000','11111111-1111-1111-1111-111111111111','authenticated','authenticated','exec@leqat.qa',   crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المشرف التنفيذي العام","role":"executive"}', now(), now(), '', '', '', '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000','22222222-2222-2222-2222-222222222222','authenticated','authenticated','psup@leqat.qa',   crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"مشرف البرنامج التنفيذي","role":"program_supervisor"}', now(), now(), '', '', '', '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000','33333333-3333-3333-3333-333333333333','authenticated','authenticated','pmgr@leqat.qa',   crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"مدير البرنامج","role":"program_manager"}', now(), now(), '', '', '', '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000','44444444-4444-4444-4444-444444444444','authenticated','authenticated','gsup@leqat.qa',   crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"مشرف المجموعة","role":"group_supervisor"}', now(), now(), '', '', '', '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000','55555555-5555-5555-5555-555555555555','authenticated','authenticated','asup@leqat.qa',   crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المشرف المساعد","role":"assistant_supervisor"}', now(), now(), '', '', '', '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000','66666666-6666-6666-6666-666666666666','authenticated','authenticated','parent@leqat.qa', crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"ولي الأمر","role":"parent"}', now(), now(), '', '', '', '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000','77777777-7777-7777-7777-777777777777','authenticated','authenticated','student@leqat.qa',crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"الطالب","role":"student"}', now(), now(), '', '', '', '', '', '', '', '')
 on conflict (id) do nothing;
+
+-- ── Auth identities ─────────────────────────────────────────────
+-- GoTrue requires a matching auth.identities row for every email/
+-- password user; without it sign-in fails even with a correct hash.
+insert into auth.identities
+  (id, user_id, provider_id, provider, identity_data,
+   last_sign_in_at, created_at, updated_at)
+select
+  gen_random_uuid(),
+  id,
+  id::text,                      -- provider_id = user id for email provider
+  'email',
+  jsonb_build_object(
+    'sub', id::text,
+    'email', email,
+    'email_verified', true,
+    'phone_verified', false
+  ),
+  now(), now(), now()
+from auth.users
+where email in (
+  'exec@leqat.qa','psup@leqat.qa','pmgr@leqat.qa','gsup@leqat.qa',
+  'asup@leqat.qa','parent@leqat.qa','student@leqat.qa'
+)
+on conflict do nothing;
 
 insert into profiles (id, role, full_name_ar, full_name_en, email, phone) values
   ('11111111-1111-1111-1111-111111111111','executive','المشرف التنفيذي العام','Executive Supervisor','exec@leqat.qa','72054558'),
