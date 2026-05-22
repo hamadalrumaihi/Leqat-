@@ -54,6 +54,7 @@ export const NAV_GROUPS: NavGroup[] = [
       },
       { href: '/dashboard/books', key: 'books', roles: ALL },
       { href: '/dashboard/stories', key: 'stories', roles: ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'] },
+      { href: '/dashboard/programs', key: 'programs', roles: ['executive', 'program_planner'] },
       { href: '/dashboard/groups', key: 'groups', roles: ['executive', 'program_planner'] },
     ],
   },
