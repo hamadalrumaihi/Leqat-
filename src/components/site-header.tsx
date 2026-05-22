@@ -7,6 +7,9 @@ import { useState } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
 import { Logo } from './logo';
 
+const WHATSAPP_REGISTER =
+  'https://wa.me/97472054558?text=%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D8%B3%D8%AC%D9%8A%D9%84%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D9%85%D9%87%D9%86%D8%AF%D8%B3%20%D8%A7%D9%84%D8%AD%D9%8A%D8%A7%D8%A9';
+
 export function SiteHeader() {
   const t = useTranslations('nav');
   const locale = useLocale();
@@ -60,9 +63,14 @@ export function SiteHeader() {
           <Link href="/login" className="btn-outline hidden sm:inline-flex">
             {t('login')}
           </Link>
-          <Link href="/register" className="btn-primary hidden sm:inline-flex">
+          <a
+            href={WHATSAPP_REGISTER}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary hidden sm:inline-flex"
+          >
             {t('register')}
-          </Link>
+          </a>
           <button className="btn-ghost lg:hidden" onClick={() => setOpen(!open)} aria-label="menu">
             <Menu className="h-5 w-5" />
           </button>
@@ -79,7 +87,9 @@ export function SiteHeader() {
             ))}
             <div className="mt-2 flex gap-2">
               <Link href="/login" className="btn-outline flex-1">{t('login')}</Link>
-              <Link href="/register" className="btn-primary flex-1">{t('register')}</Link>
+              <a href={WHATSAPP_REGISTER} target="_blank" rel="noopener noreferrer" className="btn-primary flex-1 text-center">
+                {t('register')}
+              </a>
             </div>
           </nav>
         </div>

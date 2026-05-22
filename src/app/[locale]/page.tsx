@@ -4,6 +4,10 @@ import { SiteHeader } from '@/components/site-header';
 import { Logo } from '@/components/logo';
 import { AchievementsChart } from '@/components/achievements-chart';
 
+// Registration stays on WhatsApp for v1 — the CTA opens a chat, not a form.
+const WHATSAPP_REGISTER =
+  'https://wa.me/97472054558?text=%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AA%D8%B3%D8%AC%D9%8A%D9%84%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D9%85%D9%87%D9%86%D8%AF%D8%B3%20%D8%A7%D9%84%D8%AD%D9%8A%D8%A7%D8%A9';
+
 export default async function Home({
   params,
 }: {
@@ -33,7 +37,9 @@ export default async function Home({
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">{t('home.heroSubtitle')}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/register" className="btn-primary">{t('home.cta')}</Link>
+              <a href={WHATSAPP_REGISTER} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                {t('home.cta')}
+              </a>
               <a href="#packages" className="btn-outline">{t('home.ctaSecondary')}</a>
             </div>
             <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -188,9 +194,14 @@ export default async function Home({
             <p className="text-sm">linkbio.co/LEProgram</p>
           </div>
           <div className="flex items-start">
-            <Link href="/register" className="btn bg-white px-5 h-11 text-primary hover:opacity-90">
+            <a
+              href={WHATSAPP_REGISTER}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn bg-white px-5 h-11 text-primary hover:opacity-90"
+            >
               {t('home.cta')}
-            </Link>
+            </a>
           </div>
         </div>
         <div className="border-t border-white/15 py-4 text-center text-xs text-primary-foreground/70">

@@ -30,10 +30,28 @@ export function dualDate(input: string | Date, locale: 'ar' | 'en' = 'ar') {
   return `${greg} · ${hijri}`;
 }
 
+export const BRAND_GREEN = '#1F5C3A';
+
+/**
+ * The three planner-tier roles act as one effective role in the UI.
+ * Everything else maps to itself.
+ */
+export function effectiveRole(role: string): string {
+  if (
+    role === 'program_supervisor' ||
+    role === 'program_manager' ||
+    role === 'program_planner'
+  ) {
+    return 'program_planner';
+  }
+  return role;
+}
+
 export const ROLE_LABELS: Record<string, { ar: string; en: string }> = {
   executive: { ar: 'مشرف تنفيذي عام', en: 'Executive Supervisor' },
-  program_supervisor: { ar: 'مشرف برنامج تنفيذي', en: 'Program Supervisor' },
-  program_manager: { ar: 'مدير برنامج', en: 'Program Manager' },
+  program_planner: { ar: 'مخطط البرنامج', en: 'Program Planner' },
+  program_supervisor: { ar: 'مخطط البرنامج', en: 'Program Planner' },
+  program_manager: { ar: 'مخطط البرنامج', en: 'Program Planner' },
   group_supervisor: { ar: 'مشرف مجموعة', en: 'Group Supervisor' },
   assistant_supervisor: { ar: 'مشرف مساعد', en: 'Assistant Supervisor' },
   parent: { ar: 'ولي أمر', en: 'Parent' },
