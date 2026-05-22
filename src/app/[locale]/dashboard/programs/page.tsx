@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { Link } from '@/i18n/routing';
 import { CreateProgram, EditProgram } from '@/components/program-forms';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -36,9 +37,17 @@ export default async function ProgramsPage() {
                   {p.value_ar ? ` · ${p.value_ar as string}` : ''}
                 </span>
               </div>
-              <span className="rounded-full bg-secondary px-3 py-1 text-xs">
-                {STATUS_LABEL[p.status as string] ?? (p.status as string)}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="rounded-full bg-secondary px-3 py-1 text-xs">
+                  {STATUS_LABEL[p.status as string] ?? (p.status as string)}
+                </span>
+                <Link
+                  href={`/dashboard/programs/${p.id as string}`}
+                  className="text-xs font-medium text-primary hover:underline"
+                >
+                  روابط التسجيل ←
+                </Link>
+              </div>
             </div>
             <EditProgram
               program={{

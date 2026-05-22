@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { Logo } from '@/components/logo';
-import { AuthForm } from '@/components/auth-form';
+import { LoginTabs } from '@/components/login-tabs';
 
 const DEMO = [
   ['exec@leqat.qa', 'مشرف تنفيذي عام'],
@@ -31,7 +31,7 @@ export default async function LoginPage({
       </Link>
       <div className="card p-8">
         <h1 className="mb-6 text-center text-2xl font-bold">{t('loginTitle')}</h1>
-        <AuthForm mode="login" />
+        <LoginTabs />
       </div>
       <details className="card mt-4 p-4 text-sm">
         <summary className="cursor-pointer font-medium">{t('demoAccounts')}</summary>
