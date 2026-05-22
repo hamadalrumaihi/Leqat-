@@ -61,6 +61,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     key: 'people',
     items: [
+      { href: '/dashboard/group', key: 'myGroup', roles: ['group_supervisor', 'assistant_supervisor'] },
       { href: '/dashboard/chat', key: 'chat', roles: ALL },
       {
         href: '/dashboard/dm',

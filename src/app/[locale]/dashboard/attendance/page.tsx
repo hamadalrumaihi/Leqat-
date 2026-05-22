@@ -27,7 +27,7 @@ export default async function AttendancePage() {
 
   const { data: enrollments } = await supabase
     .from('enrollments')
-    .select('student_id, students(id, full_name_ar, full_name_en)')
+    .select('student_id, students(id, full_name_ar, full_name_en, parent:profiles!students_parent_id_fkey(full_name_ar, phone))')
     .eq('group_id', session.group_id)
     .eq('status', 'active');
 
@@ -41,12 +41,15 @@ export default async function AttendancePage() {
       id: string;
       full_name_ar: string;
       full_name_en: string | null;
+      parent: { full_name_ar: string; phone: string | null } | null;
     };
     const rec = existing?.find((a) => a.student_id === st.id);
     return {
       id: st.id,
       nameAr: st.full_name_ar,
       nameEn: st.full_name_en,
+      parentName: st.parent?.full_name_ar ?? null,
+      parentPhone: st.parent?.phone ?? null,
       status: (rec?.status as string) ?? null,
     };
   });

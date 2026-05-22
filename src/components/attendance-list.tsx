@@ -4,8 +4,16 @@ import { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
+import { ParentContact } from '@/components/parent-contact';
 
-type Row = { id: string; nameAr: string; nameEn: string | null; status: string | null };
+type Row = {
+  id: string;
+  nameAr: string;
+  nameEn: string | null;
+  parentName?: string | null;
+  parentPhone?: string | null;
+  status: string | null;
+};
 const CYCLE = ['present', 'absent', 'late', 'excused'] as const;
 type Status = (typeof CYCLE)[number];
 
@@ -107,22 +115,25 @@ export function AttendanceList({
       </div>
       <ul className="space-y-2">
         {rows.map((r) => (
-          <li key={r.id}>
-            <button
-              onClick={() => cycle(r.id)}
-              className="flex w-full items-center justify-between rounded-lg border bg-card p-4 text-start active:scale-[0.99]"
-            >
+          <li
+            key={r.id}
+            className="flex items-center justify-between gap-3 rounded-lg border bg-card p-4"
+          >
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
               <span className="font-medium">
                 {locale === 'ar' ? r.nameAr : r.nameEn || r.nameAr}
               </span>
-              <span
-                className={cn(
-                  'rounded-full px-3 py-1 text-xs font-semibold',
-                  r.status ? COLOR[r.status as Status] : 'bg-muted text-muted-foreground',
-                )}
-              >
-                {r.status ? t(r.status as Status) : '—'}
-              </span>
+              {r.parentName && <ParentContact name={r.parentName} phone={r.parentPhone ?? null} />}
+            </div>
+            <button
+              onClick={() => cycle(r.id)}
+              aria-label={t('tapHint')}
+              className={cn(
+                'shrink-0 rounded-full px-3 py-1 text-xs font-semibold active:scale-95',
+                r.status ? COLOR[r.status as Status] : 'bg-muted text-muted-foreground',
+              )}
+            >
+              {r.status ? t(r.status as Status) : '—'}
             </button>
           </li>
         ))}

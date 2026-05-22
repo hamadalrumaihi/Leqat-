@@ -1,6 +1,42 @@
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
+import { effectiveRole } from '@/lib/utils';
+import { MissingPhoneAlerts } from '@/components/missing-phone-alerts';
+
+// Group supervisor's roster students whose parent phone is missing.
+async function missingPhones() {
+  const supabase = await createClient();
+  const user = await getCurrentUser();
+  if (!user) return { items: [], total: 0 };
+  const role = effectiveRole(user.role);
+  if (role !== 'group_supervisor' && role !== 'assistant_supervisor') {
+    return { items: [], total: 0 };
+  }
+
+  const { data: staff } = await supabase
+    .from('group_staff')
+    .select('group_id')
+    .eq('profile_id', user.id);
+  const groupIds = (staff ?? []).map((s) => s.group_id as string);
+  if (groupIds.length === 0) return { items: [], total: 0 };
+
+  const { data: rows } = await supabase
+    .from('enrollments')
+    .select('student_id, students!inner(id, full_name_ar, parent:profiles!students_parent_id_fkey(id, phone))')
+    .in('group_id', groupIds);
+
+  const missing = (rows ?? [])
+    .map((r) => r.students as unknown as {
+      id: string;
+      full_name_ar: string;
+      parent: { id: string; phone: string | null } | null;
+    })
+    .filter((s) => s && !s.parent?.phone)
+    .map((s) => ({ studentId: s.id, name: s.full_name_ar, parentId: s.parent?.id ?? null }));
+
+  return { items: missing.slice(0, 5), total: missing.length };
+}
 
 async function counts() {
   const supabase = await createClient();
@@ -22,6 +58,7 @@ export default async function Overview() {
   const t = await getTranslations('dashboard');
   const user = await getCurrentUser();
   const c = await counts();
+  const alerts = await missingPhones();
 
   const cards = [
     { label: t('attendance'), value: c.sessions, key: 'sessions' },
@@ -33,6 +70,7 @@ export default async function Overview() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t('overview')}</h1>
+      <MissingPhoneAlerts items={alerts.items} total={alerts.total} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
           <div key={card.key} className="card p-6">

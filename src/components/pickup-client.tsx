@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { ParentContact } from '@/components/parent-contact';
 import { arriveAction, releaseAction } from '@/app/[locale]/dashboard/pickup/actions';
 
 type Authorized = { name: string; phone: string | null };
@@ -121,6 +122,8 @@ type Row = {
   id: string;
   studentName: string;
   person: string;
+  parentName?: string | null;
+  parentPhone?: string | null;
   arrivedAt: string;
 };
 
@@ -181,12 +184,15 @@ export function PickupQueue({ sessionId, initial }: { sessionId: string; initial
             .slice()
             .sort((a, b) => (a.arrivedAt < b.arrivedAt ? -1 : 1))
             .map((r) => (
-              <li key={r.id} className="flex items-center justify-between py-3">
-                <div>
+              <li key={r.id} className="flex items-center justify-between gap-3 py-3">
+                <div className="min-w-0">
                   <p className="font-medium">{r.studentName}</p>
                   <p className="text-xs text-muted-foreground">يستلمه: {r.person}</p>
+                  {r.parentName && (
+                    <ParentContact name={r.parentName} phone={r.parentPhone ?? null} className="mt-1" />
+                  )}
                 </div>
-                <button onClick={() => release(r.id)} className="btn-primary h-9 px-4">
+                <button onClick={() => release(r.id)} className="btn-primary h-9 shrink-0 px-4">
                   تم التسليم
                 </button>
               </li>

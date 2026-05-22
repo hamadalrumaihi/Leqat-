@@ -24,18 +24,23 @@ export default async function PickupPage() {
   if (isStaff) {
     const { data: waiting } = await supabase
       .from('pickup_status')
-      .select('id, arrived_at, picked_up_by_name, students(full_name_ar)')
+      .select('id, arrived_at, picked_up_by_name, students(full_name_ar), parent:profiles!pickup_status_parent_id_fkey(full_name_ar, phone)')
       .eq('session_id', sessionId)
       .not('arrived_at', 'is', null)
       .is('released_at', null)
       .order('arrived_at', { ascending: true });
 
-    const initial = (waiting ?? []).map((r) => ({
-      id: r.id as string,
-      studentName: (r.students as unknown as { full_name_ar: string } | null)?.full_name_ar ?? '—',
-      person: (r.picked_up_by_name as string) || 'ولي الأمر',
-      arrivedAt: r.arrived_at as string,
-    }));
+    const initial = (waiting ?? []).map((r) => {
+      const parent = r.parent as unknown as { full_name_ar: string; phone: string | null } | null;
+      return {
+        id: r.id as string,
+        studentName: (r.students as unknown as { full_name_ar: string } | null)?.full_name_ar ?? '—',
+        person: (r.picked_up_by_name as string) || 'ولي الأمر',
+        parentName: parent?.full_name_ar ?? null,
+        parentPhone: parent?.phone ?? null,
+        arrivedAt: r.arrived_at as string,
+      };
+    });
 
     return (
       <div className="space-y-4">

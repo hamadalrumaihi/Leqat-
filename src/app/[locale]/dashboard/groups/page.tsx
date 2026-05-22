@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { Link } from '@/i18n/routing';
 import { GroupSwatch } from '@/components/group-swatch';
 import { CreateGroup, EditGroup } from '@/components/group-forms';
 
@@ -31,10 +32,18 @@ export default async function GroupsPage() {
           <div key={g.id as string} className="card p-5">
             <div className="mb-3 flex items-center gap-2">
               <GroupSwatch color={g.color as string | null} />
-              <span className="font-semibold">{g.name_ar as string}</span>
+              <Link href={`/dashboard/groups/${g.id as string}`} className="font-semibold hover:underline">
+                {g.name_ar as string}
+              </Link>
               <span className="text-xs text-muted-foreground">
                 · {(g.programs as unknown as { name_ar: string } | null)?.name_ar}
               </span>
+              <Link
+                href={`/dashboard/groups/${g.id as string}`}
+                className="ms-auto text-xs font-medium text-primary hover:underline"
+              >
+                الكشف والإضافة ←
+              </Link>
             </div>
             <EditGroup
               group={{
