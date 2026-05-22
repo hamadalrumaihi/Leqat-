@@ -3,6 +3,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { effectiveRole } from '@/lib/utils';
 import { MissingPhoneAlerts } from '@/components/missing-phone-alerts';
+import { NextEventWidget } from '@/components/next-event-widget';
 
 // Group supervisor's roster students whose parent phone is missing.
 async function missingPhones() {
@@ -70,6 +71,7 @@ export default async function Overview() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">{t('overview')}</h1>
+      <NextEventWidget />
       <MissingPhoneAlerts items={alerts.items} total={alerts.total} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
