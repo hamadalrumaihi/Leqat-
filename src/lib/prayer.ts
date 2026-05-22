@@ -27,36 +27,6 @@ export async function getDohaPrayerTimes(
   }
 }
 
-export const PRAYER_AR: Record<string, string> = {
-  Fajr: 'الفجر',
-  Dhuhr: 'الظهر',
-  Asr: 'العصر',
-  Maghrib: 'المغرب',
-  Isha: 'العشاء',
-};
-
-const toMin = (s: string) => {
-  const [h, m] = s.split(':').map(Number);
-  return h * 60 + m;
-};
-
-/** The next prayer at or after `now` today, or null if all have passed. */
-export function nextPrayerAfter(
-  times: PrayerTimes | null,
-  now: Date,
-): { name: string; ar: string; hhmm: string; minutes: number } | null {
-  if (!times) return null;
-  const cur = now.getHours() * 60 + now.getMinutes();
-  const order = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const;
-  for (const k of order) {
-    const v = times[k];
-    if (v && toMin(v) >= cur) {
-      return { name: k, ar: PRAYER_AR[k], hhmm: v.slice(0, 5), minutes: toMin(v) };
-    }
-  }
-  return null;
-}
-
 /** True if a session window overlaps a prayer time (HH:mm strings). */
 export function overlapsPrayer(
   startHHmm: string,
