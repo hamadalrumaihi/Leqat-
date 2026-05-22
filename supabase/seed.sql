@@ -256,3 +256,42 @@ insert into inventory_items (name_ar, name_en, total_qty) values
   ('سترات سباحة','Swim vests',15),
   ('نسخ الكتاب المقرر','Assigned book copies',20)
 on conflict do nothing;
+
+-- ════════════════════════════════════════════════════════════════
+--  0006 alignment — populate the new columns/tables for the demo
+-- ════════════════════════════════════════════════════════════════
+
+-- §3 group color
+update groups set color = '#3FA34D'
+where id = 'b0000000-0000-0000-0000-0000000000b1';
+
+-- §4/§5 explicit times + publish all of the group's sessions
+update sessions
+set start_time = time '16:00', end_time = time '20:00',
+    published_at = now(), published_by = '22222222-2222-2222-2222-222222222222'
+where group_id = 'b0000000-0000-0000-0000-0000000000b1';
+
+-- §8 turn the 2022 title into the program workbook + seed progress
+update books
+set kind = 'workbook', program_id = 'a0000000-0000-0000-0000-0000000000a1'
+where id = 'c0000000-0000-0000-0000-0000000000c1';
+
+insert into group_workbook_progress (group_id, book_id, current_page, last_section)
+values ('b0000000-0000-0000-0000-0000000000b1','c0000000-0000-0000-0000-0000000000c1',12,'الفصل الأول: معنى الإحسان')
+on conflict do nothing;
+
+-- §10 an authorized pickup person for the seeded family
+insert into authorized_pickup_persons (student_id, parent_id, name, phone, relation)
+values ('d0000000-0000-0000-0000-0000000000d1','66666666-6666-6666-6666-666666666666','سائق العائلة','55009911','سائق')
+on conflict do nothing;
+
+-- §11 program-wide broadcast channel (parents read-only by default)
+insert into chat_channels (id, type, group_id, title_ar, title_en, parents_can_post)
+values ('e0000000-0000-0000-0000-0000000000e2','program','b0000000-0000-0000-0000-0000000000b1','إعلانات البرنامج','Program announcements', false)
+on conflict (id) do nothing;
+
+insert into chat_members (channel_id, profile_id) values
+  ('e0000000-0000-0000-0000-0000000000e2','22222222-2222-2222-2222-222222222222'),
+  ('e0000000-0000-0000-0000-0000000000e2','44444444-4444-4444-4444-444444444444'),
+  ('e0000000-0000-0000-0000-0000000000e2','66666666-6666-6666-6666-666666666666')
+on conflict do nothing;

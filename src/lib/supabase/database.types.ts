@@ -5,6 +5,7 @@
 
 export type AppRole =
   | 'executive'
+  | 'program_planner'
   | 'program_supervisor'
   | 'program_manager'
   | 'group_supervisor'
