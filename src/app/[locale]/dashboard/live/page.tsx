@@ -6,7 +6,7 @@ export default async function LivePage() {
 
   const { data: session } = await supabase
     .from('sessions')
-    .select('id, group_id, programs(value_ar), stations(order_index, title_ar, duration_min, value_ar)')
+    .select('id, group_id, programs(value_ar), stations(order_index, title_ar, duration_min, value_ar, quotient, secondary_quotients, repeat_letter, is_prayer)')
     .order('date', { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -21,6 +21,10 @@ export default async function LivePage() {
     .map((s) => ({
       title: s.title_ar as string,
       minutes: s.duration_min as number,
+      quotient: (s.quotient as string) ?? null,
+      secondary: (s.secondary_quotients as string[]) ?? [],
+      repeat: (s.repeat_letter as string) ?? null,
+      isPrayer: Boolean(s.is_prayer),
     }));
 
   const valueAr =

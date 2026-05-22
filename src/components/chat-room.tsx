@@ -9,7 +9,9 @@ import {
   sendMessageAction,
   moderateMessageAction,
   reactAction,
+  mirrorToGalleryAction,
 } from '@/app/[locale]/dashboard/chat/actions';
+import { Link } from '@/i18n/routing';
 
 type Msg = {
   id: string;
@@ -31,12 +33,14 @@ export function ChatRoom({
   meId,
   initial,
   canModerate,
+  canPost = true,
 }: {
   channelId: string;
   groupId: string;
   meId: string;
   initial: Msg[];
   canModerate: boolean;
+  canPost?: boolean;
 }) {
   const t = useTranslations('chat');
   const [messages, setMessages] = useState<Msg[]>(initial);
@@ -136,6 +140,10 @@ export function ChatRoom({
     fd.set('media_path', path);
     fd.set('media_kind', kind);
     await sendMessageAction(null, fd);
+    // Mirror staff photos into the group gallery (§12).
+    if (kind === 'image' && canModerate && groupId) {
+      await mirrorToGalleryAction(groupId, path);
+    }
   }
 
   async function toggleRecord() {
@@ -248,37 +256,48 @@ export function ChatRoom({
         <div ref={endRef} />
       </div>
 
-      <div className="flex items-center gap-2 border-t p-3">
-        <label className="btn-ghost cursor-pointer" title="صورة">
-          🖼️
+      {canPost ? (
+        <div className="flex items-center gap-2 border-t p-3">
+          <label className="btn-ghost cursor-pointer" title="صورة">
+            🖼️
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) uploadAndSend(f, 'image', 'webp');
+              }}
+            />
+          </label>
+          <button
+            onClick={toggleRecord}
+            className={cn('btn-ghost', recording && 'text-destructive')}
+            title={t('voiceNote')}
+          >
+            {recording ? '■' : '🎤'}
+          </button>
           <input
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) uploadAndSend(f, 'image', 'webp');
-            }}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && sendText()}
+            placeholder={t('placeholder')}
+            className="input"
           />
-        </label>
-        <button
-          onClick={toggleRecord}
-          className={cn('btn-ghost', recording && 'text-destructive')}
-          title={t('voiceNote')}
-        >
-          {recording ? '■' : '🎤'}
-        </button>
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && sendText()}
-          placeholder={t('placeholder')}
-          className="input"
-        />
-        <button onClick={sendText} className="btn-primary">
-          {t('send')}
-        </button>
-      </div>
+          <button onClick={sendText} className="btn-primary">
+            {t('send')}
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between gap-2 border-t bg-muted/40 p-3 text-sm">
+          <span className="text-muted-foreground">
+            للأسئلة، تواصل مع المشرف مباشرة عبر محادثة خاصة
+          </span>
+          <Link href="/dashboard/dm" className="btn-outline h-9 px-3 text-xs">
+            بدء محادثة
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

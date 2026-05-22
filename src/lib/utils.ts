@@ -57,3 +57,51 @@ export const ROLE_LABELS: Record<string, { ar: string; en: string }> = {
   parent: { ar: 'ولي أمر', en: 'Parent' },
   student: { ar: 'طالب', en: 'Student' },
 };
+
+/** Format a "HH:MM[:SS]" time as 12-hour with Arabic ص/م + numerals. */
+export function formatTime12(
+  time: string | null | undefined,
+  pref: 'arabic' | 'latin' = 'arabic',
+) {
+  if (!time) return '';
+  const [hStr, mStr] = time.split(':');
+  let h = Number(hStr);
+  const m = mStr ?? '00';
+  const meridiem = h >= 12 ? (pref === 'arabic' ? 'م' : 'PM') : pref === 'arabic' ? 'ص' : 'AM';
+  h = h % 12 || 12;
+  return `${toNumerals(h, pref)}:${toNumerals(m, pref)} ${meridiem}`;
+}
+
+export function timeRange(
+  start: string | null,
+  end: string | null,
+  pref: 'arabic' | 'latin' = 'arabic',
+) {
+  if (!start && !end) return '';
+  return `${formatTime12(start, pref)} — ${formatTime12(end, pref)}`;
+}
+
+// Canonical quotient → value mapping (matches the 0006 DB trigger).
+export const QUOTIENT_VALUE: Record<string, { ar: string; en: string }> = {
+  SQ: { ar: 'الإحسان', en: 'Ihsan' },
+  EQ: { ar: 'الانضباط الذاتي', en: 'Self-discipline' },
+  IQ: { ar: 'التعلّم', en: 'Learning' },
+  PQ: { ar: 'الصحة', en: 'Health' },
+};
+
+export const QUOTIENT_COLOR: Record<string, string> = {
+  SQ: '#1F5C3A',
+  EQ: '#3FA34D',
+  IQ: '#8A8F98',
+  PQ: '#A7D7A0',
+};
+
+// REPEAT framework letters → Arabic label + full brand-book phrase.
+export const REPEAT_LETTERS: { code: string; label: string; phrase: string }[] = [
+  { code: 'R', label: 'احترام', phrase: 'احترام المشرفين والطلاب والأشياء' },
+  { code: 'E1', label: 'استئذان', phrase: 'الاستئذان قبل التصرّف' },
+  { code: 'P', label: 'مبادرة', phrase: 'المبادرة وروح الريادة' },
+  { code: 'E2', label: 'أخلاق', phrase: 'الأخلاق الحسنة في التعامل' },
+  { code: 'A', label: 'نشاط', phrase: 'النشاط والحيوية' },
+  { code: 'T', label: 'وقت', phrase: 'احترام الوقت والالتزام به' },
+];

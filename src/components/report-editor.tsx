@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { aiDraftAction, saveReportAction } from '@/app/[locale]/dashboard/reports/actions';
+import { REPEAT_LETTERS } from '@/lib/utils';
 
 const QUOTIENTS = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
 const SKILLS = ['critical', 'creative', 'collaboration', 'communication'] as const;
@@ -91,6 +92,18 @@ export function ReportEditor({
             onChange={(e) => setHighlights(e.target.value)}
           />
         </div>
+
+        <fieldset>
+          <legend className="label">إطار REPEAT</legend>
+          <div className="flex flex-wrap gap-3">
+            {REPEAT_LETTERS.map((r) => (
+              <label key={r.code} title={r.phrase} className="flex items-center gap-1.5 text-sm">
+                <input type="checkbox" name="repeat_tags" value={r.code} />
+                <span className="latin-term font-bold">{r.code}</span> {r.label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <fieldset>
           <legend className="label">{t('quotientTags')}</legend>

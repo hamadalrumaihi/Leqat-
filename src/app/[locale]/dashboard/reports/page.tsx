@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { Link } from '@/i18n/routing';
 import { ReportAdvance } from '@/components/report-advance';
+import { GroupSwatch } from '@/components/group-swatch';
 
 const STAGE_KEY: Record<string, string> = {
   draft: 'stageDraft',
@@ -27,7 +28,7 @@ export default async function ReportsPage() {
 
   const { data: reports } = await supabase
     .from('reports')
-    .select('id, summary_ar, highlights_ar, quotient_tags, skill_tags, stage, created_at, groups(name_ar)')
+    .select('id, summary_ar, highlights_ar, quotient_tags, skill_tags, repeat_tags, stage, created_at, groups(name_ar, color)')
     .order('created_at', { ascending: false })
     .limit(50);
 
@@ -53,7 +54,8 @@ export default async function ReportsPage() {
         {(reports ?? []).map((r) => (
           <article key={r.id as string} className="card p-5">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-medium text-primary">
+              <span className="flex items-center gap-2 text-sm font-medium text-primary">
+                <GroupSwatch color={(r.groups as unknown as { color: string | null } | null)?.color} />
                 {(r.groups as unknown as { name_ar: string } | null)?.name_ar}
               </span>
               <span className="rounded-full bg-secondary px-3 py-1 text-xs">
@@ -67,6 +69,11 @@ export default async function ReportsPage() {
               </p>
             ) : null}
             <div className="mt-3 flex flex-wrap gap-1.5">
+              {((r.repeat_tags as string[]) ?? []).map((rt) => (
+                <span key={rt} className="latin-term rounded-full bg-secondary px-2 py-0.5 text-xs font-bold text-primary">
+                  {rt}
+                </span>
+              ))}
               {((r.quotient_tags as string[]) ?? []).map((q) => (
                 <span key={q} className="latin-term rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   {q}

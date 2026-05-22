@@ -47,6 +47,7 @@ export async function saveReportAction(_: unknown, formData: FormData) {
 
   const quotientTags = formData.getAll('quotient_tags').map(String);
   const skillTags = formData.getAll('skill_tags').map(String);
+  const repeatTags = formData.getAll('repeat_tags').map(String);
 
   const { error } = await supabase.from('reports').upsert(
     {
@@ -56,6 +57,7 @@ export async function saveReportAction(_: unknown, formData: FormData) {
       highlights_ar: String(formData.get('highlights_ar') ?? ''),
       quotient_tags: quotientTags,
       skill_tags: skillTags,
+      repeat_tags: repeatTags,
       ai_assisted: formData.get('ai_assisted') === 'true',
       stage: 'draft',
     },

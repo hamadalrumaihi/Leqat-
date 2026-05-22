@@ -2,13 +2,29 @@
 
 import { useEffect, useState } from 'react';
 
+type Station = {
+  title: string;
+  minutes: number;
+  quotient?: string | null;
+  secondary?: string[];
+  repeat?: string | null;
+  isPrayer?: boolean;
+};
+
+const Q_COLOR: Record<string, string> = {
+  SQ: '#1F5C3A',
+  EQ: '#3FA34D',
+  IQ: '#8A8F98',
+  PQ: '#A7D7A0',
+};
+
 export function LiveScreen({
   valueAr,
   stations,
   names,
 }: {
   valueAr: string;
-  stations: { title: string; minutes: number }[];
+  stations: Station[];
   names: string[];
 }) {
   const [seconds, setSeconds] = useState(0);
@@ -45,11 +61,34 @@ export function LiveScreen({
           <h2 className="mb-3 text-lg font-semibold opacity-80">المحطات</h2>
           <ol className="space-y-2">
             {stations.map((s, i) => (
-              <li key={i} className="flex items-center justify-between rounded-lg bg-white/10 px-4 py-3">
-                <span>
-                  {i + 1}. {s.title}
-                </span>
-                <span className="opacity-80">{s.minutes}د</span>
+              <li key={i} className="rounded-lg bg-white/10 px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <span>
+                    {s.isPrayer ? '🕌 ' : ''}
+                    {i + 1}. {s.title}
+                  </span>
+                  <span className="opacity-80">{s.minutes}د</span>
+                </div>
+                <div className="mt-1 flex flex-wrap items-center gap-1">
+                  {s.quotient ? (
+                    <span
+                      className="latin-term rounded px-1.5 py-0.5 text-[11px] font-bold"
+                      style={{ backgroundColor: Q_COLOR[s.quotient] ?? '#3FA34D', color: '#fff' }}
+                    >
+                      {s.quotient}
+                    </span>
+                  ) : null}
+                  {(s.secondary ?? []).map((sq) => (
+                    <span key={sq} className="latin-term rounded bg-white/20 px-1.5 py-0.5 text-[10px]">
+                      {sq}
+                    </span>
+                  ))}
+                  {s.repeat ? (
+                    <span className="latin-term rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold text-primary">
+                      {s.repeat}
+                    </span>
+                  ) : null}
+                </div>
               </li>
             ))}
           </ol>

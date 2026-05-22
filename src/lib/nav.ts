@@ -54,6 +54,7 @@ export const NAV_GROUPS: NavGroup[] = [
       },
       { href: '/dashboard/books', key: 'books', roles: ALL },
       { href: '/dashboard/stories', key: 'stories', roles: ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'] },
+      { href: '/dashboard/groups', key: 'groups', roles: ['executive', 'program_planner'] },
     ],
   },
   {
@@ -90,11 +91,19 @@ export const NAV_GROUPS: NavGroup[] = [
         key: 'substitute',
         roles: ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'],
       },
+      {
+        href: '/dashboard/pickup',
+        key: 'pickup',
+        roles: ['executive', 'group_supervisor', 'assistant_supervisor', 'parent'],
+      },
     ],
   },
   {
     key: 'settings',
-    items: [{ href: '/dashboard/consent', key: 'consent', roles: ['parent'] }],
+    items: [
+      { href: '/dashboard/consent', key: 'consent', roles: ['parent'] },
+      { href: '/dashboard/authorized', key: 'authorized', roles: ['parent'] },
+    ],
   },
 ];
 

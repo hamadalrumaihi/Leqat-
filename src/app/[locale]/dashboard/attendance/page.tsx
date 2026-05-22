@@ -2,6 +2,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { dualDate } from '@/lib/utils';
 import { AttendanceList } from '@/components/attendance-list';
+import { GroupSwatch } from '@/components/group-swatch';
 
 export default async function AttendancePage() {
   const t = await getTranslations('attendance');
@@ -11,7 +12,7 @@ export default async function AttendancePage() {
   // Most recent session in a group the current user can access (RLS scoped).
   const { data: session } = await supabase
     .from('sessions')
-    .select('id, date, week_no, group_id, groups(name_ar, name_en)')
+    .select('id, date, week_no, group_id, groups(name_ar, name_en, color)')
     .order('date', { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -50,13 +51,14 @@ export default async function AttendancePage() {
     };
   });
 
-  const group = session.groups as unknown as { name_ar: string } | null;
+  const group = session.groups as unknown as { name_ar: string; color: string | null } | null;
 
   return (
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">{t('title')}</h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="flex items-center gap-2 text-sm text-muted-foreground">
+          <GroupSwatch color={group?.color} />
           {group?.name_ar} · {dualDate(session.date as string, locale)}
         </p>
       </div>

@@ -3,7 +3,56 @@
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
 
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+
+/** Staff toggle: allow parents to post in a channel (§11). */
+export async function setParentsCanPostAction(_: unknown, formData: FormData) {
+  const user = await getCurrentUser();
+  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('chat_channels')
+    .update({ parents_can_post: formData.get('allow') === 'true' })
+    .eq('id', String(formData.get('channel_id')));
+  if (error) return { error: error.message };
+  return { ok: true };
+}
+
+/**
+ * Mirror a staff chat photo into the group gallery (§12). Files land
+ * in the session's album, or a default "متفرقات / Misc" album.
+ */
+export async function mirrorToGalleryAction(groupId: string, path: string) {
+  const user = await getCurrentUser();
+  if (!user || !STAFF.includes(user.role) || !groupId) return;
+  const supabase = await createClient();
+
+  let albumId: string | null = null;
+  const { data: misc } = await supabase
+    .from('gallery_albums')
+    .select('id')
+    .eq('group_id', groupId)
+    .eq('title_ar', 'متفرقات')
+    .maybeSingle();
+  if (misc) {
+    albumId = (misc as { id: string }).id;
+  } else {
+    const { data: created } = await supabase
+      .from('gallery_albums')
+      .insert({ group_id: groupId, title_ar: 'متفرقات', title_en: 'Misc' })
+      .select('id')
+      .single();
+    albumId = (created as { id: string } | null)?.id ?? null;
+  }
+  if (!albumId) return;
+
+  await supabase.from('gallery_media').insert({
+    album_id: albumId,
+    group_id: groupId,
+    path,
+    kind: 'image',
+  });
+}
 
 /**
  * Record a message after the client uploaded any media to storage.
