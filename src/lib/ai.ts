@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import AI from '@anthropic-ai/sdk';
 
 export type StationLite = { title_ar: string; quotient?: string | null };
 
@@ -18,7 +18,7 @@ const SYSTEM = `أنت مساعد تربوي لبرنامج "مهندس الحي
  * Produce a polished Arabic report draft from the supervisor's rough
  * notes. Human-in-the-loop: the caller stores this as a DRAFT only —
  * it is never auto-published. Falls back to a deterministic template
- * when ANTHROPIC_API_KEY is not configured (no external call).
+ * when AI_API_KEY is not configured (no external call).
  */
 export async function draftReportArabic(
   rawNotes: string,
@@ -26,7 +26,7 @@ export async function draftReportArabic(
 ): Promise<ReportDraft> {
   const stationList = stations.map((s) => `- ${s.title_ar}`).join('\n');
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.AI_API_KEY) {
     return {
       summaryAr: `غطّينا اليوم المحطات التالية:\n${stationList}\n\nملاحظات المشرف: ${rawNotes}`,
       highlightsAr: rawNotes.slice(0, 280),
@@ -34,9 +34,9 @@ export async function draftReportArabic(
     };
   }
 
-  const client = new Anthropic();
+  const client = new AI({ apiKey: process.env.AI_API_KEY });
   const message = await client.messages.create({
-    model: 'claude-opus-4-7',
+    model: process.env.AI_MODEL ?? 'claude-opus-4-7',
     max_tokens: 1500,
     system: SYSTEM,
     messages: [
@@ -48,7 +48,7 @@ export async function draftReportArabic(
   });
 
   const text = message.content
-    .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+    .filter((b): b is AI.TextBlock => b.type === 'text')
     .map((b) => b.text)
     .join('\n')
     .trim();
