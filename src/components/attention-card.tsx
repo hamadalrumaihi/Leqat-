@@ -3,7 +3,7 @@ import { AlertCircle } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { effectiveRole } from '@/lib/utils';
+import { isStaff, isManagement } from '@/lib/roles';
 
 type Item = { key: string; label: string; count: number; href: string };
 
@@ -15,9 +15,7 @@ type Item = { key: string; label: string; count: number; href: string };
 export async function AttentionCard() {
   const user = await getCurrentUser();
   if (!user) return null;
-  const role = effectiveRole(user.role);
-  const staffRoles = ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'];
-  if (!staffRoles.includes(role)) return null;
+  if (!isStaff(user.role)) return null;
 
   const t = await getTranslations('dashboard');
   const supabase = await createClient();
@@ -32,7 +30,7 @@ export async function AttentionCard() {
     items.push({ key: 'unassigned', label: t('attnUnassigned'), count: unassigned, href: '/dashboard/groups' });
   }
 
-  if (role === 'executive' || role === 'program_planner') {
+  if (isManagement(user.role)) {
     const { count: pending } = await supabase
       .from('enrollments')
       .select('id', { count: 'exact', head: true })

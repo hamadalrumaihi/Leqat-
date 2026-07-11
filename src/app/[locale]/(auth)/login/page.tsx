@@ -4,9 +4,10 @@ import { Logo } from '@/components/logo';
 import { LoginTabs } from '@/components/login-tabs';
 
 const DEMO = [
+  ['founder@leqat.qa', 'المؤسّس'],
   ['exec@leqat.qa', 'مشرف تنفيذي عام'],
-  ['psup@leqat.qa', 'مشرف برنامج'],
-  ['pmgr@leqat.qa', 'مدير برنامج'],
+  ['psup@leqat.qa', 'مدير (صباحي)'],
+  ['pmgr@leqat.qa', 'مدير (مسائي)'],
   ['gsup@leqat.qa', 'مشرف مجموعة'],
   ['asup@leqat.qa', 'مشرف مساعد'],
   ['parent@leqat.qa', 'ولي أمر'],

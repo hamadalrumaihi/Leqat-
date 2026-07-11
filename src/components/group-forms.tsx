@@ -34,6 +34,14 @@ export function CreateGroup({ programs }: { programs: { id: string; name_ar: str
         <label className="label">اللون</label>
         <input name="color" type="color" defaultValue={BRAND_GREEN} className="h-11 w-14 rounded-md border" />
       </div>
+      <div className="w-28">
+        <label className="label">الفئة العمرية</label>
+        <select name="division" className="input" defaultValue="">
+          <option value="">—</option>
+          <option value="younger">الفئة الأصغر</option>
+          <option value="teen">فئة اليافعين</option>
+        </select>
+      </div>
       <div className="w-24">
         <label className="label">السعة</label>
         <input name="capacity" type="number" min="1" defaultValue={15} className="input" />
@@ -46,7 +54,7 @@ export function CreateGroup({ programs }: { programs: { id: string; name_ar: str
 export function EditGroup({
   group,
 }: {
-  group: { id: string; name_ar: string; color: string | null; capacity: number };
+  group: { id: string; name_ar: string; color: string | null; capacity: number; division: string | null };
 }) {
   const [, action] = useFormState(updateGroupAction, null);
   return (
@@ -59,6 +67,14 @@ export function EditGroup({
       <div>
         <label className="label">اللون</label>
         <input name="color" type="color" defaultValue={group.color || BRAND_GREEN} className="h-11 w-14 rounded-md border" />
+      </div>
+      <div className="w-28">
+        <label className="label">الفئة العمرية</label>
+        <select name="division" className="input" defaultValue={group.division ?? ''}>
+          <option value="">—</option>
+          <option value="younger">الفئة الأصغر</option>
+          <option value="teen">فئة اليافعين</option>
+        </select>
       </div>
       <div className="w-24">
         <label className="label">السعة</label>

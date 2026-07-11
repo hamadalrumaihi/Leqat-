@@ -5,6 +5,11 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { can } from '@/lib/roles';
 
+// Age division is optional; only the two enum values are accepted.
+function divisionOrNull(v: FormDataEntryValue | null): 'younger' | 'teen' | null {
+  return v === 'younger' || v === 'teen' ? v : null;
+}
+
 export async function createGroupAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
   if (!user || !can(user.role, 'manageGroups')) return { error: 'forbidden' };
@@ -15,6 +20,7 @@ export async function createGroupAction(_: unknown, formData: FormData) {
     name_en: String(formData.get('name_en') ?? '') || null,
     color: String(formData.get('color') ?? '') || null,
     capacity: Number(formData.get('capacity') ?? 15),
+    division: divisionOrNull(formData.get('division')),
   });
   if (error) return { error: error.message };
   revalidatePath('/dashboard/groups');
@@ -31,6 +37,7 @@ export async function updateGroupAction(_: unknown, formData: FormData) {
       name_ar: String(formData.get('name_ar')),
       color: String(formData.get('color') ?? '') || null,
       capacity: Number(formData.get('capacity') ?? 15),
+      division: divisionOrNull(formData.get('division')),
     })
     .eq('id', String(formData.get('group_id')));
   if (error) return { error: error.message };

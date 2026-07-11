@@ -1,7 +1,8 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { dualDate, timeRange, effectiveRole, QUOTIENT_COLOR } from '@/lib/utils';
+import { dualDate, timeRange, QUOTIENT_COLOR } from '@/lib/utils';
+import { can } from '@/lib/roles';
 import { GroupSwatch } from '@/components/group-swatch';
 import { SessionCreate, PublishButton, StationForm } from '@/components/schedule-forms';
 
@@ -11,7 +12,7 @@ export default async function SchedulePage() {
   const pref = locale === 'ar' ? 'arabic' : 'latin';
   const supabase = await createClient();
   const user = await getCurrentUser();
-  const canPlan = user ? ['executive', 'program_planner'].includes(effectiveRole(user.role)) : false;
+  const canPlan = can(user?.role, 'planSchedule');
 
   let q = supabase
     .from('sessions')

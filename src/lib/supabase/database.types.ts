@@ -4,8 +4,10 @@
 // generics the @supabase/supabase-js client expects.
 
 export type AppRole =
+  | 'founder'
   | 'executive'
-  | 'program_planner'
+  | 'manager'
+  | 'program_planner' // legacy compat aliases → manager
   | 'program_supervisor'
   | 'program_manager'
   | 'group_supervisor'

@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { effectiveRole, formatTime12, dualDate, qatarToday, qatarNowMinutes } from '@/lib/utils';
 
-const STAFF = ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'];
+const STAFF = ['founder', 'executive', 'manager', 'group_supervisor', 'assistant_supervisor'];
 
 function minutesToHHMM(min: number) {
   const h = Math.floor(min / 60) % 24;

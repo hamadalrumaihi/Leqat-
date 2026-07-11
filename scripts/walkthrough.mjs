@@ -9,8 +9,10 @@ const OUT = '/tmp/walk';
 fs.mkdirSync(OUT, { recursive: true });
 
 const ACCOUNTS = [
+  ['founder@leqat.qa', 'founder'],
   ['exec@leqat.qa', 'executive'],
-  ['pmgr@leqat.qa', 'program_manager'],
+  ['psup@leqat.qa', 'manager (morning)'],
+  ['pmgr@leqat.qa', 'manager (afternoon)'],
   ['gsup@leqat.qa', 'group_supervisor'],
   ['asup@leqat.qa', 'assistant_supervisor'],
   ['parent@leqat.qa', 'parent'],
