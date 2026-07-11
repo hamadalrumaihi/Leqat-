@@ -35,7 +35,7 @@ export function ParentContact({ name, phone, className = '' }: Props) {
         href={`https://wa.me/${intl}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-green-50 text-green-700 transition hover:bg-green-100 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-900"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-green-700 transition hover:bg-green-100 dark:bg-green-950 dark:text-green-300 dark:hover:bg-green-900"
         aria-label={`Open WhatsApp chat with ${name}`}
         title={`واتساب: ${phone}`}
       >

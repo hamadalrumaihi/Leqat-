@@ -129,7 +129,7 @@ export function AttendanceList({
               onClick={() => cycle(r.id)}
               aria-label={t('tapHint')}
               className={cn(
-                'shrink-0 rounded-full px-3 py-1 text-xs font-semibold active:scale-95',
+                'min-h-11 min-w-[4.5rem] shrink-0 rounded-full px-4 text-sm font-semibold active:scale-95',
                 r.status ? COLOR[r.status as Status] : 'bg-muted text-muted-foreground',
               )}
             >
