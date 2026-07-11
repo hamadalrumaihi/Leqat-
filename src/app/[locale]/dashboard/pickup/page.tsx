@@ -1,13 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { PickupParent, PickupQueue } from '@/components/pickup-client';
-
-const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export default async function PickupPage() {
   const supabase = await createClient();
   const user = await getCurrentUser();
-  const isStaff = user ? STAFF.includes(user.role) : false;
+  const isStaff = can(user?.role, 'staffPickup');
 
   const { data: session } = await supabase
     .from('sessions')

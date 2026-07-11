@@ -3,8 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { Link } from '@/i18n/routing';
 import { WorkbookProgress } from '@/components/workbook-progress';
+import { can } from '@/lib/roles';
 
-const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
 const TABS = [
   { key: 'publications', ar: 'الإصدارات' },
   { key: 'workbooks', ar: 'كرّاسات البرامج' },
@@ -21,7 +21,7 @@ export default async function BooksPage({
   const active = (TABS.find((x) => x.key === tab)?.key ?? 'publications') as string;
   const supabase = await createClient();
   const user = await getCurrentUser();
-  const isStaff = user ? STAFF.includes(user.role) : false;
+  const isStaff = can(user?.role, 'staffBooks');
 
   const { data: books } = await supabase
     .from('books')

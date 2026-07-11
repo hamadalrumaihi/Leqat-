@@ -3,8 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function addItemAction(formData: FormData) {
   const user = await getCurrentUser();
@@ -20,7 +19,7 @@ export async function addItemAction(formData: FormData) {
 
 export async function checkoutItemAction(formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return;
+  if (!user || !can(user.role, 'manageInventory')) return;
   const supabase = await createClient();
   await supabase.from('inventory_checkouts').insert({
     item_id: String(formData.get('item_id')),
@@ -32,7 +31,7 @@ export async function checkoutItemAction(formData: FormData) {
 
 export async function returnCheckoutAction(formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return;
+  if (!user || !can(user.role, 'manageInventory')) return;
   const supabase = await createClient();
   await supabase
     .from('inventory_checkouts')

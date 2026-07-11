@@ -2,9 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-import { effectiveRole } from '@/lib/utils';
-
-const STAFF = ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 /**
  * Start a staff↔student direct message. The two-adult rule is
@@ -18,7 +16,7 @@ export async function createDmAction(
   formData: FormData,
 ): Promise<{ channelId?: string; error?: string }> {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(effectiveRole(user.role))) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'useDm')) return { error: 'forbidden' };
 
   const studentId = String(formData.get('student_id'));
   const supabase = await createClient();

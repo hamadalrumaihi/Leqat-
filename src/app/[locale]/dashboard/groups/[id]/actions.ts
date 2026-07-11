@@ -3,10 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-import { effectiveRole } from '@/lib/utils';
 import { ROSTER_SELECT, mapRosterRows, type RosterStudent } from '@/lib/roster';
-
-const STAFF = ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function searchUnassignedStudents(
   groupId: string,
@@ -76,7 +74,7 @@ export async function removeStudentFromGroup(enrollmentId: string, groupId: stri
 // children — no service role, no all-parents write surface.
 export async function updateParentPhone(parentId: string, phone: string) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(effectiveRole(user.role))) {
+  if (!can(user?.role, 'manageRoster')) {
     return { error: 'forbidden' };
   }
   const clean = phone.trim();

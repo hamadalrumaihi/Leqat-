@@ -3,13 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { effectiveRole } from '@/lib/utils';
-
-const CAN_MANAGE = ['executive', 'program_planner'];
+import { can } from '@/lib/roles';
 
 export async function createGroupAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !CAN_MANAGE.includes(effectiveRole(user.role))) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'manageGroups')) return { error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase.from('groups').insert({
     program_id: String(formData.get('program_id')),
@@ -25,7 +23,7 @@ export async function createGroupAction(_: unknown, formData: FormData) {
 
 export async function updateGroupAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !CAN_MANAGE.includes(effectiveRole(user.role))) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'manageGroups')) return { error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase
     .from('groups')

@@ -2,8 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-
-const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function arriveAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
@@ -28,7 +27,7 @@ export async function arriveAction(_: unknown, formData: FormData) {
 
 export async function releaseAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'staffPickup')) return { error: 'forbidden' };
   const supabase = await createClient();
   const id = String(formData.get('pickup_id'));
   const { error } = await supabase

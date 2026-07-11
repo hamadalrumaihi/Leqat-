@@ -2,13 +2,12 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-
-const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 /** Staff toggle: allow parents to post in a channel (§11). */
 export async function setParentsCanPostAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!can(user?.role, 'moderateChat')) return { error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase
     .from('chat_channels')
@@ -24,7 +23,7 @@ export async function setParentsCanPostAction(_: unknown, formData: FormData) {
  */
 export async function mirrorToGalleryAction(groupId: string, path: string) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role) || !groupId) return;
+  if (!can(user?.role, 'moderateChat') || !groupId) return;
   const supabase = await createClient();
 
   let albumId: string | null = null;
@@ -69,7 +68,7 @@ export async function sendMessageAction(_: unknown, formData: FormData) {
   const mediaKind = String(formData.get('media_kind') ?? '') || null;
   if (!body && !mediaPath) return { error: 'empty' };
 
-  const isStaff = STAFF.includes(user.role);
+  const isStaff = can(user?.role, 'moderateChat');
   const moderation = mediaPath && !isStaff ? 'pending' : 'approved';
 
   const supabase = await createClient();
@@ -88,7 +87,7 @@ export async function sendMessageAction(_: unknown, formData: FormData) {
 
 export async function moderateMessageAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!can(user?.role, 'moderateChat')) return { error: 'forbidden' };
 
   const messageId = String(formData.get('message_id'));
   const decision = String(formData.get('decision')); // approved | rejected

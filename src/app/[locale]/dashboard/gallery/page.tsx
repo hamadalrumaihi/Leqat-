@@ -4,14 +4,13 @@ import { getCurrentUser } from '@/lib/auth';
 import { childrenConsentForParent } from '@/lib/consent';
 import { GalleryAdmin } from '@/components/gallery-admin';
 import { GalleryUploader } from '@/components/gallery-uploader';
-
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export default async function GalleryPage() {
   const t = await getTranslations('gallery');
   const supabase = await createClient();
   const user = await getCurrentUser();
-  const isStaff = user ? STAFF.includes(user.role) : false;
+  const isStaff = can(user?.role, 'staffGallery');
 
   const { data: albums } = await supabase
     .from('gallery_albums')

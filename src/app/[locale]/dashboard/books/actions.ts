@@ -3,12 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-
-const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function updateWorkbookProgressAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!can(user?.role, 'staffBooks')) return { error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase.from('group_workbook_progress').upsert(
     {

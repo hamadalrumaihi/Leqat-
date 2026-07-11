@@ -5,8 +5,8 @@ import { Link } from '@/i18n/routing';
 import { ChatRoom } from '@/components/chat-room';
 import { GroupSwatch } from '@/components/group-swatch';
 import { AllowParentsToggle } from '@/components/allow-parents-toggle';
+import { can } from '@/lib/roles';
 
-const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
 const ORDER: Record<string, number> = { program: 0, group: 1, dm: 2 };
 
 export default async function ChatPage({
@@ -18,7 +18,7 @@ export default async function ChatPage({
   const t = await getTranslations('chat');
   const supabase = await createClient();
   const user = await getCurrentUser();
-  const isStaff = user ? STAFF.includes(user.role) : false;
+  const isStaff = can(user?.role, 'moderateChat');
 
   const { data: memberships } = await supabase
     .from('chat_members')

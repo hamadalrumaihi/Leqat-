@@ -3,16 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { effectiveRole } from '@/lib/utils';
-
-const CAN = ['executive', 'program_planner'];
-function canManage(role: string) {
-  return CAN.includes(effectiveRole(role));
-}
+import { can } from '@/lib/roles';
 
 export async function createProgramAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !canManage(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'managePrograms')) return { error: 'forbidden' };
   const supabase = await createClient();
 
   // value_ar/value_en left blank are auto-filled by the 0006 trigger.
@@ -39,7 +34,7 @@ export async function createProgramAction(_: unknown, formData: FormData) {
 
 export async function updateProgramAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !canManage(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'managePrograms')) return { error: 'forbidden' };
   const supabase = await createClient();
 
   const { error } = await supabase

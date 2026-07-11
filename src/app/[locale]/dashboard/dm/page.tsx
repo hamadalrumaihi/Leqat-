@@ -3,8 +3,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { Link } from '@/i18n/routing';
 import { ChatRoom } from '@/components/chat-room';
 import { StartDm } from '@/components/start-dm';
-
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export default async function DmPage({
   searchParams,
@@ -14,7 +13,7 @@ export default async function DmPage({
   const { c } = await searchParams;
   const supabase = await createClient();
   const user = await getCurrentUser();
-  const isStaff = user ? STAFF.includes(user.role) : false;
+  const isStaff = can(user?.role, 'useDm');
 
   // DM channels the user is a member of.
   const { data: memberships } = await supabase

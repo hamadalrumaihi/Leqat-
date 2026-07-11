@@ -3,12 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function createSlipAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'manageSlips')) return { error: 'forbidden' };
   const supabase = await createClient();
 
   const { error } = await supabase.from('permission_slips').insert({
