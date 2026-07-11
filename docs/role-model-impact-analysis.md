@@ -1,7 +1,12 @@
 # Role Model Redesign — Impact Analysis
 
-Status: **analysis only** — no enum migration performed. Required gate
-before Phase 2 structural work per the enhancement mission.
+Status: **IMPLEMENTED** (approved 2026-07 — build phased, report chain
+8a). Migrations `0017` (M-a enum add), `0018` (M-b founder authority +
+shifts + divisions + assistant assignments), and the M-c report-chain
+collapse are applied; the app role layer (`effectiveRole`, `roles.ts`,
+`nav.ts`, `ROLE_LABELS`, seed) is repointed to the new hierarchy. This
+document is retained as the design record; the plan below is what was
+built. See the commit trail (`feat(roles): M-a/M-b/M-c`).
 
 Legend for Phase-2 tagging used later in the walkthrough:
 - **[NEW]** valid under the new target model
