@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
+import { effectiveRole } from '@/lib/utils';
 import { Link } from '@/i18n/routing';
 import { ReportAdvance } from '@/components/report-advance';
 import { GroupSwatch } from '@/components/group-swatch';
@@ -13,11 +14,13 @@ const STAGE_KEY: Record<string, string> = {
   approved: 'stageApproved',
 };
 
-// next stage → { role allowed, Arabic action label }
+// next stage → { effective role allowed, Arabic action label }. 3-stage
+// chain (8a): Group Supervisor → Manager → Executive. submitted_supervisor
+// is a compat entry for in-flight reports.
 const ADVANCE: Record<string, { role: string; label: string }> = {
-  draft: { role: 'group_supervisor', label: 'رفع إلى مدير البرنامج' },
-  submitted_manager: { role: 'program_manager', label: 'رفع إلى مشرف البرنامج' },
-  submitted_supervisor: { role: 'program_supervisor', label: 'رفع إلى التنفيذي' },
+  draft: { role: 'group_supervisor', label: 'رفع إلى المدير' },
+  submitted_manager: { role: 'manager', label: 'رفع إلى التنفيذي' },
+  submitted_supervisor: { role: 'manager', label: 'رفع إلى التنفيذي' },
   submitted_executive: { role: 'executive', label: 'اعتماد التقرير' },
 };
 
@@ -88,7 +91,8 @@ export default async function ReportsPage() {
             {(() => {
               const step = ADVANCE[r.stage as string];
               if (!step) return null;
-              const allowed = user?.role === step.role || user?.role === 'executive';
+              const eff = user ? effectiveRole(user.role) : '';
+              const allowed = eff === step.role || eff === 'executive' || eff === 'founder';
               if (!allowed) return null;
               return (
                 <div className="mt-4 border-t pt-3">
