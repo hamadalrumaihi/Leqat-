@@ -7,40 +7,52 @@ npm i -g supabase
 supabase login
 supabase link --project-ref <YOUR_PROJECT_REF>
 
-# Apply schema + RLS, then seed
-supabase db push                  # runs supabase/migrations/*
-psql "$SUPABASE_DB_URL" -f supabase/seed.sql   # or: supabase db reset (local)
+supabase db push    # applies supabase/migrations/* in order (0001–0014)
 ```
 
-Create Storage buckets (private):
+The migrations are self-contained and **forward-only**: schema + RLS
+(0001–0004), private Storage buckets + object policies (0005), API
+grants (0009 — without it every PostgREST request fails), staff
+visibility helpers (0010), integrity guards (0011), Realtime
+publication + replica identity (0012 — without it no live feature
+fires), session visibility (0013), pickup release (0014).
 
-```sql
-insert into storage.buckets (id, name, public) values
-  ('books','books',false),
-  ('gallery','gallery',false),
-  ('chat-media','chat-media',false)
-on conflict do nothing;
-```
+> **Do not apply `supabase/seed.sql` to production.** It creates demo
+> accounts with a published password. It is for local stacks and
+> previews only.
 
-Files are served via **signed URLs** only; books are watermarked with
-the student's name (DRM-light).
+### Auth configuration (Supabase dashboard → Authentication → URL)
+
+- **Site URL** = `https://<your-domain>`
+- **Redirect URLs** must include `https://<your-domain>/auth/callback`
+  — magic-link login and registration links land there for the PKCE
+  exchange; without the allowlist entry GoTrue silently falls back to
+  the Site URL and login completes nowhere.
 
 ## 2. Vercel
 
 ```bash
 npm i -g vercel
 vercel link
-# Add env vars from .env.example in the Vercel dashboard
 vercel --prod
 ```
 
-Required env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-`SUPABASE_SERVICE_ROLE_KEY`, payment + FCM keys.
+Set env vars in the Vercel dashboard (see `.env.example` for the full
+annotated list):
 
-## 3. Post-deploy checklist
+| Variable | Required | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | yes | build-time inlined — redeploy after changing |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | build-time inlined |
+| `SUPABASE_SERVICE_ROLE_KEY` | yes | **server only**, never exposed to the client |
+| `NEXT_PUBLIC_SITE_URL` | yes | canonical origin; used in emailed links |
+| `SUBSTITUTE_LINK_SECRET` | for substitute links | unset = feature disabled (button reports not_configured) |
+| `RESEND_API_KEY` / `EMAIL_FROM` / `CRON_SECRET` | for weekly digest | unset = digest stub mode (logs, no send) |
+| `PAYMENT_PROVIDER` + gateway keys | keep `sandbox` for v1 | WhatsApp-led payments; gateway integration is dormant |
+| `AI_API_KEY` / `AI_MODEL` | optional | report assistant falls back to a deterministic template |
 
-- [ ] Supabase Auth → Site URL = production domain
-- [ ] Realtime enabled for `chat_messages`, `attendance`
-- [ ] Payment webhook → `/api/payments/webhook` (Dibsy/MyFatoorah/Stripe)
-- [ ] FCM web push VAPID key set
-- [ ] Run `npm run typecheck && npm run build` in CI
+## 3. Post-deploy
+
+Run the smoke tests in `docs/release-checklist.md`. CI
+(`.github/workflows/ci.yml`) already gates lint, typecheck, build, and
+a full `supabase db reset` migration-chain validation on every push.
