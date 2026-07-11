@@ -28,8 +28,12 @@ stack): `walkthrough.mjs`, `ui-audit.mjs`, `pickup-realtime-test.mjs`,
    0012 applied (`select * from pg_publication_tables where pubname =
    'supabase_realtime'` must list chat_messages, pickup_status,
    attendance).
-4. **Chat** — send a text + a voice note in a group channel from one
-   device, appears live on the other; media plays via signed URL.
+4. **Chat** — the channel list must NOT read "no channels" (0016 fixed
+   an RLS recursion that killed chat). Send a text + a voice note in a
+   group channel from one device, appears live on the other with the
+   sender's name; media plays via signed URL. Negative: as a parent,
+   `GET /rest/v1/profiles?id=eq.<another member>&select=email,phone`
+   must return `[]` (0015).
 5. **Attendance** — mark 3 students on mobile; toggle airplane mode
    mid-way; marks flush when back online (offline queue).
 6. **Gallery** — staff upload with consent gate; parent of a
