@@ -30,30 +30,87 @@ export type RedeemInput = {
   emergencyContacts?: { name: string; phone: string; relation: string }[];
 };
 
+/** Find a parent's auth id by email without paging the whole user list. */
+async function findParentIdByEmail(
+  sb: ReturnType<typeof createAdminClient>,
+  email: string,
+): Promise<string | null> {
+  // profiles is 1:1 with auth.users (signup trigger + invite upsert)
+  // and has an email column — an indexed O(1) lookup, unlike
+  // auth.admin.listUsers() which only returns the first page.
+  const { data } = await sb
+    .from('profiles')
+    .select('id')
+    .ilike('email', email)
+    .limit(1)
+    .maybeSingle();
+  return (data as { id: string } | null)?.id ?? null;
+}
+
 /**
  * Consumes the invite, creates parent + child + enrollment + consent,
  * and best-effort emails a magic link. Throws a coded error on failure.
+ *
+ * Concurrency: the invite is CLAIMED first via a conditional update
+ * (consumed_at IS NULL), which is atomic in Postgres — a double
+ * submit or replay gets zero rows and stops. If any later step fails,
+ * the claim is released so the parent can retry.
  */
 export async function redeemInvite(input: RedeemInput) {
   const sb = createAdminClient();
 
-  const invite = await lookupInvite(input.token);
-  if (!invite) throw new Error('invite_invalid_or_expired');
+  // 1. Atomically claim the invite.
+  const { data: claimed } = await sb
+    .from('registration_invites')
+    .update({ consumed_at: new Date().toISOString() })
+    .eq('token', input.token)
+    .is('consumed_at', null)
+    .gt('expires_at', new Date().toISOString())
+    .select('id, program_id')
+    .maybeSingle();
+  if (!claimed) throw new Error('invite_invalid_or_expired');
+  const invite = claimed as { id: string; program_id: string | null };
 
-  // 1. Find or create the parent auth user.
-  const email = input.parentEmail.toLowerCase().trim();
-  const { data: existing } = await sb.auth.admin.listUsers();
-  let parentId = existing.users.find((u: { email?: string; id: string }) => u.email === email)?.id;
+  const releaseClaim = async () => {
+    await sb
+      .from('registration_invites')
+      .update({ consumed_at: null, consumed_by_profile_id: null })
+      .eq('id', invite.id);
+  };
 
-  if (!parentId) {
-    const { data: created, error: createErr } = await sb.auth.admin.createUser({
-      email,
-      email_confirm: true,
-      user_metadata: { full_name_ar: input.parentName, role: 'parent' },
-    });
-    if (createErr) throw new Error('email_in_use_or_invalid');
-    parentId = created.user.id;
+  try {
+    // 2. Find or create the parent auth user.
+    const email = input.parentEmail.toLowerCase().trim();
+    let parentId = await findParentIdByEmail(sb, email);
+
+    if (!parentId) {
+      const { data: created, error: createErr } = await sb.auth.admin.createUser({
+        email,
+        email_confirm: true,
+        user_metadata: { full_name_ar: input.parentName, role: 'parent' },
+      });
+      if (createErr) {
+        // Possible race: user created between lookup and createUser.
+        parentId = await findParentIdByEmail(sb, email);
+        if (!parentId) throw new Error('email_in_use_or_invalid');
+      } else {
+        parentId = created.user.id;
+      }
+    }
+    return await completeRedemption(sb, invite, input, email, parentId);
+  } catch (e) {
+    await releaseClaim();
+    throw e;
   }
+}
+
+async function completeRedemption(
+  sb: ReturnType<typeof createAdminClient>,
+  invite: { id: string; program_id: string | null },
+  input: RedeemInput,
+  email: string,
+  parentId: string,
+) {
 
   // 2. Upsert profile (the signup trigger may have created it already).
   await sb.from('profiles').upsert({
@@ -81,10 +138,28 @@ export async function redeemInvite(input: RedeemInput) {
   if (studentErr) throw new Error('student_create_failed');
 
   if (invite.program_id) {
+    // Capacity is a soft gate: a full program waitlists instead of
+    // blocking — staff resolves from the ledger, never the parent.
+    let status: 'pending' | 'waitlisted' = 'pending';
+    const { data: prog } = await sb
+      .from('programs')
+      .select('capacity')
+      .eq('id', invite.program_id)
+      .maybeSingle();
+    if (prog) {
+      const { count } = await sb
+        .from('enrollments')
+        .select('id', { count: 'exact', head: true })
+        .eq('program_id', invite.program_id)
+        .in('status', ['pending', 'active']);
+      if ((count ?? 0) >= Number((prog as { capacity: number }).capacity)) {
+        status = 'waitlisted';
+      }
+    }
     await sb.from('enrollments').insert({
       student_id: student.id,
       program_id: invite.program_id,
-      status: 'pending', // staff confirms once the WhatsApp payment lands
+      status,
     });
   }
 
@@ -95,11 +170,11 @@ export async function redeemInvite(input: RedeemInput) {
     photo_consent: input.photoConsent,
   });
 
-  // 5. Mark the invite consumed (single-use).
+  // 5. Attach the redeeming parent to the already-claimed invite.
   await sb
     .from('registration_invites')
-    .update({ consumed_at: new Date().toISOString(), consumed_by_profile_id: parentId })
-    .eq('token', input.token);
+    .update({ consumed_by_profile_id: parentId })
+    .eq('id', invite.id);
 
   // 6. Best-effort magic link so the parent can return any time.
   try {
