@@ -160,7 +160,11 @@
     "statSessions": "Sessions",
     "statStudents": "Students",
     "currentRole": "Your role",
-    "roleHint": "Use the side menu to reach the features available for your role."
+    "roleHint": "Use the side menu to reach the features available for your role.",
+    "attnTitle": "Needs attention",
+    "attnUnassigned": "students awaiting group assignment",
+    "attnPending": "registrations pending confirmation",
+    "attnInvites": "invite links expiring within 3 days"
   },
   "attendance": {
     "title": "Attendance",
