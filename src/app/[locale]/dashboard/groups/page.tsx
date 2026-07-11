@@ -40,7 +40,7 @@ export default async function GroupsPage() {
               </span>
               <Link
                 href={`/dashboard/groups/${g.id as string}`}
-                className="ms-auto text-xs font-medium text-primary hover:underline"
+                className="-my-2 ms-auto py-2 text-xs font-medium text-primary hover:underline"
               >
                 الكشف والإضافة ←
               </Link>

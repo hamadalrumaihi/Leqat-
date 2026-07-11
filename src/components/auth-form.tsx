@@ -52,12 +52,12 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
         {mode === 'login' ? (
           <>
             {t('noAccount')}{' '}
-            <Link href="/register" className="font-medium text-primary">{t('registerTitle')}</Link>
+            <Link href="/register" className="inline-block px-1 py-2 font-medium text-primary">{t('registerTitle')}</Link>
           </>
         ) : (
           <>
             {t('haveAccount')}{' '}
-            <Link href="/login" className="font-medium text-primary">{t('loginTitle')}</Link>
+            <Link href="/login" className="inline-block px-1 py-2 font-medium text-primary">{t('loginTitle')}</Link>
           </>
         )}
       </p>

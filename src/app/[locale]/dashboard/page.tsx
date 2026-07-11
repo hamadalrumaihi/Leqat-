@@ -1,7 +1,7 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { getCurrentUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
-import { effectiveRole } from '@/lib/utils';
+import { effectiveRole, ROLE_LABELS } from '@/lib/utils';
 import { MissingPhoneAlerts } from '@/components/missing-phone-alerts';
 import { NextEventWidget } from '@/components/next-event-widget';
 
@@ -57,16 +57,21 @@ async function counts() {
 
 export default async function Overview() {
   const t = await getTranslations('dashboard');
+  const locale = await getLocale();
   const user = await getCurrentUser();
   const c = await counts();
   const alerts = await missingPhones();
 
   const cards = [
-    { label: t('attendance'), value: c.sessions, key: 'sessions' },
-    { label: t('staff'), value: c.groups, key: 'groups' },
-    { label: 'الطلاب / Students', value: c.students, key: 'students' },
-    { label: t('schedule'), value: c.programs, key: 'programs' },
+    { label: t('statSessions'), value: c.sessions, key: 'sessions' },
+    { label: t('groups'), value: c.groups, key: 'groups' },
+    { label: t('statStudents'), value: c.students, key: 'students' },
+    { label: t('programs'), value: c.programs, key: 'programs' },
   ];
+
+  const roleLabel = user
+    ? ROLE_LABELS[user.role]?.[locale === 'ar' ? 'ar' : 'en'] ?? user.role
+    : '';
 
   return (
     <div className="space-y-6">
@@ -83,13 +88,9 @@ export default async function Overview() {
       </div>
       <div className="card p-6">
         <p className="text-sm text-muted-foreground">
-          الدور الحالي / Current role:{' '}
-          <span className="font-medium text-foreground">{user?.role}</span>
+          {t('currentRole')}: <span className="font-medium text-foreground">{roleLabel}</span>
         </p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          استخدم القائمة الجانبية للوصول إلى الميزات المتاحة لدورك. كل الصلاحيات
-          مُطبَّقة على الخادم عبر سياسات RLS.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{t('roleHint')}</p>
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ export default async function Home({
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-secondary/60 to-background" />
         <div className="container grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
           <div className="animate-fade-in">
-            <p className="mb-3 text-sm font-medium text-accent">{t('brand.full')} — قطر · 2017</p>
+            <p className="mb-3 text-sm font-medium text-accent">{t('brand.full')} — {t('home.heroEyebrow')}</p>
             <h1 className="text-4xl font-bold leading-tight text-primary md:text-5xl">
               {t('home.heroTitle')}
             </h1>

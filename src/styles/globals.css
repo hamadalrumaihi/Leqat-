@@ -56,6 +56,15 @@
     unicode-bidi: isolate;
     display: inline-block;
   }
+  /* Native checkboxes/radios render 13px by default — too small to tap
+     and off-brand. One base rule instead of per-usage classes. */
+  input[type='checkbox'],
+  input[type='radio'] {
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: hsl(var(--primary));
+    flex-shrink: 0;
+  }
 }
 
 @layer components {
