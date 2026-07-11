@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
 import { effectiveRole } from '@/lib/utils';
 import { ROSTER_SELECT, mapRosterRows, type RosterStudent } from '@/lib/roster';
@@ -70,9 +70,10 @@ export async function removeStudentFromGroup(enrollmentId: string, groupId: stri
   return { success: true };
 }
 
-// Staff correcting a parent's contact number. Parent profiles aren't
-// writable by supervisors under RLS, so this runs with the service
-// role and is audit-logged. Gated to staff roles.
+// Staff correcting a parent's contact number. Runs as the user via
+// the update_parent_phone RPC (0010), which verifies server-side that
+// the caller staffs a group/program containing one of that parent's
+// children — no service role, no all-parents write surface.
 export async function updateParentPhone(parentId: string, phone: string) {
   const user = await getCurrentUser();
   if (!user || !STAFF.includes(effectiveRole(user.role))) {
@@ -81,9 +82,14 @@ export async function updateParentPhone(parentId: string, phone: string) {
   const clean = phone.trim();
   if (!clean) return { error: 'empty' };
 
-  const admin = createAdminClient();
-  const { error } = await admin.from('profiles').update({ phone: clean }).eq('id', parentId);
-  if (error) return { error: error.message };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('update_parent_phone', {
+    parent: parentId,
+    new_phone: clean,
+  });
+  if (error) {
+    return { error: error.message.includes('not_authorized') ? 'forbidden' : error.message };
+  }
 
   await audit('parent.phone_update', 'profiles', parentId);
   revalidatePath('/[locale]/dashboard/groups/[id]', 'page');
