@@ -2,7 +2,7 @@ import { getLocale } from 'next-intl/server';
 import { CalendarClock } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { effectiveRole, formatTime12, dualDate } from '@/lib/utils';
+import { effectiveRole, formatTime12, dualDate, qatarToday, qatarNowMinutes } from '@/lib/utils';
 
 const STAFF = ['executive', 'program_planner', 'group_supervisor', 'assistant_supervisor'];
 
@@ -22,8 +22,7 @@ export async function NextEventWidget() {
   const locale = (await getLocale()) as 'ar' | 'en';
   const pref = locale === 'ar' ? 'arabic' : 'latin';
   const supabase = await createClient();
-  const now = new Date();
-  const todayStr = now.toISOString().slice(0, 10);
+  const todayStr = qatarToday();
 
   const { data: session } = await supabase
     .from('sessions')
@@ -36,7 +35,7 @@ export async function NextEventWidget() {
   if (!session) return null;
 
   const isToday = session.date === todayStr;
-  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const nowMin = qatarNowMinutes();
 
   // Next station today, derived from start_time + cumulative durations.
   let nextStation: { title: string; hhmm: string; isPrayer: boolean } | null = null;

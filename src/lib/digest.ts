@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { qatarToday } from '@/lib/utils';
 
 // Builds the Thursday weekly-digest email body for one parent.
 // Uses a service-role client (cron context, no user session) so it
@@ -20,7 +21,7 @@ export async function buildParentDigest(
   const groupIds = [...new Set((enrollments ?? []).map((e) => e.group_id))];
   if (groupIds.length === 0) return null;
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = qatarToday();
   const [{ data: report }, { data: next }] = await Promise.all([
     admin
       .from('reports')

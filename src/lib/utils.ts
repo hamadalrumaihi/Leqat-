@@ -33,6 +33,29 @@ export function dualDate(input: string | Date, locale: 'ar' | 'en' = 'ar') {
 export const BRAND_GREEN = '#1F5C3A';
 
 /**
+ * Today's date (YYYY-MM-DD) in Qatar time. toISOString() is UTC, so
+ * "today" flipped at 03:00 Doha time and evening sessions compared
+ * against the wrong day.
+ */
+export function qatarToday(): string {
+  // en-CA formats as YYYY-MM-DD.
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Qatar' }).format(new Date());
+}
+
+/** Current wall-clock minutes in Qatar (for station/next-event math). */
+export function qatarNowMinutes(): number {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Qatar',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date());
+  const h = Number(parts.find((p) => p.type === 'hour')?.value ?? 0);
+  const m = Number(parts.find((p) => p.type === 'minute')?.value ?? 0);
+  return h * 60 + m;
+}
+
+/**
  * The three planner-tier roles act as one effective role in the UI.
  * Everything else maps to itself.
  */
