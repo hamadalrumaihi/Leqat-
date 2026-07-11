@@ -25,6 +25,13 @@ export const metadata: Metadata = {
   description:
     'منصة برنامج مهندس الحياة التربوي — قطر. بناء الشخصية عبر SQ · EQ · IQ · PQ وإطار REPEAT.',
   manifest: '/manifest.webmanifest',
+  // The compass SVG is the only icon asset; point every icon slot at it
+  // so there is no /favicon.ico 404 on each page load.
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    shortcut: ['/icon.svg'],
+    apple: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+  },
   appleWebApp: { capable: true, title: 'برنامج مهندس الحياة', statusBarStyle: 'default' },
 };
 
