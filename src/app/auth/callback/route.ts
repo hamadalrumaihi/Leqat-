@@ -17,9 +17,12 @@ function relativeRedirect(path: string) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
-  // Same-origin relative paths only — never redirect off-site.
+  // Same-origin relative paths only — never redirect off-site. Require
+  // a leading slash followed by a normal path char: this rejects both
+  // `//host` (protocol-relative) and `/\host` (backslash variant that
+  // browsers normalize to an absolute URL).
   const rawNext = searchParams.get('next') ?? '/dashboard';
-  const next = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/dashboard';
+  const next = /^\/[^/\\]/.test(rawNext) ? rawNext : '/dashboard';
 
   if (code) {
     const supabase = await createClient();

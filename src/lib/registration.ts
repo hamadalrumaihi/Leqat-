@@ -38,10 +38,14 @@ async function findParentIdByEmail(
   // profiles is 1:1 with auth.users (signup trigger + invite upsert)
   // and has an email column — an indexed O(1) lookup, unlike
   // auth.admin.listUsers() which only returns the first page.
+  // Exact match, NOT ilike: emails are stored lowercased (GoTrue +
+  // the upsert below), and a LIKE pattern would let a submitted
+  // `%@%` / `_` match an arbitrary existing profile — which is then
+  // overwritten via the service-role client further down.
   const { data } = await sb
     .from('profiles')
     .select('id')
-    .ilike('email', email)
+    .eq('email', email)
     .limit(1)
     .maybeSingle();
   return (data as { id: string } | null)?.id ?? null;
@@ -82,6 +86,7 @@ export async function redeemInvite(input: RedeemInput) {
     // 2. Find or create the parent auth user.
     const email = input.parentEmail.toLowerCase().trim();
     let parentId = await findParentIdByEmail(sb, email);
+    let isNew = false;
 
     if (!parentId) {
       const { data: created, error: createErr } = await sb.auth.admin.createUser({
@@ -95,9 +100,10 @@ export async function redeemInvite(input: RedeemInput) {
         if (!parentId) throw new Error('email_in_use_or_invalid');
       } else {
         parentId = created.user.id;
+        isNew = true;
       }
     }
-    return await completeRedemption(sb, invite, input, email, parentId);
+    return await completeRedemption(sb, invite, input, email, parentId, isNew);
   } catch (e) {
     await releaseClaim();
     throw e;
@@ -110,16 +116,21 @@ async function completeRedemption(
   input: RedeemInput,
   email: string,
   parentId: string,
+  isNew: boolean,
 ) {
 
   // 2. Upsert profile (the signup trigger may have created it already).
-  await sb.from('profiles').upsert({
+  // Never overwrite the role of an already-existing account — a parent
+  // who is also staff must not be silently downgraded to 'parent' by
+  // re-redeeming an invite. Only a freshly created user gets the role.
+  const profile: Record<string, unknown> = {
     id: parentId,
-    role: 'parent',
     full_name_ar: input.parentName,
     email,
     phone: input.parentPhone,
-  });
+  };
+  if (isNew) profile.role = 'parent';
+  await sb.from('profiles').upsert(profile);
 
   // 3. Child + enrollment (group_id stays null; supervisor assigns later).
   const { data: student, error: studentErr } = await sb
