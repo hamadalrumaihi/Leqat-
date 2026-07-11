@@ -26,19 +26,28 @@ export function PickupParent({
   useEffect(() => {
     if (status !== 'waiting') return;
     const sb = supabase.current;
-    const ch = sb
-      .channel(`pickup:${sessionId}`)
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'pickup_status', filter: `session_id=eq.${sessionId}` },
-        (payload) => {
-          const r = payload.new as Record<string, unknown>;
-          if (r.student_id === studentId && r.released_at) setStatus('released');
-        },
-      )
-      .subscribe();
+    let ch: ReturnType<typeof sb.channel> | null = null;
+    let cancelled = false;
+    (async () => {
+      // The join must carry the user JWT or the RLS-gated subscription
+      // is created as anon and rejected server-side.
+      await sb.realtime.setAuth();
+      if (cancelled) return;
+      ch = sb
+        .channel(`pickup:${sessionId}`)
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'pickup_status', filter: `session_id=eq.${sessionId}` },
+          (payload) => {
+            const r = payload.new as Record<string, unknown>;
+            if (r.student_id === studentId && r.released_at) setStatus('released');
+          },
+        )
+        .subscribe();
+    })();
     return () => {
-      sb.removeChannel(ch);
+      cancelled = true;
+      if (ch) sb.removeChannel(ch);
     };
   }, [status, sessionId, studentId]);
 
@@ -133,7 +142,13 @@ export function PickupQueue({ sessionId, initial }: { sessionId: string; initial
 
   useEffect(() => {
     const sb = supabase.current;
-    const ch = sb
+    let ch: ReturnType<typeof sb.channel> | null = null;
+    let cancelled = false;
+    (async () => {
+      // Same as above: authenticate the socket before joining.
+      await sb.realtime.setAuth();
+      if (cancelled) return;
+      ch = sb
       .channel(`pickupq:${sessionId}`)
       .on(
         'postgres_changes',
@@ -157,12 +172,29 @@ export function PickupQueue({ sessionId, initial }: { sessionId: string; initial
                     },
                   ],
             );
+            // The change payload carries only IDs — resolve the child's
+            // name so the gate staff know who is being picked up.
+            void sb
+              .from('students')
+              .select('full_name_ar')
+              .eq('id', r.student_id as string)
+              .single()
+              .then(({ data }) => {
+                if (!data) return;
+                setRows((prev) =>
+                  prev.map((x) =>
+                    x.id === r.id ? { ...x, studentName: data.full_name_ar as string } : x,
+                  ),
+                );
+              });
           }
         },
       )
       .subscribe();
+    })();
     return () => {
-      sb.removeChannel(ch);
+      cancelled = true;
+      if (ch) sb.removeChannel(ch);
     };
   }, [sessionId]);
 

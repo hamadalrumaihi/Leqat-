@@ -74,6 +74,29 @@ migration.
   re-run. **Claim: publication defect proven + fixed; live app-level
   pickup delivery is a pending smoke-test, not verified here.**
 
+### Phase 3 resolution — it WAS an app defect
+
+The two-browser test (`scripts/pickup-realtime-test.mjs`) reproduced
+the failure in the real UI and WebSocket-frame capture found the root
+cause: the browser client never forwarded the user JWT to the realtime
+socket. Login happens in a server action, so the browser only ever
+emits `INITIAL_SESSION` — which supabase-js does **not** propagate to
+realtime (only `SIGNED_IN`/`TOKEN_REFRESHED` are). Every RLS-gated
+subscription therefore joined as `anon` and was rejected server-side
+with `P0001 invalid column for filter …` (anon has no column privilege
+on the table, by design). The Phase 2 harness "auth-wiring difference"
+theory was wrong; the app had the same bug on every realtime surface
+(pickup, chat).
+
+Fixed by awaiting `realtime.setAuth()` before each `channel(...)
+.subscribe()` (plus a prime in `createClient`). A second latent defect
+surfaced immediately after: **staff had no UPDATE policy on
+`pickup_status`**, so "تم التسليم" was a silent 0-row no-op hidden by
+the optimistic UI — fixed in migration 0014. Final state, proven live
+through the real login → middleware → RLS chain: parent tap →
+supervisor queue in ~257 ms; supervisor release → parent confirmation
+in ~511 ms (filtered UPDATE, exercising 0012's replica identity).
+
 ## Observations for later phases
 
 - **[WAIT-MIGRATION]** Manager/Founder, shifts, divisions, assistant
