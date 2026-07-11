@@ -1,4 +1,4 @@
-# لِ.قات — Le.Qat · Life Engineer Program Platform
+# برنامج مهندس الحياة — Life Engineer Program
 
 منصة برنامج مهندس الحياة التربوي — قطر. Responsive, Arabic-primary (RTL),
 installable PWA built with Next.js + Supabase.

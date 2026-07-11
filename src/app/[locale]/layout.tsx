@@ -21,11 +21,11 @@ const latin = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'لِ.قات — برنامج مهندس الحياة | Le.Qat',
+  title: 'برنامج مهندس الحياة — Life Engineer Program',
   description:
     'منصة برنامج مهندس الحياة التربوي — قطر. بناء الشخصية عبر SQ · EQ · IQ · PQ وإطار REPEAT.',
   manifest: '/manifest.webmanifest',
-  appleWebApp: { capable: true, title: 'Le.Qat', statusBarStyle: 'default' },
+  appleWebApp: { capable: true, title: 'برنامج مهندس الحياة', statusBarStyle: 'default' },
 };
 
 export const viewport: Viewport = {

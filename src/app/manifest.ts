@@ -2,8 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'لِ.قات — برنامج مهندس الحياة',
-    short_name: 'Le.Qat',
+    name: 'برنامج مهندس الحياة — Life Engineer Program',
+    // Official Arabic name; launchers truncate long labels themselves.
+    short_name: 'برنامج مهندس الحياة',
     description: 'منصة برنامج مهندس الحياة التربوي',
     start_url: '/',
     display: 'standalone',

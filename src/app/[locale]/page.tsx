@@ -205,7 +205,7 @@ export default async function Home({
           </div>
         </div>
         <div className="border-t border-white/15 py-4 text-center text-xs text-primary-foreground/70">
-          © 2017–2026 Le.Qat — برنامج مهندس الحياة
+          © 2017–2026 برنامج مهندس الحياة — Life Engineer Program
         </div>
       </footer>
     </div>

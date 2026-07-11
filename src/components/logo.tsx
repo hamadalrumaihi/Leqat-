@@ -2,7 +2,7 @@
 // formation → values forming → character strengthening → empowerment.
 export function Logo({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} role="img" aria-label="Le.Qat">
+    <svg viewBox="0 0 64 64" className={className} role="img" aria-label="برنامج مهندس الحياة">
       <circle cx="32" cy="32" r="30" fill="none" stroke="#8A8F98" strokeWidth="2" />
       <circle cx="32" cy="32" r="22" fill="none" stroke="#A7D7A0" strokeWidth="3" />
       <circle cx="32" cy="32" r="13" fill="none" stroke="#1F5C3A" strokeWidth="3" />
