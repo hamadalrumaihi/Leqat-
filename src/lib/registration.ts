@@ -181,7 +181,7 @@ async function completeRedemption(
     await sb.auth.admin.generateLink({
       type: 'magiclink',
       email,
-      options: { redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/ar/dashboard` },
+      options: { redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/dashboard` },
     });
   } catch {
     // Email delivery not configured — parent can use the login page's
