@@ -38,12 +38,21 @@ export default async function ChatPage({
 
   let initial: Parameters<typeof ChatRoom>[0]['initial'] = [];
   if (selected) {
-    const { data: messages } = await supabase
-      .from('chat_messages')
-      .select('id, body, sender_id, is_announcement, moderation, media_path, media_kind, created_at, profiles(full_name_ar)')
-      .eq('channel_id', selected.id)
-      .order('created_at', { ascending: true })
-      .limit(100);
+    // Sender names come from a names-only directory (id + names of
+    // channel peers), never an embedded profiles join — that would
+    // expose co-members' email/phone. See migration 0015.
+    const [{ data: messages }, { data: dir }] = await Promise.all([
+      supabase
+        .from('chat_messages')
+        .select('id, body, sender_id, is_announcement, moderation, media_path, media_kind, created_at')
+        .eq('channel_id', selected.id)
+        .order('created_at', { ascending: true })
+        .limit(100),
+      supabase.rpc('channel_peer_directory'),
+    ]);
+    const names = new Map(
+      ((dir as { id: string; full_name_ar: string }[] | null) ?? []).map((d) => [d.id, d.full_name_ar]),
+    );
     initial = (messages ?? []).map((m) => ({
       id: m.id as string,
       body: (m.body as string) ?? '',
@@ -53,7 +62,7 @@ export default async function ChatPage({
       mediaPath: (m.media_path as string) ?? null,
       mediaKind: (m.media_kind as string) ?? null,
       createdAt: m.created_at as string,
-      senderName: (m.profiles as unknown as { full_name_ar: string } | null)?.full_name_ar ?? '—',
+      senderName: names.get(m.sender_id as string) ?? '—',
     }));
   }
 

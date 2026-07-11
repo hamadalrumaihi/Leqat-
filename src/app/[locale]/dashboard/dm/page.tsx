@@ -36,12 +36,20 @@ export default async function DmPage({
     initial: Parameters<typeof ChatRoom>[0]['initial'];
   };
   if (c) {
-    const { data: msgs } = await supabase
-      .from('chat_messages')
-      .select('id, body, sender_id, is_announcement, moderation, media_path, media_kind, created_at, profiles(full_name_ar)')
-      .eq('channel_id', c)
-      .order('created_at', { ascending: true })
-      .limit(100);
+    // Names via the names-only directory RPC, not an embedded profiles
+    // join (which would expose the peer's email/phone). See 0015.
+    const [{ data: msgs }, { data: dir }] = await Promise.all([
+      supabase
+        .from('chat_messages')
+        .select('id, body, sender_id, is_announcement, moderation, media_path, media_kind, created_at')
+        .eq('channel_id', c)
+        .order('created_at', { ascending: true })
+        .limit(100),
+      supabase.rpc('channel_peer_directory'),
+    ]);
+    const names = new Map(
+      ((dir as { id: string; full_name_ar: string }[] | null) ?? []).map((d) => [d.id, d.full_name_ar]),
+    );
     const ch = channels.find((x) => x.id === c);
     if (ch) {
       room = {
@@ -56,8 +64,7 @@ export default async function DmPage({
           mediaPath: (m.media_path as string) ?? null,
           mediaKind: (m.media_kind as string) ?? null,
           createdAt: m.created_at as string,
-          senderName:
-            (m.profiles as unknown as { full_name_ar: string } | null)?.full_name_ar ?? '—',
+          senderName: names.get(m.sender_id as string) ?? '—',
         })),
       };
     }
