@@ -20,7 +20,9 @@ export async function arriveAction(_: unknown, formData: FormData) {
     picked_up_by_phone: String(formData.get('person_phone') ?? '') || null,
     arrived_at: new Date().toISOString(),
   });
-  if (error) return { error: error.message };
+  // 23505 = the pickup_one_open_arrival guard (0011): the parent is
+  // already announced for this child — a double-tap, treat as success.
+  if (error && error.code !== '23505') return { error: error.message };
   return { ok: true };
 }
 
