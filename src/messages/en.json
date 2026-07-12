@@ -1,7 +1,6 @@
 {
   "brand": {
     "name": "Life Engineer Program",
-    "short": "Le.Qat",
     "full": "Life Engineer Educational Program",
     "tagline": "We engineer life with values"
   },
@@ -35,15 +34,28 @@
       "We engineer life through values"
     ],
     "cta": "Register now",
-    "ctaSecondary": "Explore programs"
+    "ctaSecondary": "Explore programs",
+    "heroEyebrow": "Qatar · since 2017"
   },
   "quotients": {
     "title": "The Four Quotients",
     "subtitle": "The program's philosophy is built on four quotients and the REPEAT framework",
-    "SQ": { "name": "Spiritual (SQ)", "value": "Ihsan" },
-    "EQ": { "name": "Emotional (EQ)", "value": "Self-discipline" },
-    "IQ": { "name": "Intellectual (IQ)", "value": "Learning" },
-    "PQ": { "name": "Physical (PQ)", "value": "Health" },
+    "SQ": {
+      "name": "Spiritual (SQ)",
+      "value": "Ihsan"
+    },
+    "EQ": {
+      "name": "Emotional (EQ)",
+      "value": "Self-discipline"
+    },
+    "IQ": {
+      "name": "Intellectual (IQ)",
+      "value": "Learning"
+    },
+    "PQ": {
+      "name": "Physical (PQ)",
+      "value": "Health"
+    },
     "repeat": "REPEAT — an educational method that repeats a value until it settles as behaviour."
   },
   "palette": {
@@ -101,7 +113,12 @@
     "noAccount": "No account?",
     "haveAccount": "Have an account?",
     "error": "Could not complete the request. Check your details.",
-    "demoAccounts": "Demo accounts (password: Leqat@2025)"
+    "demoAccounts": "Demo accounts (password: Leqat@2025)",
+    "magicTab": "Sign-in link",
+    "passwordTab": "Password",
+    "sendMagic": "Send sign-in link",
+    "magicSent": "Check your email. The link expires within an hour.",
+    "magicHint": "We email you a sign-in link — no password needed."
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -139,7 +156,15 @@
     "analytics": "Analytics",
     "staff": "Staff",
     "myChild": "My child",
-    "settings": "Settings"
+    "settings": "Settings",
+    "statSessions": "Sessions",
+    "statStudents": "Students",
+    "currentRole": "Your role",
+    "roleHint": "Use the side menu to reach the features available for your role.",
+    "attnTitle": "Needs attention",
+    "attnUnassigned": "students awaiting group assignment",
+    "attnPending": "registrations pending confirmation",
+    "attnInvites": "invite links expiring within 3 days"
   },
   "attendance": {
     "title": "Attendance",

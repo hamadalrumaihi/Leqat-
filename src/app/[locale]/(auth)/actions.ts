@@ -52,7 +52,7 @@ export async function sendMagicLinkAction(_: unknown, formData: FormData) {
     email,
     options: {
       shouldCreateUser: false,
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/ar/dashboard`,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/auth/callback?next=/dashboard`,
     },
   });
   if (error) {

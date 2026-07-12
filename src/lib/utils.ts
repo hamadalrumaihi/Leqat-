@@ -7,6 +7,15 @@ export function cn(...inputs: ClassValue[]) {
 
 const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
 
+// Soft group-size guidance: warn above this, NEVER block. Roster
+// assignment has no hard cap by design — this only surfaces a hint.
+export const RECOMMENDED_GROUP_SIZE = 14;
+
+export const DIVISION_LABELS: Record<string, { ar: string; en: string }> = {
+  younger: { ar: 'الفئة الأصغر', en: 'Younger' },
+  teen: { ar: 'فئة اليافعين', en: 'Teen' },
+};
+
 /** Render a number using Arabic-Indic or Latin digits per preference. */
 export function toNumerals(value: number | string, pref: 'arabic' | 'latin' = 'arabic') {
   const s = String(value);
@@ -33,25 +42,59 @@ export function dualDate(input: string | Date, locale: 'ar' | 'en' = 'ar') {
 export const BRAND_GREEN = '#1F5C3A';
 
 /**
- * The three planner-tier roles act as one effective role in the UI.
- * Everything else maps to itself.
+ * Today's date (YYYY-MM-DD) in Qatar time. toISOString() is UTC, so
+ * "today" flipped at 03:00 Doha time and evening sessions compared
+ * against the wrong day.
+ */
+export function qatarToday(): string {
+  // en-CA formats as YYYY-MM-DD.
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Qatar' }).format(new Date());
+}
+
+/** Current wall-clock minutes in Qatar (for station/next-event math). */
+export function qatarNowMinutes(): number {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Qatar',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date());
+  const h = Number(parts.find((p) => p.type === 'hour')?.value ?? 0);
+  const m = Number(parts.find((p) => p.type === 'minute')?.value ?? 0);
+  return h * 60 + m;
+}
+
+/**
+ * Collapse roles to the effective set the UI/gates reason about:
+ *   founder | executive | manager | group_supervisor |
+ *   assistant_supervisor | parent | student
+ * The legacy planner trio (program_supervisor/manager/planner) and the
+ * new `manager` all resolve to `manager` — the planner tier's duties
+ * became the Manager role. `founder` stays distinct (top of hierarchy);
+ * everything else maps to itself.
  */
 export function effectiveRole(role: string): string {
   if (
     role === 'program_supervisor' ||
     role === 'program_manager' ||
-    role === 'program_planner'
+    role === 'program_planner' ||
+    role === 'manager'
   ) {
-    return 'program_planner';
+    return 'manager';
   }
   return role;
 }
 
+const MANAGER_LABEL = { ar: 'مدير', en: 'Manager' };
+
 export const ROLE_LABELS: Record<string, { ar: string; en: string }> = {
+  founder: { ar: 'المؤسّس', en: 'Founder' },
   executive: { ar: 'مشرف تنفيذي عام', en: 'Executive Supervisor' },
-  program_planner: { ar: 'مخطط البرنامج', en: 'Program Planner' },
-  program_supervisor: { ar: 'مخطط البرنامج', en: 'Program Planner' },
-  program_manager: { ar: 'مخطط البرنامج', en: 'Program Planner' },
+  manager: MANAGER_LABEL,
+  // Legacy planner-tier values all render as Manager (compat aliases).
+  program_planner: MANAGER_LABEL,
+  program_supervisor: MANAGER_LABEL,
+  program_manager: MANAGER_LABEL,
   group_supervisor: { ar: 'مشرف مجموعة', en: 'Group Supervisor' },
   assistant_supervisor: { ar: 'مشرف مساعد', en: 'Assistant Supervisor' },
   parent: { ar: 'ولي أمر', en: 'Parent' },

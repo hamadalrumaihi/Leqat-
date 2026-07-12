@@ -2,8 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'لِ.قات — برنامج مهندس الحياة',
-    short_name: 'Le.Qat',
+    name: 'برنامج مهندس الحياة — Life Engineer Program',
+    // Official Arabic name; launchers truncate long labels themselves.
+    short_name: 'برنامج مهندس الحياة',
     description: 'منصة برنامج مهندس الحياة التربوي',
     start_url: '/',
     display: 'standalone',
@@ -12,9 +13,10 @@ export default function manifest(): MetadataRoute.Manifest {
     dir: 'rtl',
     lang: 'ar',
     icons: [
+      // Scalable SVG covers all launcher sizes; PNG variants were
+      // referenced but never shipped (install-time 404s), so removed.
       { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-      { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
     ],
   };
 }

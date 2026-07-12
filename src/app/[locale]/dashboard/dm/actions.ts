@@ -2,20 +2,21 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 /**
  * Start a staff↔student direct message. The two-adult rule is
  * enforced here: a second supervisor from the same group is added as
- * a CC member so no staff↔student DM is ever 1:1.
+ * a CC member so no staff↔student DM is ever 1:1. Re-invoking for the
+ * same student reuses the caller's existing channel (0011 records
+ * student_id on the channel) instead of piling up duplicates.
  */
 export async function createDmAction(
   _: unknown,
   formData: FormData,
 ): Promise<{ channelId?: string; error?: string }> {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'useDm')) return { error: 'forbidden' };
 
   const studentId = String(formData.get('student_id'));
   const supabase = await createClient();
@@ -26,6 +27,19 @@ export async function createDmAction(
     .eq('id', studentId)
     .single();
   if (!student) return { error: 'no_student' };
+
+  // Reuse the caller's existing DM with this student, if any.
+  const { data: existingDm } = await supabase
+    .from('chat_members')
+    .select('channel_id, chat_channels!inner(id, type, student_id)')
+    .eq('profile_id', user.id)
+    .eq('chat_channels.type', 'dm')
+    .eq('chat_channels.student_id', studentId)
+    .limit(1)
+    .maybeSingle();
+  if (existingDm) {
+    return { channelId: (existingDm as { channel_id: string }).channel_id };
+  }
 
   const { data: enr } = await supabase
     .from('enrollments')
@@ -54,6 +68,7 @@ export async function createDmAction(
     .insert({
       type: 'dm',
       group_id: groupId,
+      student_id: studentId,
       is_staff_student: true,
       cc_profile_id: ccId,
       title_ar: `محادثة خاصة — ${(student as { full_name_ar: string }).full_name_ar}`,

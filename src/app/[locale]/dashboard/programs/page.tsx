@@ -43,7 +43,7 @@ export default async function ProgramsPage() {
                 </span>
                 <Link
                   href={`/dashboard/programs/${p.id as string}`}
-                  className="text-xs font-medium text-primary hover:underline"
+                  className="-my-2 py-2 text-xs font-medium text-primary hover:underline"
                 >
                   روابط التسجيل ←
                 </Link>

@@ -2,7 +2,7 @@
   "name": "leqat-platform",
   "version": "1.0.0",
   "private": true,
-  "description": "Le.Qat — Life Engineer Educational Program Platform",
+  "description": "Life Engineer Program (برنامج مهندس الحياة) platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

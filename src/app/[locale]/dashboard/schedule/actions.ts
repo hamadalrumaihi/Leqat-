@@ -3,16 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-import { effectiveRole } from '@/lib/utils';
-
-const PLANNER = ['executive', 'program_planner'];
-function canPlan(role: string) {
-  return PLANNER.includes(effectiveRole(role));
-}
+import { can } from '@/lib/roles';
 
 export async function createSessionAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !canPlan(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const supabase = await createClient();
 
   const { error } = await supabase.from('sessions').insert({
@@ -31,7 +26,7 @@ export async function createSessionAction(_: unknown, formData: FormData) {
 
 export async function publishSessionAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !canPlan(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const supabase = await createClient();
   const sessionId = String(formData.get('session_id'));
   const { error } = await supabase
@@ -46,7 +41,7 @@ export async function publishSessionAction(_: unknown, formData: FormData) {
 
 export async function createStationAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !canPlan(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const supabase = await createClient();
 
   const isPrayer = formData.get('is_prayer') === 'on';

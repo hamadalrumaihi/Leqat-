@@ -21,11 +21,18 @@ const latin = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'لِ.قات — برنامج مهندس الحياة | Le.Qat',
+  title: 'برنامج مهندس الحياة — Life Engineer Program',
   description:
     'منصة برنامج مهندس الحياة التربوي — قطر. بناء الشخصية عبر SQ · EQ · IQ · PQ وإطار REPEAT.',
   manifest: '/manifest.webmanifest',
-  appleWebApp: { capable: true, title: 'Le.Qat', statusBarStyle: 'default' },
+  // The compass SVG is the only icon asset; point every icon slot at it
+  // so there is no /favicon.ico 404 on each page load.
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    shortcut: ['/icon.svg'],
+    apple: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+  },
+  appleWebApp: { capable: true, title: 'برنامج مهندس الحياة', statusBarStyle: 'default' },
 };
 
 export const viewport: Viewport = {

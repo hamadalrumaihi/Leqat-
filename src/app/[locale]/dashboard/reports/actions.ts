@@ -4,14 +4,20 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
 import { draftReportArabic, type StationLite } from '@/lib/ai';
-import type { AppRole } from '@/lib/supabase/database.types';
+import { effectiveRole } from '@/lib/utils';
 
-// Upward workflow. Each transition is allowed for exactly one role —
-// enforced here on the server, in addition to RLS on the row.
-const NEXT_STAGE: Record<string, { to: string; role: AppRole }> = {
+// Upward workflow — 3 stages under the new hierarchy (option 8a):
+//   draft → submitted_manager (Group Supervisor)
+//         → submitted_executive (Manager)
+//         → approved (Executive/Founder)
+// The retired middle stage `submitted_supervisor` is kept only as a
+// compat entry so any in-flight report already sitting there still
+// advances (to submitted_executive, by a Manager). `role` values are
+// EFFECTIVE roles, compared through effectiveRole.
+const NEXT_STAGE: Record<string, { to: string; role: string }> = {
   draft: { to: 'submitted_manager', role: 'group_supervisor' },
-  submitted_manager: { to: 'submitted_supervisor', role: 'program_manager' },
-  submitted_supervisor: { to: 'submitted_executive', role: 'program_supervisor' },
+  submitted_manager: { to: 'submitted_executive', role: 'manager' },
+  submitted_supervisor: { to: 'submitted_executive', role: 'manager' }, // compat
   submitted_executive: { to: 'approved', role: 'executive' },
 };
 
@@ -86,8 +92,11 @@ export async function advanceReportAction(_: unknown, formData: FormData) {
   const step = NEXT_STAGE[stage];
   if (!step) return { error: 'terminal' };
 
-  // Server-side role gate. Executives may advance any stage.
-  if (user.role !== step.role && user.role !== 'executive') {
+  // Server-side role gate (effective roles). Executive and Founder may
+  // advance any stage; otherwise the caller's effective role must match
+  // the transition's designated approver.
+  const eff = effectiveRole(user.role);
+  if (eff !== step.role && eff !== 'executive' && eff !== 'founder') {
     return { error: 'forbidden' };
   }
 

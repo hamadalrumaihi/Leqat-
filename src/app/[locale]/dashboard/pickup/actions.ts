@@ -2,8 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-
-const STAFF = ['executive', 'program_planner', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function arriveAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
@@ -20,13 +19,15 @@ export async function arriveAction(_: unknown, formData: FormData) {
     picked_up_by_phone: String(formData.get('person_phone') ?? '') || null,
     arrived_at: new Date().toISOString(),
   });
-  if (error) return { error: error.message };
+  // 23505 = the pickup_one_open_arrival guard (0011): the parent is
+  // already announced for this child — a double-tap, treat as success.
+  if (error && error.code !== '23505') return { error: error.message };
   return { ok: true };
 }
 
 export async function releaseAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'staffPickup')) return { error: 'forbidden' };
   const supabase = await createClient();
   const id = String(formData.get('pickup_id'));
   const { error } = await supabase

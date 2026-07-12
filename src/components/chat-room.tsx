@@ -53,7 +53,14 @@ export function ChatRoom({
 
   useEffect(() => {
     const sb = supabase.current;
-    const ch = sb
+    let ch: ReturnType<typeof sb.channel> | null = null;
+    let cancelled = false;
+    (async () => {
+      // The join must carry the user JWT or the RLS-gated subscription
+      // is created as anon and rejected server-side.
+      await sb.realtime.setAuth();
+      if (cancelled) return;
+      ch = sb
       .channel(`room:${channelId}`)
       .on(
         'postgres_changes',
@@ -84,8 +91,10 @@ export function ChatRoom({
         },
       )
       .subscribe();
+    })();
     return () => {
-      sb.removeChannel(ch);
+      cancelled = true;
+      if (ch) sb.removeChannel(ch);
     };
   }, [channelId]);
 

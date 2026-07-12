@@ -1,11 +1,11 @@
 import { getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { dualDate } from '@/lib/utils';
+import { dualDate, qatarToday } from '@/lib/utils';
 
 export default async function DigestPage() {
   const locale = (await getLocale()) as 'ar' | 'en';
   const supabase = await createClient();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = qatarToday();
 
   const [{ data: nextSession }, { data: lastReport }, { data: lastSession }] =
     await Promise.all([

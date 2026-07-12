@@ -3,8 +3,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { Link } from '@/i18n/routing';
 import { ChatRoom } from '@/components/chat-room';
 import { StartDm } from '@/components/start-dm';
-
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export default async function DmPage({
   searchParams,
@@ -14,7 +13,7 @@ export default async function DmPage({
   const { c } = await searchParams;
   const supabase = await createClient();
   const user = await getCurrentUser();
-  const isStaff = user ? STAFF.includes(user.role) : false;
+  const isStaff = can(user?.role, 'useDm');
 
   // DM channels the user is a member of.
   const { data: memberships } = await supabase
@@ -37,12 +36,20 @@ export default async function DmPage({
     initial: Parameters<typeof ChatRoom>[0]['initial'];
   };
   if (c) {
-    const { data: msgs } = await supabase
-      .from('chat_messages')
-      .select('id, body, sender_id, is_announcement, moderation, media_path, media_kind, created_at, profiles(full_name_ar)')
-      .eq('channel_id', c)
-      .order('created_at', { ascending: true })
-      .limit(100);
+    // Names via the names-only directory RPC, not an embedded profiles
+    // join (which would expose the peer's email/phone). See 0015.
+    const [{ data: msgs }, { data: dir }] = await Promise.all([
+      supabase
+        .from('chat_messages')
+        .select('id, body, sender_id, is_announcement, moderation, media_path, media_kind, created_at')
+        .eq('channel_id', c)
+        .order('created_at', { ascending: true })
+        .limit(100),
+      supabase.rpc('channel_peer_directory'),
+    ]);
+    const names = new Map(
+      ((dir as { id: string; full_name_ar: string }[] | null) ?? []).map((d) => [d.id, d.full_name_ar]),
+    );
     const ch = channels.find((x) => x.id === c);
     if (ch) {
       room = {
@@ -57,8 +64,7 @@ export default async function DmPage({
           mediaPath: (m.media_path as string) ?? null,
           mediaKind: (m.media_kind as string) ?? null,
           createdAt: m.created_at as string,
-          senderName:
-            (m.profiles as unknown as { full_name_ar: string } | null)?.full_name_ar ?? '—',
+          senderName: names.get(m.sender_id as string) ?? '—',
         })),
       };
     }

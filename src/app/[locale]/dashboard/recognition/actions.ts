@@ -3,12 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser, audit } from '@/lib/auth';
-
-const STAFF = ['executive', 'group_supervisor', 'assistant_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function awardRecognitionAction(_: unknown, formData: FormData) {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!user || !can(user.role, 'awardRecognition')) return { error: 'forbidden' };
 
   const studentId = String(formData.get('student_id'));
   const valueAr = String(formData.get('value_ar') ?? '').trim();

@@ -2,15 +2,14 @@
 
 import { getCurrentUser, audit } from '@/lib/auth';
 import { signSubstituteToken } from '@/lib/token';
-
-const STAFF = ['executive', 'program_supervisor', 'program_manager', 'group_supervisor'];
+import { can } from '@/lib/roles';
 
 export async function createSubstituteLinkAction(
   _: unknown,
   formData: FormData,
 ): Promise<{ url?: string; error?: string }> {
   const user = await getCurrentUser();
-  if (!user || !STAFF.includes(user.role)) return { error: 'forbidden' };
+  if (!can(user?.role, 'manageSubstitute')) return { error: 'forbidden' };
 
   const sessionId = String(formData.get('session_id'));
   try {
