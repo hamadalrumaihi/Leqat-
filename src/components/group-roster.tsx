@@ -12,20 +12,13 @@ import {
 } from '@/app/[locale]/dashboard/groups/[id]/actions';
 import type { RosterStudent } from '@/lib/roster';
 
-const AGE: Record<string, string> = {
-  baraem: 'براعم',
-  nashia: 'ناشئة',
-  fityan: 'فتيان',
-  shabab: 'شباب',
-  university: 'جامعي',
-  parents: 'والدون',
-};
+import { AGE_LABEL_AR, type AgeGroup } from '@/lib/age-groups';
 
 function AgeBadge({ age }: { age: string | null }) {
   if (!age) return null;
   return (
     <span className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
-      {AGE[age] ?? age}
+      {AGE_LABEL_AR[age as AgeGroup] ?? age}
     </span>
   );
 }

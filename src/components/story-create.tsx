@@ -2,6 +2,7 @@
 
 import { useFormState, useFormStatus } from 'react-dom';
 import { createStoryAction } from '@/app/[locale]/dashboard/stories/actions';
+import { VISIBLE_AGE_GROUPS, AGE_LABEL_AR } from '@/lib/age-groups';
 
 function Btn() {
   const { pending } = useFormStatus();
@@ -32,10 +33,9 @@ export function StoryCreate() {
         <div>
           <label className="label">الفئة</label>
           <select name="age_grp" className="input">
-            <option value="baraem">براعم</option>
-            <option value="nashia">ناشئة</option>
-            <option value="fityan">فتيان</option>
-            <option value="shabab">شباب</option>
+            {VISIBLE_AGE_GROUPS.map((g) => (
+              <option key={g} value={g}>{AGE_LABEL_AR[g]}</option>
+            ))}
           </select>
         </div>
         <div>

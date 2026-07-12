@@ -74,7 +74,7 @@ values ('a0000000-0000-0000-0000-0000000000a1',
   'الفصل الدراسي — فتيان (الإحسان)', 'Semester — Fityan (Ihsan)',
   'برنامج فصلي مدته ١٠ أسابيع، جلسة أسبوعية ٤ ساعات، يركّز على البعد الروحي (SQ) وقيمة الإحسان.',
   '10-week semester, weekly 4-hour session, focused on the spiritual quotient (SQ) and the value of Ihsan.',
-  'weekly','fityan','male','SQ','الإحسان','Ihsan',
+  'weekly','boys','male','SQ','الإحسان','Ihsan',
   date '2025-09-06', date '2025-11-15', 10, 15, 1500.00, 'open',
   '11111111-1111-1111-1111-111111111111')
 on conflict (id) do nothing;
@@ -127,7 +127,7 @@ begin
     insert into students (id, parent_id, full_name_ar, full_name_en, dob, gender, age_grp, photo_consent)
     values (sid, '66666666-6666-6666-6666-666666666666',
             'طالب ' || i, 'Student ' || i,
-            date '2013-01-01' + (i * 20), 'male', 'fityan', (i % 2 = 0));
+            date '2013-01-01' + (i * 20), 'male', 'boys', (i % 2 = 0));
     insert into enrollments (student_id, program_id, group_id, status, tier)
     values (sid, 'a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1','active','full_semester');
   end loop;
@@ -135,7 +135,7 @@ begin
   -- The seeded student test account
   insert into students (id, profile_id, parent_id, full_name_ar, full_name_en, dob, gender, age_grp, photo_consent)
   values ('d0000000-0000-0000-0000-0000000000d1','77777777-7777-7777-7777-777777777777',
-          '66666666-6666-6666-6666-666666666666','الطالب','Student', date '2013-05-01','male','fityan', true)
+          '66666666-6666-6666-6666-666666666666','الطالب','Student', date '2013-05-01','male','boys', true)
   on conflict (id) do nothing;
   insert into enrollments (student_id, program_id, group_id, status, tier)
   values ('d0000000-0000-0000-0000-0000000000d1','a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1','active','full_semester')
@@ -225,8 +225,8 @@ on conflict do nothing;
 -- ════════════════════════════════════════════════════════════════
 
 insert into stories (title_ar, title_en, body_ar, value_ar, age_grp, quotient, created_by) values
-  ('قصة الإحسان في الطريق','Kindness on the road','قصة تربوية قصيرة عن الإحسان للمارة وكبار السن.','الإحسان','fityan','SQ','11111111-1111-1111-1111-111111111111'),
-  ('الفريق الواحد','One team','قصة عن التعاون والعمل الجماعي في الرياضة.','التعاون','fityan','EQ','11111111-1111-1111-1111-111111111111')
+  ('قصة الإحسان في الطريق','Kindness on the road','قصة تربوية قصيرة عن الإحسان للمارة وكبار السن.','الإحسان','boys','SQ','11111111-1111-1111-1111-111111111111'),
+  ('الفريق الواحد','One team','قصة عن التعاون والعمل الجماعي في الرياضة.','التعاون','boys','EQ','11111111-1111-1111-1111-111111111111')
 on conflict do nothing;
 
 -- More chat history for a realistic demo

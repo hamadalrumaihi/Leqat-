@@ -15,7 +15,7 @@ export async function createProgramAction(_: unknown, formData: FormData) {
     name_ar: String(formData.get('name_ar')),
     name_en: String(formData.get('name_en') ?? '') || null,
     type: String(formData.get('type') ?? 'weekly'),
-    age_grp: String(formData.get('age_grp') ?? 'fityan'),
+    age_grp: String(formData.get('age_grp') ?? 'boys'),
     gender: String(formData.get('gender') ?? 'both'),
     quotient: String(formData.get('quotient') ?? '') || null,
     value_ar: String(formData.get('value_ar') ?? '') || null,
