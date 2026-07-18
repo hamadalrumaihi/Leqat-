@@ -21,7 +21,7 @@
   },
   "home": {
     "heroTitle": "Engineering life through values",
-    "heroSubtitle": "A Qatar-based character-building program for ages 5–18, university students, and parents — since 2017.",
+    "heroSubtitle": "A Qatar-based character-building program for ages 5–17 — since 2017.",
     "vision": "Our Vision 2030",
     "visionText": "To be the leading educational program in building a balanced character — spiritually, emotionally, intellectually, and physically.",
     "mission": "Our Mission",
@@ -67,12 +67,9 @@
   },
   "ageGroups": {
     "title": "Age Groups",
-    "baraem": "Baraem (5–6)",
-    "nashia": "Nashia (7–9)",
-    "fityan": "Fityan (10–14)",
-    "shabab": "Shabab (15–18) — boys",
-    "university": "University students",
-    "parents": "Parents"
+    "children": "Children between 5–6 years",
+    "boys": "Boys between 7–13 years",
+    "youth": "Youth between 14–17 years"
   },
   "packages": {
     "title": "Program Packages",

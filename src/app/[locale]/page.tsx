@@ -18,7 +18,7 @@ export default async function Home({
   const t = await getTranslations();
 
   const quotients = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
-  const ageKeys = ['baraem', 'nashia', 'fityan', 'shabab', 'university', 'parents'] as const;
+  const ageKeys = ['children', 'boys', 'youth'] as const;
   const manifesto = t.raw('home.manifesto') as string[];
   const packages = t.raw('packages.items') as string[];
 

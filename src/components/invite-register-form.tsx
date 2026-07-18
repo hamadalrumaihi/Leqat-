@@ -30,7 +30,7 @@ export function InviteRegisterForm({
   phoneHint: string | null;
 }) {
   const [state, action] = useFormState(redeemInviteAction, null as null | { ok?: boolean; error?: string });
-  const [age, setAge] = useState<AgeGroup>('fityan');
+  const [age, setAge] = useState<AgeGroup>('boys');
   const [contacts, setContacts] = useState([{ id: 1 }]);
   const [nextId, setNextId] = useState(2);
 
@@ -78,7 +78,7 @@ export function InviteRegisterForm({
             name="child_dob"
             type="date"
             dir="ltr"
-            min={dateBound(19)}
+            min={dateBound(18)}
             max={dateBound(5)}
             className="input"
             required

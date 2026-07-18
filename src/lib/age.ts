@@ -1,17 +1,16 @@
-export type AgeGroup = 'baraem' | 'nashia' | 'fityan' | 'shabab';
+// Compatibility shim — the canonical age-group definitions live in
+// @/lib/age-groups. This re-exports them and keeps the older
+// AGE_GROUPS ({ value, ar }) shape a couple of call sites still use.
+import {
+  VISIBLE_AGE_GROUPS,
+  AGE_LABEL_AR,
+  ageGroupFromDob,
+  type AgeGroup,
+} from '@/lib/age-groups';
 
-export const AGE_GROUPS: { value: AgeGroup; ar: string }[] = [
-  { value: 'baraem', ar: 'براعم (٥–٦)' },
-  { value: 'nashia', ar: 'ناشئة (٧–٩)' },
-  { value: 'fityan', ar: 'فتيان (١٠–١٤)' },
-  { value: 'shabab', ar: 'شباب (١٥–١٨)' },
-];
+export type { AgeGroup };
+export { ageGroupFromDob };
 
-/** Suggest an age group from a DOB (maps to the program's enum). */
-export function ageGroupFromDob(dob: string): AgeGroup {
-  const age = Math.floor((Date.now() - new Date(dob).getTime()) / (365.25 * 86400e3));
-  if (age <= 6) return 'baraem';
-  if (age <= 9) return 'nashia';
-  if (age <= 14) return 'fityan';
-  return 'shabab';
-}
+export const AGE_GROUPS: { value: AgeGroup; ar: string }[] = VISIBLE_AGE_GROUPS.map(
+  (value) => ({ value, ar: AGE_LABEL_AR[value] }),
+);

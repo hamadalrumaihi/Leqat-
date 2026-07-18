@@ -16,6 +16,11 @@ export type AppRole =
   | 'student';
 
 export type AgeGroup =
+  // current groups
+  | 'children'
+  | 'boys'
+  | 'youth'
+  // legacy — retained so historical rows still type-check, never selectable
   | 'baraem'
   | 'nashia'
   | 'fityan'
