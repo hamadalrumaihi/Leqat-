@@ -166,7 +166,8 @@
     "rooms": "Rooms",
     "masterSchedule": "Master Schedule",
     "announcements": "Announcements",
-    "issues": "Issues"
+    "issues": "Issues",
+    "opsBoard": "Ops Board"
   },
   "attendance": {
     "title": "Attendance",
@@ -392,5 +393,28 @@
       "in_progress": "In progress",
       "resolved": "Resolved"
     }
+  },
+  "opsBoard": {
+    "title": "Daily Operations Board",
+    "noProgram": "No programs yet.",
+    "expected": "Expected",
+    "present": "Present",
+    "notMarked": "Not marked",
+    "activitiesToday": "Today's activities",
+    "openIssues": "Open issues",
+    "conflicts": "Schedule conflicts",
+    "inProgress": "In progress",
+    "completed": "Completed",
+    "delayed": "Delayed/moved",
+    "roomsOccupied": "Rooms in use",
+    "todaysActivities": "Today's activities",
+    "noneToday": "No activities today.",
+    "open": "Open",
+    "noTeacher": "No teacher",
+    "noIssues": "No open issues.",
+    "latestAnnouncements": "Latest announcements",
+    "noAnnouncements": "No announcements.",
+    "conflictsNote": "{count} conflict(s) in today’s schedule",
+    "noTeacherNote": "{count} activity without a teacher"
   }
 }
