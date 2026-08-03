@@ -171,7 +171,8 @@
     "transfers": "نقل بين المجموعات",
     "notifications": "الإشعارات",
     "participants": "المشاركون",
-    "calendar": "التقويم"
+    "calendar": "التقويم",
+    "switchProgram": "البرنامج النشط"
   },
   "attendance": {
     "title": "الحضور",

@@ -5,6 +5,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { isManagement } from '@/lib/roles';
 import { AGE_LABEL_AR, AGE_LABEL_EN, type AgeGroup } from '@/lib/age-groups';
 import { dualDate } from '@/lib/utils';
+import { getActiveProgram } from '@/lib/program-context';
 import { ParticipantsTable, type ParticipantRow } from '@/components/participants-table';
 
 export default async function ParticipantsPage() {
@@ -17,12 +18,10 @@ export default async function ParticipantsPage() {
   const isAr = locale === 'ar';
   const supabase = await createClient();
 
-  const { data: program } = await supabase
-    .from('programs')
-    .select('id, name_ar')
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const active = await getActiveProgram();
+  const { data: program } = active
+    ? await supabase.from('programs').select('id, name_ar').eq('id', active.id).maybeSingle()
+    : { data: null };
 
   if (!program) {
     return (

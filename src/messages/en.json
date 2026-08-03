@@ -171,7 +171,8 @@
     "transfers": "Group Transfers",
     "notifications": "Notifications",
     "participants": "Participants",
-    "calendar": "Calendar"
+    "calendar": "Calendar",
+    "switchProgram": "Active program"
   },
   "attendance": {
     "title": "Attendance",
