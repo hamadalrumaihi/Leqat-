@@ -83,6 +83,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: '/dashboard/feedback', key: 'feedback', roles: [...MGMT, 'parent'] },
       { href: '/dashboard/digest', key: 'digest', roles: [...TOP, 'group_supervisor', 'parent'] },
       { href: '/dashboard/substitute', key: 'substitute', roles: MGMT_STAFF },
+      { href: '/dashboard/issues', key: 'issues', roles: STAFF_ALL },
       { href: '/dashboard/pickup', key: 'pickup', roles: [...TOP, 'group_supervisor', 'assistant_supervisor', 'parent'] },
     ],
   },
