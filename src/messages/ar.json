@@ -165,7 +165,8 @@
     "activities": "مكتبة الأنشطة",
     "rooms": "القاعات",
     "masterSchedule": "الجدول التنفيذي",
-    "announcements": "الإعلانات"
+    "announcements": "الإعلانات",
+    "issues": "البلاغات التشغيلية"
   },
   "attendance": {
     "title": "الحضور",
@@ -351,6 +352,45 @@
       "specialist_teachers": "المعلّمون المختصون",
       "group": "مجموعة محددة",
       "teacher": "معلّم محدد"
+    }
+  },
+  "issues": {
+    "title": "البلاغات التشغيلية",
+    "report": "الإبلاغ عن مشكلة",
+    "submit": "إرسال البلاغ",
+    "triage": "معالجة",
+    "save": "حفظ",
+    "kind": "نوع المشكلة",
+    "priority": "الأولوية",
+    "group": "المجموعة",
+    "location": "الموقع",
+    "description": "الوصف",
+    "empty": "لا توجد بلاغات.",
+    "reportedBy": "المُبلِّغ",
+    "unassigned": "غير مُسند",
+    "kinds": {
+      "missing_participant": "مشارك مفقود",
+      "attendance": "مشكلة حضور",
+      "teacher_delay": "تأخر معلّم",
+      "room_conflict": "تعارض قاعات",
+      "missing_materials": "نقص مواد",
+      "activity_delay": "تأخر نشاط",
+      "safety": "مخاطر سلامة",
+      "technical": "مشكلة تقنية",
+      "transportation": "مشكلة نقل",
+      "other": "أخرى"
+    },
+    "prio": {
+      "low": "منخفضة",
+      "normal": "عادية",
+      "high": "عالية",
+      "urgent": "عاجلة"
+    },
+    "statusv": {
+      "new": "جديد",
+      "acknowledged": "تم الاطلاع",
+      "in_progress": "قيد المعالجة",
+      "resolved": "تم الحل"
     }
   }
 }

@@ -165,7 +165,8 @@
     "activities": "Activity Library",
     "rooms": "Rooms",
     "masterSchedule": "Master Schedule",
-    "announcements": "Announcements"
+    "announcements": "Announcements",
+    "issues": "Issues"
   },
   "attendance": {
     "title": "Attendance",
@@ -351,6 +352,45 @@
       "specialist_teachers": "Specialist teachers",
       "group": "Specific group",
       "teacher": "Specific teacher"
+    }
+  },
+  "issues": {
+    "title": "Operational Issues",
+    "report": "Report an issue",
+    "submit": "Submit report",
+    "triage": "Triage",
+    "save": "Save",
+    "kind": "Issue type",
+    "priority": "Priority",
+    "group": "Group",
+    "location": "Location",
+    "description": "Description",
+    "empty": "No issues.",
+    "reportedBy": "Reported by",
+    "unassigned": "Unassigned",
+    "kinds": {
+      "missing_participant": "Missing participant",
+      "attendance": "Attendance issue",
+      "teacher_delay": "Teacher delay",
+      "room_conflict": "Room conflict",
+      "missing_materials": "Missing materials",
+      "activity_delay": "Activity delay",
+      "safety": "Safety concern",
+      "technical": "Technical issue",
+      "transportation": "Transportation issue",
+      "other": "Other"
+    },
+    "prio": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "statusv": {
+      "new": "New",
+      "acknowledged": "Acknowledged",
+      "in_progress": "In progress",
+      "resolved": "Resolved"
     }
   }
 }
