@@ -169,7 +169,8 @@
     "issues": "Issues",
     "opsBoard": "Ops Board",
     "transfers": "Group Transfers",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "participants": "Participants"
   },
   "attendance": {
     "title": "Attendance",
@@ -441,5 +442,29 @@
     "empty": "No notifications.",
     "markRead": "Mark read",
     "markAll": "Mark all read"
+  },
+  "participants": {
+    "title": "Participants",
+    "noProgram": "No programs yet.",
+    "name": "Name",
+    "group": "Group",
+    "level": "Level",
+    "status": "Status",
+    "enrolled": "Enrolled",
+    "search": "Search name…"
+  },
+  "enrollStatus": {
+    "pending": "Pending",
+    "active": "Active",
+    "waitlisted": "Waitlisted",
+    "refunded": "Refunded",
+    "cancelled": "Cancelled"
+  },
+  "table": {
+    "search": "Search…",
+    "columns": "Columns",
+    "rows": "{count} rows",
+    "empty": "No data.",
+    "page": "Page {page} of {total}"
   }
 }
