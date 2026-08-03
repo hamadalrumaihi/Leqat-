@@ -97,6 +97,7 @@ export const ROLE_LABELS: Record<string, { ar: string; en: string }> = {
   program_manager: MANAGER_LABEL,
   group_supervisor: { ar: 'مشرف مجموعة', en: 'Group Supervisor' },
   assistant_supervisor: { ar: 'مشرف مساعد', en: 'Assistant Supervisor' },
+  specialist_teacher: { ar: 'معلّم مختص', en: 'Specialist Teacher' },
   parent: { ar: 'ولي أمر', en: 'Parent' },
   student: { ar: 'طالب', en: 'Student' },
 };
