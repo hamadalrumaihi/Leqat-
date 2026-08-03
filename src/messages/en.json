@@ -360,7 +360,9 @@
       "specialist_teachers": "Specialist teachers",
       "group": "Specific group",
       "teacher": "Specific teacher"
-    }
+    },
+    "published": "Announcement published",
+    "failed": "Could not publish the announcement"
   },
   "issues": {
     "title": "Operational Issues",
