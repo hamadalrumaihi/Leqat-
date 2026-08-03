@@ -164,7 +164,8 @@
     "attnInvites": "invite links expiring within 3 days",
     "activities": "Activity Library",
     "rooms": "Rooms",
-    "masterSchedule": "Master Schedule"
+    "masterSchedule": "Master Schedule",
+    "announcements": "Announcements"
   },
   "attendance": {
     "title": "Attendance",
@@ -330,6 +331,26 @@
       "delayed": "Delayed",
       "cancelled": "Cancelled",
       "moved": "Moved"
+    }
+  },
+  "announce": {
+    "title": "Operational Announcements",
+    "create": "New announcement",
+    "publish": "Publish",
+    "titleField": "Title",
+    "body": "Details",
+    "audience": "Audience",
+    "targetGroup": "Group",
+    "targetTeacher": "Teacher",
+    "empty": "No announcements.",
+    "aud": {
+      "all_staff": "All staff",
+      "executives": "Executive team",
+      "managers": "Managers",
+      "group_supervisors": "Group managers",
+      "specialist_teachers": "Specialist teachers",
+      "group": "Specific group",
+      "teacher": "Specific teacher"
     }
   }
 }

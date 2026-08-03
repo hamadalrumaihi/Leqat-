@@ -164,7 +164,8 @@
     "attnInvites": "روابط تسجيل تنتهي خلال ٣ أيام",
     "activities": "مكتبة الأنشطة",
     "rooms": "القاعات",
-    "masterSchedule": "الجدول التنفيذي"
+    "masterSchedule": "الجدول التنفيذي",
+    "announcements": "الإعلانات"
   },
   "attendance": {
     "title": "الحضور",
@@ -330,6 +331,26 @@
       "delayed": "متأخر",
       "cancelled": "ملغى",
       "moved": "منقول"
+    }
+  },
+  "announce": {
+    "title": "الإعلانات التشغيلية",
+    "create": "إعلان جديد",
+    "publish": "نشر",
+    "titleField": "العنوان",
+    "body": "التفاصيل",
+    "audience": "الجمهور",
+    "targetGroup": "المجموعة",
+    "targetTeacher": "المعلّم",
+    "empty": "لا توجد إعلانات.",
+    "aud": {
+      "all_staff": "كل الطاقم",
+      "executives": "الإدارة التنفيذية",
+      "managers": "المدراء",
+      "group_supervisors": "مشرفو المجموعات",
+      "specialist_teachers": "المعلّمون المختصون",
+      "group": "مجموعة محددة",
+      "teacher": "معلّم محدد"
     }
   }
 }
