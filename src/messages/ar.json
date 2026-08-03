@@ -166,7 +166,8 @@
     "rooms": "القاعات",
     "masterSchedule": "الجدول التنفيذي",
     "announcements": "الإعلانات",
-    "issues": "البلاغات التشغيلية"
+    "issues": "البلاغات التشغيلية",
+    "opsBoard": "لوحة العمليات"
   },
   "attendance": {
     "title": "الحضور",
@@ -392,5 +393,28 @@
       "in_progress": "قيد المعالجة",
       "resolved": "تم الحل"
     }
+  },
+  "opsBoard": {
+    "title": "لوحة العمليات اليومية",
+    "noProgram": "لا توجد برامج بعد.",
+    "expected": "المتوقّع حضورهم",
+    "present": "حاضرون",
+    "notMarked": "لم تُرصد",
+    "activitiesToday": "أنشطة اليوم",
+    "openIssues": "بلاغات مفتوحة",
+    "conflicts": "تعارضات الجدول",
+    "inProgress": "قيد التنفيذ",
+    "completed": "مكتملة",
+    "delayed": "متأخرة/منقولة",
+    "roomsOccupied": "القاعات المشغولة",
+    "todaysActivities": "أنشطة اليوم",
+    "noneToday": "لا توجد أنشطة اليوم.",
+    "open": "فتح",
+    "noTeacher": "بدون معلّم",
+    "noIssues": "لا توجد بلاغات مفتوحة.",
+    "latestAnnouncements": "أحدث الإعلانات",
+    "noAnnouncements": "لا توجد إعلانات.",
+    "conflictsNote": "{count} تعارض في جدول اليوم",
+    "noTeacherNote": "{count} نشاط بدون معلّم"
   }
 }
