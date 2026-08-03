@@ -93,9 +93,11 @@ insert into manager_shifts (program_id, profile_id, shift) values
   ('a0000000-0000-0000-0000-0000000000a1','33333333-3333-3333-3333-333333333333','afternoon')
 on conflict do nothing;
 
--- Fityan (10–14) group is a teen division.
-insert into groups (id, program_id, name_ar, name_en, capacity, division)
-values ('b0000000-0000-0000-0000-0000000000b1','a0000000-0000-0000-0000-0000000000a1','مجموعة الفرسان','Knights Group',15,'teen')
+-- Fityan (10–14) group is a teen division. A second group in the same
+-- program gives transfers a valid destination.
+insert into groups (id, program_id, name_ar, name_en, color, capacity, division)
+values ('b0000000-0000-0000-0000-0000000000b1','a0000000-0000-0000-0000-0000000000a1','مجموعة الفرسان','Knights Group','#1F5C3A',15,'teen'),
+       ('b0000000-0000-0000-0000-0000000000b2','a0000000-0000-0000-0000-0000000000a1','مجموعة النجوم','Stars Group','#3FA34D',15,'teen')
 on conflict (id) do update set division = excluded.division;
 
 insert into group_staff (group_id, profile_id, role) values

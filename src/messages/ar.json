@@ -167,7 +167,8 @@
     "masterSchedule": "الجدول التنفيذي",
     "announcements": "الإعلانات",
     "issues": "البلاغات التشغيلية",
-    "opsBoard": "لوحة العمليات"
+    "opsBoard": "لوحة العمليات",
+    "transfers": "نقل بين المجموعات"
   },
   "attendance": {
     "title": "الحضور",
@@ -416,5 +417,22 @@
     "noAnnouncements": "لا توجد إعلانات.",
     "conflictsNote": "{count} تعارض في جدول اليوم",
     "noTeacherNote": "{count} نشاط بدون معلّم"
+  },
+  "transfers": {
+    "title": "النقل بين المجموعات",
+    "noProgram": "لا توجد برامج بعد.",
+    "roster": "الطلاب المسجّلون",
+    "noStudents": "لا يوجد طلاب مسندون.",
+    "transfer": "نقل",
+    "toGroup": "إلى مجموعة",
+    "reason": "السبب (اختياري)",
+    "confirm": "تأكيد النقل",
+    "mismatch": "المجموعة الوجهة من برنامج آخر.",
+    "already": "الطالب في هذه المجموعة بالفعل.",
+    "history": "سجل النقل",
+    "noHistory": "لا يوجد سجل نقل بعد.",
+    "from": "من",
+    "to": "إلى",
+    "unassigned": "غير مُسند"
   }
 }
