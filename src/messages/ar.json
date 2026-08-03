@@ -163,7 +163,8 @@
     "attnPending": "تسجيلات قيد التأكيد",
     "attnInvites": "روابط تسجيل تنتهي خلال ٣ أيام",
     "activities": "مكتبة الأنشطة",
-    "rooms": "القاعات"
+    "rooms": "القاعات",
+    "masterSchedule": "الجدول التنفيذي"
   },
   "attendance": {
     "title": "الحضور",
@@ -285,6 +286,32 @@
       "needs_revision": "يحتاج تعديلًا",
       "rejected": "مرفوض",
       "archived": "مؤرشف"
+    }
+  },
+  "scheduleOps": {
+    "title": "الجدول التنفيذي",
+    "addEntry": "إضافة نشاط للجدول",
+    "group": "المجموعة",
+    "activity": "النشاط",
+    "teacher": "المعلّم المختص",
+    "room": "القاعة",
+    "start": "من",
+    "end": "إلى",
+    "save": "حفظ",
+    "badTime": "وقت النهاية يجب أن يكون بعد البداية.",
+    "empty": "لا توجد أنشطة مجدولة في هذا اليوم.",
+    "noProgram": "لا توجد برامج بعد.",
+    "publishDay": "نشر جدول اليوم",
+    "published": "تم النشر",
+    "publishedTag": "منشور",
+    "draftTag": "مسودة",
+    "conflictsFound": "{count} تعارض في الجدول — راجعها قبل النشر",
+    "conflict": {
+      "teacher_double_booked": "معلّم مجدول في مجموعتين بنفس الوقت",
+      "group_double_booked": "مجموعة لديها نشاطان بنفس الوقت",
+      "room_double_booked": "قاعة محجوزة لنشاطين بنفس الوقت",
+      "no_teacher": "نشاط بدون معلّم مختص",
+      "out_of_hours": "نشاط خارج ساعات البرنامج"
     }
   }
 }

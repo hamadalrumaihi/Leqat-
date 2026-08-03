@@ -54,6 +54,7 @@ export const NAV_GROUPS: NavGroup[] = [
     key: 'program',
     items: [
       { href: '/dashboard/schedule', key: 'schedule', roles: [...MGMT_STAFF, 'parent', 'student'] },
+      { href: '/dashboard/master-schedule', key: 'masterSchedule', roles: STAFF_ALL },
       { href: '/dashboard/activities', key: 'activities', roles: STAFF_ALL },
       { href: '/dashboard/books', key: 'books', roles: ALL },
       { href: '/dashboard/stories', key: 'stories', roles: MGMT_STAFF },
