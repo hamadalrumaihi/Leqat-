@@ -313,5 +313,23 @@
       "no_teacher": "Activity has no specialist teacher",
       "out_of_hours": "Activity outside program hours"
     }
+  },
+  "exec": {
+    "update": "Update status",
+    "statusLabel": "Status",
+    "save": "Save",
+    "forbidden": "Not allowed to update",
+    "notePlaceholder": "Operational note (optional)",
+    "requestSupport": "Request executive support",
+    "supportFlag": "Support needed",
+    "status": {
+      "scheduled": "Scheduled",
+      "ready": "Ready",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "delayed": "Delayed",
+      "cancelled": "Cancelled",
+      "moved": "Moved"
+    }
   }
 }
