@@ -5,6 +5,7 @@ import { Menu, X, LogOut, Languages } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Logo } from '@/components/logo';
+import { NotificationBell } from '@/components/notification-bell';
 import { cn, BRAND_GREEN } from '@/lib/utils';
 import { logoutAction } from '@/app/[locale]/(auth)/actions';
 
@@ -63,18 +64,22 @@ export function DashboardChrome({
   brand,
   roleLabel,
   userName,
+  userId,
   welcome,
   logoutLabel,
   menuLabel,
+  notificationsLabel,
   children,
 }: {
   groups: Group[];
   brand: string;
   roleLabel: string;
   userName: string;
+  userId: string;
   welcome: string;
   logoutLabel: string;
   menuLabel: string;
+  notificationsLabel: string;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -160,6 +165,7 @@ export function DashboardChrome({
           </div>
 
           <div className="flex items-center gap-1">
+            <NotificationBell userId={userId} label={notificationsLabel} />
             <Link
               href={pathname}
               locale={locale === 'ar' ? 'en' : 'ar'}

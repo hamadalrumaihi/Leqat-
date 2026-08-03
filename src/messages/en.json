@@ -168,7 +168,8 @@
     "announcements": "Announcements",
     "issues": "Issues",
     "opsBoard": "Ops Board",
-    "transfers": "Group Transfers"
+    "transfers": "Group Transfers",
+    "notifications": "Notifications"
   },
   "attendance": {
     "title": "Attendance",
@@ -434,5 +435,11 @@
     "from": "From",
     "to": "To",
     "unassigned": "Unassigned"
+  },
+  "notif": {
+    "title": "Notifications",
+    "empty": "No notifications.",
+    "markRead": "Mark read",
+    "markAll": "Mark all read"
   }
 }
