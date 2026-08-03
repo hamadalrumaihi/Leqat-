@@ -170,7 +170,8 @@
     "opsBoard": "لوحة العمليات",
     "transfers": "نقل بين المجموعات",
     "notifications": "الإشعارات",
-    "participants": "المشاركون"
+    "participants": "المشاركون",
+    "calendar": "التقويم"
   },
   "attendance": {
     "title": "الحضور",
@@ -466,5 +467,19 @@
     "rows": "{count} صف",
     "empty": "لا توجد بيانات.",
     "page": "صفحة {page} من {total}"
+  },
+  "calendar": {
+    "title": "تقويم الجدول",
+    "editList": "تحرير القائمة",
+    "today": "اليوم",
+    "previous": "السابق",
+    "next": "التالي",
+    "week": "أسبوع",
+    "day": "يوم",
+    "agenda": "قائمة",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "event": "النشاط",
+    "noEvents": "لا توجد أنشطة في هذه الفترة."
   }
 }

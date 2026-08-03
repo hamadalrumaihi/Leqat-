@@ -170,7 +170,8 @@
     "opsBoard": "Ops Board",
     "transfers": "Group Transfers",
     "notifications": "Notifications",
-    "participants": "Participants"
+    "participants": "Participants",
+    "calendar": "Calendar"
   },
   "attendance": {
     "title": "Attendance",
@@ -466,5 +467,19 @@
     "rows": "{count} rows",
     "empty": "No data.",
     "page": "Page {page} of {total}"
+  },
+  "calendar": {
+    "title": "Schedule Calendar",
+    "editList": "Edit list",
+    "today": "Today",
+    "previous": "Back",
+    "next": "Next",
+    "week": "Week",
+    "day": "Day",
+    "agenda": "Agenda",
+    "date": "Date",
+    "time": "Time",
+    "event": "Activity",
+    "noEvents": "No activities in this range."
   }
 }
