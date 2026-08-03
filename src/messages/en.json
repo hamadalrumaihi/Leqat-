@@ -319,7 +319,10 @@
       "room_double_booked": "Room double-booked at the same time",
       "no_teacher": "Activity has no specialist teacher",
       "out_of_hours": "Activity outside program hours"
-    }
+    },
+    "builder": "Schedule builder (drag & drop)",
+    "builderHint": "Drag to reorder — times reflow automatically",
+    "saving": "Saving…"
   },
   "exec": {
     "update": "Update status",
