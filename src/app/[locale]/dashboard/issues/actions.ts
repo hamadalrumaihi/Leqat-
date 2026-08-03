@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { can, isStaff } from '@/lib/roles';
+import { notify } from '@/lib/notify';
 
 const KINDS = [
   'missing_participant', 'attendance', 'teacher_delay', 'room_conflict',
@@ -48,17 +49,30 @@ export async function triageIssueAction(_: unknown, formData: FormData) {
   const priority = String(formData.get('priority') ?? '');
   if (!id || !STATUSES.includes(status as (typeof STATUSES)[number])) return { error: 'invalid' };
 
+  const assignedTo = String(formData.get('assigned_to') ?? '') || null;
   const patch: Record<string, unknown> = {
     status,
     updated_at: new Date().toISOString(),
     resolved_at: status === 'resolved' ? new Date().toISOString() : null,
-    assigned_to: String(formData.get('assigned_to') ?? '') || null,
+    assigned_to: assignedTo,
   };
   if (PRIORITIES.includes(priority as (typeof PRIORITIES)[number])) patch.priority = priority;
 
   const supabase = await createClient();
+  // Read the prior assignee so we only notify on a NEW assignment.
+  const { data: before } = await supabase.from('issues').select('assigned_to, description_ar').eq('id', id).maybeSingle();
   const { error } = await supabase.from('issues').update(patch).eq('id', id);
   if (error) return { error: error.message };
+
+  if (assignedTo && assignedTo !== user.id && (before as { assigned_to: string | null } | null)?.assigned_to !== assignedTo) {
+    await notify([assignedTo], {
+      kind: 'issue_assigned',
+      title_ar: 'أُسند إليك بلاغ',
+      body_ar: (before as { description_ar: string } | null)?.description_ar ?? null,
+      href: '/dashboard/issues',
+    });
+  }
+
   revalidatePath('/dashboard/issues');
   return { ok: true };
 }

@@ -42,9 +42,11 @@ export default async function DashboardLayout({
       brand={tb('name')}
       roleLabel={roleLabel}
       userName={name}
+      userId={user!.id}
       welcome={t('welcome')}
       logoutLabel={tn('logout')}
       menuLabel={t('menu')}
+      notificationsLabel={t('notifications')}
     >
       {children}
     </DashboardChrome>
