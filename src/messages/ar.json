@@ -169,7 +169,8 @@
     "issues": "البلاغات التشغيلية",
     "opsBoard": "لوحة العمليات",
     "transfers": "نقل بين المجموعات",
-    "notifications": "الإشعارات"
+    "notifications": "الإشعارات",
+    "participants": "المشاركون"
   },
   "attendance": {
     "title": "الحضور",
@@ -441,5 +442,29 @@
     "empty": "لا توجد إشعارات.",
     "markRead": "تعليم كمقروء",
     "markAll": "تعليم الكل كمقروء"
+  },
+  "participants": {
+    "title": "المشاركون",
+    "noProgram": "لا توجد برامج بعد.",
+    "name": "الاسم",
+    "group": "المجموعة",
+    "level": "الفئة",
+    "status": "الحالة",
+    "enrolled": "تاريخ التسجيل",
+    "search": "بحث بالاسم…"
+  },
+  "enrollStatus": {
+    "pending": "قيد التأكيد",
+    "active": "نشط",
+    "waitlisted": "قائمة انتظار",
+    "refunded": "مُسترجع",
+    "cancelled": "ملغى"
+  },
+  "table": {
+    "search": "بحث…",
+    "columns": "الأعمدة",
+    "rows": "{count} صف",
+    "empty": "لا توجد بيانات.",
+    "page": "صفحة {page} من {total}"
   }
 }
