@@ -163,7 +163,8 @@
     "attnPending": "registrations pending confirmation",
     "attnInvites": "invite links expiring within 3 days",
     "activities": "Activity Library",
-    "rooms": "Rooms"
+    "rooms": "Rooms",
+    "masterSchedule": "Master Schedule"
   },
   "attendance": {
     "title": "Attendance",
@@ -285,6 +286,32 @@
       "needs_revision": "Needs revision",
       "rejected": "Rejected",
       "archived": "Archived"
+    }
+  },
+  "scheduleOps": {
+    "title": "Master Schedule",
+    "addEntry": "Add to schedule",
+    "group": "Group",
+    "activity": "Activity",
+    "teacher": "Specialist teacher",
+    "room": "Room",
+    "start": "From",
+    "end": "To",
+    "save": "Save",
+    "badTime": "End time must be after the start.",
+    "empty": "No activities scheduled for this day.",
+    "noProgram": "No programs yet.",
+    "publishDay": "Publish this day",
+    "published": "Published",
+    "publishedTag": "Published",
+    "draftTag": "Draft",
+    "conflictsFound": "{count} scheduling conflict(s) — review before publishing",
+    "conflict": {
+      "teacher_double_booked": "Teacher booked for two groups at once",
+      "group_double_booked": "Group has two activities at once",
+      "room_double_booked": "Room double-booked at the same time",
+      "no_teacher": "Activity has no specialist teacher",
+      "out_of_hours": "Activity outside program hours"
     }
   }
 }

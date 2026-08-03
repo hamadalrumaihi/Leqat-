@@ -323,8 +323,25 @@ insert into rooms (id, program_id, name_ar, name_en, capacity, notes_ar) values
 on conflict (id) do nothing;
 
 insert into activities
-  (title_ar, title_en, category, objective_ar, duration_min, age_grp, max_group_size, materials_ar, status, proposed_by, reviewed_by) values
-  ('تحدي الروبوتيك','Robotics Challenge','STEM','بناء وبرمجة روبوت بسيط ضمن فريق',40,'boys',12,'مجموعات ليغو، حواسيب','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
-  ('ورشة المهارات الحياتية','Life Skills Workshop','life-skills','تنمية مهارات التواصل واتخاذ القرار',40,'boys',15,'بطاقات، سبورة','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
-  ('حل المشكلات الإبداعي','Creative Problem Solving','life-skills','التفكير الناقد وحل المشكلات',45,'youth',15,null,'proposed','88888888-8888-8888-8888-888888888888',null)
+  (id, title_ar, title_en, category, objective_ar, duration_min, age_grp, max_group_size, materials_ar, status, proposed_by, reviewed_by) values
+  ('ac000000-0000-0000-0000-000000000001','تحدي الروبوتيك','Robotics Challenge','STEM','بناء وبرمجة روبوت بسيط ضمن فريق',40,'boys',12,'مجموعات ليغو، حواسيب','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
+  ('ac000000-0000-0000-0000-000000000002','ورشة المهارات الحياتية','Life Skills Workshop','life-skills','تنمية مهارات التواصل واتخاذ القرار',40,'boys',15,'بطاقات، سبورة','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
+  ('ac000000-0000-0000-0000-000000000003','حل المشكلات الإبداعي','Creative Problem Solving','life-skills','التفكير الناقد وحل المشكلات',45,'youth',15,null,'proposed','88888888-8888-8888-8888-888888888888',null)
+on conflict (id) do nothing;
+
+-- Program operating hours + location (MVP example: 4pm–8pm, Sun–Thu).
+update programs set
+  daily_start = '16:00', daily_end = '20:00',
+  operating_days = '{0,1,2,3,4}', location_ar = 'المقر الرئيسي', location_en = 'Main Campus'
+where id = 'a0000000-0000-0000-0000-0000000000a1';
+
+-- Master schedule: two activities for today's date for the Knights group.
+insert into schedule_entries
+  (program_id, group_id, activity_id, teacher_id, room_id, date, start_time, end_time, created_by) values
+  ('a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1',
+   'ac000000-0000-0000-0000-000000000002',null,'c1000000-0000-0000-0000-000000000003',
+   current_date,'16:20','17:00','11111111-1111-1111-1111-111111111111'),
+  ('a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1',
+   'ac000000-0000-0000-0000-000000000001','99999999-9999-9999-9999-999999999999','c1000000-0000-0000-0000-000000000001',
+   current_date,'17:00','17:40','11111111-1111-1111-1111-111111111111')
 on conflict do nothing;
