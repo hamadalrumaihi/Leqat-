@@ -313,5 +313,23 @@
       "no_teacher": "نشاط بدون معلّم مختص",
       "out_of_hours": "نشاط خارج ساعات البرنامج"
     }
+  },
+  "exec": {
+    "update": "تحديث الحالة",
+    "statusLabel": "الحالة",
+    "save": "حفظ",
+    "forbidden": "لا تملك صلاحية التحديث",
+    "notePlaceholder": "ملاحظة تشغيلية (اختياري)",
+    "requestSupport": "طلب دعم من الإدارة",
+    "supportFlag": "دعم مطلوب",
+    "status": {
+      "scheduled": "مجدول",
+      "ready": "جاهز",
+      "in_progress": "جارٍ التنفيذ",
+      "completed": "مكتمل",
+      "delayed": "متأخر",
+      "cancelled": "ملغى",
+      "moved": "منقول"
+    }
   }
 }

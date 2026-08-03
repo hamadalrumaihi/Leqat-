@@ -12,6 +12,8 @@ import {
 } from '@/lib/schedule';
 import { ScheduleEntryForm } from '@/components/schedule-entry-form';
 import { DeleteEntryButton, PublishDayButton } from '@/components/schedule-actions';
+import { ActivityStatusControls } from '@/components/activity-status-controls';
+import { EXEC_STATUS_STYLE } from '@/lib/exec-status';
 
 function addDays(date: string, delta: number): string {
   const d = new Date(date + 'T00:00:00Z');
@@ -29,6 +31,7 @@ export default async function MasterSchedulePage({
   if (!user || !isStaff(user.role)) redirect({ href: '/dashboard', locale });
 
   const t = await getTranslations('scheduleOps');
+  const te = await getTranslations('exec');
   const canManage = can(user!.role, 'planSchedule');
   const supabase = await createClient();
   const { p, d } = await searchParams;
@@ -56,6 +59,7 @@ export default async function MasterSchedulePage({
     .from('schedule_entries')
     .select(
       'id, date, start_time, end_time, group_id, teacher_id, room_id, exec_status, published_at,' +
+        ' exec_note, support_requested,' +
         ' groups(name_ar), activities(title_ar), room:rooms(name_ar),' +
         ' teacher:profiles!schedule_entries_teacher_id_fkey(full_name_ar)',
     )
@@ -67,6 +71,7 @@ export default async function MasterSchedulePage({
     id: string; date: string; start_time: string; end_time: string;
     group_id: string; teacher_id: string | null; room_id: string | null;
     exec_status: string; published_at: string | null;
+    exec_note: string | null; support_requested: boolean;
     groups: { name_ar: string } | null;
     activities: { title_ar: string } | null;
     room: { name_ar: string } | null;
@@ -176,12 +181,29 @@ export default async function MasterSchedulePage({
                 {e.teacher?.full_name_ar ?? <span className="text-amber-700">{t('conflict.no_teacher')}</span>}
               </span>
               {e.room?.name_ar ? <span className="text-sm text-muted-foreground">🏫 {e.room.name_ar}</span> : null}
+              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${EXEC_STATUS_STYLE[e.exec_status] ?? 'bg-muted'}`}>
+                {te(`status.${e.exec_status}`)}
+              </span>
+              {e.support_requested ? (
+                <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-xs text-destructive">{te('supportFlag')}</span>
+              ) : null}
               {e.published_at ? (
                 <span className="rounded-full bg-green-vibrant/15 px-2 py-0.5 text-xs text-green-vibrant">{t('publishedTag')}</span>
               ) : (
                 <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">{t('draftTag')}</span>
               )}
-              {canManage && <span className="ms-auto"><DeleteEntryButton id={e.id} /></span>}
+              <span className="ms-auto flex items-center gap-2">
+                <ActivityStatusControls
+                  id={e.id}
+                  status={e.exec_status}
+                  note={e.exec_note}
+                  support={e.support_requested}
+                />
+                {canManage && <DeleteEntryButton id={e.id} />}
+              </span>
+              {e.exec_note ? (
+                <p className="w-full text-xs text-muted-foreground">📝 {e.exec_note}</p>
+              ) : null}
             </li>
           ))}
         </ul>
