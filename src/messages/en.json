@@ -161,7 +161,9 @@
     "attnTitle": "Needs attention",
     "attnUnassigned": "students awaiting group assignment",
     "attnPending": "registrations pending confirmation",
-    "attnInvites": "invite links expiring within 3 days"
+    "attnInvites": "invite links expiring within 3 days",
+    "activities": "Activity Library",
+    "rooms": "Rooms"
   },
   "attendance": {
     "title": "Attendance",
@@ -242,5 +244,47 @@
     "cancel": "Cancel",
     "back": "Back",
     "comingSoon": "Coming soon"
+  },
+  "rooms": {
+    "title": "Rooms & Activity Locations",
+    "create": "Add room",
+    "name": "Room name",
+    "program": "Program",
+    "capacity": "Capacity",
+    "notes": "Notes",
+    "save": "Save",
+    "empty": "No rooms yet.",
+    "none": "No programs — create a program first."
+  },
+  "activities": {
+    "title": "Executive Activity Library",
+    "propose": "Propose activity",
+    "name": "Activity name",
+    "category": "Category",
+    "objective": "Objective",
+    "description": "Description",
+    "instructions": "Implementation steps",
+    "duration": "Duration (min)",
+    "level": "Suitable level",
+    "materials": "Required materials",
+    "prep": "Required preparation",
+    "maxGroup": "Max group size",
+    "safety": "Safety notes",
+    "save": "Save proposal",
+    "empty": "No activities yet.",
+    "approvedOnly": "Approved activities",
+    "submitReview": "Submit for review",
+    "approve": "Approve",
+    "requestChanges": "Request changes",
+    "reject": "Reject",
+    "archive": "Archive",
+    "status": {
+      "proposed": "Proposed",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "needs_revision": "Needs revision",
+      "rejected": "Rejected",
+      "archived": "Archived"
+    }
   }
 }

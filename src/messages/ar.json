@@ -161,7 +161,9 @@
     "attnTitle": "بحاجة إلى متابعة",
     "attnUnassigned": "طلاب بانتظار الإسناد إلى مجموعة",
     "attnPending": "تسجيلات قيد التأكيد",
-    "attnInvites": "روابط تسجيل تنتهي خلال ٣ أيام"
+    "attnInvites": "روابط تسجيل تنتهي خلال ٣ أيام",
+    "activities": "مكتبة الأنشطة",
+    "rooms": "القاعات"
   },
   "attendance": {
     "title": "الحضور",
@@ -242,5 +244,47 @@
     "cancel": "إلغاء",
     "back": "رجوع",
     "comingSoon": "قيد التطوير"
+  },
+  "rooms": {
+    "title": "القاعات ومواقع الأنشطة",
+    "create": "إضافة قاعة",
+    "name": "اسم القاعة",
+    "program": "البرنامج",
+    "capacity": "السعة",
+    "notes": "ملاحظات",
+    "save": "حفظ",
+    "empty": "لا توجد قاعات بعد.",
+    "none": "لا توجد برامج — أنشئ برنامجًا أولًا."
+  },
+  "activities": {
+    "title": "مكتبة الأنشطة التنفيذية",
+    "propose": "اقتراح نشاط",
+    "name": "اسم النشاط",
+    "category": "التصنيف",
+    "objective": "الهدف",
+    "description": "الوصف",
+    "instructions": "خطوات التنفيذ",
+    "duration": "المدة (دقيقة)",
+    "level": "الفئة المناسبة",
+    "materials": "المواد المطلوبة",
+    "prep": "التحضير المطلوب",
+    "maxGroup": "أقصى حجم للمجموعة",
+    "safety": "ملاحظات السلامة",
+    "save": "حفظ الاقتراح",
+    "empty": "لا توجد أنشطة بعد.",
+    "approvedOnly": "الأنشطة المعتمدة",
+    "submitReview": "إرسال للمراجعة",
+    "approve": "اعتماد",
+    "requestChanges": "طلب تعديل",
+    "reject": "رفض",
+    "archive": "أرشفة",
+    "status": {
+      "proposed": "مقترح",
+      "under_review": "قيد المراجعة",
+      "approved": "معتمد",
+      "needs_revision": "يحتاج تعديلًا",
+      "rejected": "مرفوض",
+      "archived": "مؤرشف"
+    }
   }
 }

@@ -8,6 +8,7 @@ type Role =
   | 'manager'
   | 'group_supervisor'
   | 'assistant_supervisor'
+  | 'specialist_teacher'
   | 'parent'
   | 'student';
 
@@ -20,6 +21,7 @@ const ALL: Role[] = [
   'manager',
   'group_supervisor',
   'assistant_supervisor',
+  'specialist_teacher',
   'parent',
   'student',
 ];
@@ -32,6 +34,8 @@ const TOP: Role[] = ['founder', 'executive']; // founder + executive only
 const MGMT_GROUP: Role[] = [...MGMT, 'group_supervisor'];
 const MGMT_STAFF: Role[] = [...MGMT, 'group_supervisor', 'assistant_supervisor'];
 const GROUP_STAFF: Role[] = ['group_supervisor', 'assistant_supervisor'];
+// Everyone on staff, including specialist teachers (activity library).
+const STAFF_ALL: Role[] = [...MGMT_STAFF, 'specialist_teacher'];
 
 // Grouped sidebar map.
 export const NAV_GROUPS: NavGroup[] = [
@@ -50,10 +54,12 @@ export const NAV_GROUPS: NavGroup[] = [
     key: 'program',
     items: [
       { href: '/dashboard/schedule', key: 'schedule', roles: [...MGMT_STAFF, 'parent', 'student'] },
+      { href: '/dashboard/activities', key: 'activities', roles: STAFF_ALL },
       { href: '/dashboard/books', key: 'books', roles: ALL },
       { href: '/dashboard/stories', key: 'stories', roles: MGMT_STAFF },
       { href: '/dashboard/programs', key: 'programs', roles: MGMT },
       { href: '/dashboard/groups', key: 'groups', roles: MGMT },
+      { href: '/dashboard/rooms', key: 'rooms', roles: MGMT },
     ],
   },
   {

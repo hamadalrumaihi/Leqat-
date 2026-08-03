@@ -11,7 +11,7 @@ import { effectiveRole } from '@/lib/utils';
 //
 // Effective roles after effectiveRole():
 //   founder | executive | manager | group_supervisor |
-//   assistant_supervisor | parent | student
+//   assistant_supervisor | specialist_teacher | parent | student
 // (program_supervisor / program_manager / program_planner / manager → manager)
 // Founder holds ≥ Executive authority, so it appears wherever executive
 // does (and RLS grants it the same via is_executive() including founder).
@@ -33,13 +33,17 @@ export type Capability =
   | 'moderateChat' // approve media, toggle parents_can_post
   | 'staffBooks' // workbook progress editor, signed PDF
   | 'staffPickup' // pickup queue + release
-  | 'awardRecognition'; // award معنوي tokens
+  | 'awardRecognition' // award معنوي tokens
+  | 'manageRooms' // create/edit program rooms
+  | 'manageActivities' // propose/edit/approve executive activities
+  | 'viewActivities'; // read the approved activity library
 
 const FOUNDER = 'founder';
 const MANAGER = 'manager'; // effective planner-tier (legacy trio → manager)
 const GS = 'group_supervisor';
 const AS = 'assistant_supervisor';
 const EXEC = 'executive';
+const SPECIALIST = 'specialist_teacher'; // delivers activities across groups
 
 // Management-tier shorthand: founder ≥ executive ≥ manager for the
 // scheduling/program capabilities the old planner held.
@@ -60,6 +64,10 @@ const CAPABILITY_ROLES: Record<Capability, readonly string[]> = {
   staffBooks: [...MGMT, GS, AS],
   staffPickup: [...MGMT, GS, AS],
   awardRecognition: [EXEC, FOUNDER, GS, AS],
+  // Ops platform:
+  manageRooms: [...MGMT],
+  manageActivities: [...MGMT], // planning folded into Manager
+  viewActivities: [...MGMT, GS, AS, SPECIALIST], // all staff read the library
 };
 
 /** True if the given (raw) role holds the capability. */
@@ -72,7 +80,9 @@ export function can(role: string | null | undefined, capability: Capability): bo
 export function isStaff(role: string | null | undefined): boolean {
   if (!role) return false;
   const r = effectiveRole(role);
-  return r === FOUNDER || r === EXEC || r === MANAGER || r === GS || r === AS;
+  return (
+    r === FOUNDER || r === EXEC || r === MANAGER || r === GS || r === AS || r === SPECIALIST
+  );
 }
 
 /** Management tier: founder, executive, or manager (legacy planner tier). */

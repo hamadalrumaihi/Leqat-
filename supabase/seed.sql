@@ -26,7 +26,8 @@ values
   ('00000000-0000-0000-0000-000000000000','55555555-5555-5555-5555-555555555555','authenticated','authenticated','asup@leqat.qa',   crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المشرف المساعد","role":"assistant_supervisor"}', now(), now(), '', '', '', '', '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000','66666666-6666-6666-6666-666666666666','authenticated','authenticated','parent@leqat.qa', crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"ولي الأمر","role":"parent"}', now(), now(), '', '', '', '', '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000','77777777-7777-7777-7777-777777777777','authenticated','authenticated','student@leqat.qa',crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"الطالب","role":"student"}', now(), now(), '', '', '', '', '', '', '', ''),
-  ('00000000-0000-0000-0000-000000000000','88888888-8888-8888-8888-888888888888','authenticated','authenticated','founder@leqat.qa',crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المؤسّس","role":"founder"}', now(), now(), '', '', '', '', '', '', '', '')
+  ('00000000-0000-0000-0000-000000000000','88888888-8888-8888-8888-888888888888','authenticated','authenticated','founder@leqat.qa',crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المؤسّس","role":"founder"}', now(), now(), '', '', '', '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000','99999999-9999-9999-9999-999999999999','authenticated','authenticated','teacher@leqat.qa',crypt('Leqat@2025', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"full_name_ar":"المعلّم المختص","role":"specialist_teacher"}', now(), now(), '', '', '', '', '', '', '', '')
 on conflict (id) do nothing;
 
 -- ── Auth identities ─────────────────────────────────────────────
@@ -50,7 +51,8 @@ select
 from auth.users
 where email in (
   'exec@leqat.qa','psup@leqat.qa','pmgr@leqat.qa','gsup@leqat.qa',
-  'asup@leqat.qa','parent@leqat.qa','student@leqat.qa','founder@leqat.qa'
+  'asup@leqat.qa','parent@leqat.qa','student@leqat.qa','founder@leqat.qa',
+  'teacher@leqat.qa'
 )
 on conflict do nothing;
 
@@ -64,7 +66,8 @@ insert into profiles (id, role, full_name_ar, full_name_en, email, phone) values
   ('44444444-4444-4444-4444-444444444444','group_supervisor','مشرف المجموعة','Group Supervisor','gsup@leqat.qa',null),
   ('55555555-5555-5555-5555-555555555555','assistant_supervisor','المشرف المساعد','Assistant Supervisor','asup@leqat.qa',null),
   ('66666666-6666-6666-6666-666666666666','parent','ولي الأمر','Parent','parent@leqat.qa','55667788'),
-  ('77777777-7777-7777-7777-777777777777','student','الطالب','Student','student@leqat.qa',null)
+  ('77777777-7777-7777-7777-777777777777','student','الطالب','Student','student@leqat.qa',null),
+  ('99999999-9999-9999-9999-999999999999','specialist_teacher','المعلّم المختص','Specialist Teacher','teacher@leqat.qa',null)
 on conflict (id) do update set role = excluded.role, full_name_ar = excluded.full_name_ar,
   full_name_en = excluded.full_name_en, email = excluded.email, phone = excluded.phone;
 
@@ -310,4 +313,18 @@ insert into chat_members (channel_id, profile_id) values
   ('e0000000-0000-0000-0000-0000000000e2','22222222-2222-2222-2222-222222222222'),
   ('e0000000-0000-0000-0000-0000000000e2','44444444-4444-4444-4444-444444444444'),
   ('e0000000-0000-0000-0000-0000000000e2','66666666-6666-6666-6666-666666666666')
+on conflict do nothing;
+
+-- ── Ops foundation: rooms + activity library samples (0021) ─────
+insert into rooms (id, program_id, name_ar, name_en, capacity, notes_ar) values
+  ('c1000000-0000-0000-0000-000000000001','a0000000-0000-0000-0000-0000000000a1','قاعة الابتكار','Innovation Room',20,'أجهزة حاسب ومستلزمات روبوتيك'),
+  ('c1000000-0000-0000-0000-000000000002','a0000000-0000-0000-0000-0000000000a1','القاعة الرياضية','Gymnasium',40,null),
+  ('c1000000-0000-0000-0000-000000000003','a0000000-0000-0000-0000-0000000000a1','قاعة ٢','Room 2',15,null)
+on conflict (id) do nothing;
+
+insert into activities
+  (title_ar, title_en, category, objective_ar, duration_min, age_grp, max_group_size, materials_ar, status, proposed_by, reviewed_by) values
+  ('تحدي الروبوتيك','Robotics Challenge','STEM','بناء وبرمجة روبوت بسيط ضمن فريق',40,'boys',12,'مجموعات ليغو، حواسيب','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
+  ('ورشة المهارات الحياتية','Life Skills Workshop','life-skills','تنمية مهارات التواصل واتخاذ القرار',40,'boys',15,'بطاقات، سبورة','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
+  ('حل المشكلات الإبداعي','Creative Problem Solving','life-skills','التفكير الناقد وحل المشكلات',45,'youth',15,null,'proposed','88888888-8888-8888-8888-888888888888',null)
 on conflict do nothing;
