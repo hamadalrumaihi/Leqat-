@@ -13,7 +13,13 @@ import {
 import { ScheduleEntryForm } from '@/components/schedule-entry-form';
 import { DeleteEntryButton, PublishDayButton } from '@/components/schedule-actions';
 import { ActivityStatusControls } from '@/components/activity-status-controls';
+import { ScheduleBuilder } from '@/components/schedule-builder';
 import { EXEC_STATUS_STYLE } from '@/lib/exec-status';
+
+const toMin = (t: string) => {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + (m || 0);
+};
 
 function addDays(date: string, delta: number): string {
   const d = new Date(date + 'T00:00:00Z');
@@ -160,6 +166,20 @@ export default async function MasterSchedulePage({
             ))}
           </ul>
         </div>
+      )}
+
+      {/* Drag-and-drop schedule builder (management; traditional list below stays the editor) */}
+      {canManage && entries.length >= 2 && (
+        <ScheduleBuilder
+          programId={programId}
+          date={date}
+          base={Math.min(...entries.map((e) => toMin(e.start_time)))}
+          entries={entries.map((e) => ({
+            id: e.id,
+            label: `${e.activities?.title_ar ?? '—'}${e.groups?.name_ar ? ` · ${e.groups.name_ar}` : ''}`,
+            dur: toMin(e.end_time) - toMin(e.start_time),
+          }))}
+        />
       )}
 
       {/* Entries */}

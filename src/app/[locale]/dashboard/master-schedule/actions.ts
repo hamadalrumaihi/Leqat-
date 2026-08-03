@@ -74,3 +74,55 @@ export async function publishDayAction(_: unknown, formData: FormData) {
   revalidatePath('/dashboard/master-schedule');
   return { ok: true };
 }
+
+// ── Schedule builder: drag-reorder a day, reflow times sequentially ──
+const toMin = (t: string) => {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + (m || 0);
+};
+const fromMin = (m: number) =>
+  `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}:00`;
+
+// Persist a new order for a program+date: each entry keeps its own
+// duration; start/end are repacked back-to-back from the earliest
+// current start. Traditional per-entry editing stays available.
+export async function reorderScheduleDayAction(
+  programId: string,
+  date: string,
+  orderedIds: string[],
+) {
+  const user = await getCurrentUser();
+  if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
+  if (!programId || !date || !Array.isArray(orderedIds) || orderedIds.length < 2) {
+    return { ok: true };
+  }
+
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('schedule_entries')
+    .select('id, start_time, end_time')
+    .eq('program_id', programId)
+    .eq('date', date);
+  const rows = (data ?? []) as { id: string; start_time: string; end_time: string }[];
+  if (rows.length < 2) return { ok: true };
+
+  const dur = new Map(rows.map((r) => [r.id, toMin(r.end_time) - toMin(r.start_time)]));
+  const base = Math.min(...rows.map((r) => toMin(r.start_time)));
+  const ordered = orderedIds.filter((id) => dur.has(id));
+
+  let cursor = base;
+  for (const id of ordered) {
+    const d = dur.get(id) ?? 30;
+    const start = cursor;
+    const end = cursor + d;
+    // RLS ("management writes schedule") re-checks on the server.
+    const { error } = await supabase
+      .from('schedule_entries')
+      .update({ start_time: fromMin(start), end_time: fromMin(end), updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) return { error: error.message };
+    cursor = end;
+  }
+  revalidatePath('/dashboard/master-schedule');
+  return { ok: true };
+}
