@@ -14,6 +14,13 @@ import {
 } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuCheckboxItem,
+} from '@/components/ui/dropdown-menu';
 
 // Reusable data table built on TanStack Table (headless). RTL-aware,
 // styled to match the app: global search, sortable headers, column
@@ -33,7 +40,6 @@ export function DataTable<TData>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [showCols, setShowCols] = useState(false);
 
   const table = useReactTable({
     data,
@@ -58,28 +64,25 @@ export function DataTable<TData>({
           placeholder={searchPlaceholder ?? t('search')}
           className="input h-9 max-w-xs"
         />
-        <div className="relative">
-          <button
-            onClick={() => setShowCols((v) => !v)}
-            className="btn-outline h-9 gap-2 px-3 text-sm"
-          >
-            <SlidersHorizontal className="h-4 w-4" /> {t('columns')}
-          </button>
-          {showCols && (
-            <div className="absolute z-20 mt-1 w-48 rounded-md border bg-card p-2 shadow-md">
-              {table.getAllLeafColumns().map((col) => (
-                <label key={col.id} className="flex items-center gap-2 px-1 py-1 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={col.getIsVisible()}
-                    onChange={col.getToggleVisibilityHandler()}
-                  />
-                  {typeof col.columnDef.header === 'string' ? col.columnDef.header : col.id}
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="btn-outline h-9 gap-2 px-3 text-sm">
+              <SlidersHorizontal className="h-4 w-4" /> {t('columns')}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuLabel>{t('columns')}</DropdownMenuLabel>
+            {table.getAllLeafColumns().map((col) => (
+              <DropdownMenuCheckboxItem
+                key={col.id}
+                checked={col.getIsVisible()}
+                onCheckedChange={(v) => col.toggleVisibility(!!v)}
+              >
+                {typeof col.columnDef.header === 'string' ? col.columnDef.header : col.id}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <span className="ms-auto text-xs text-muted-foreground">
           {t('rows', { count: table.getFilteredRowModel().rows.length })}
         </span>

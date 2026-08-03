@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
+import { Toaster } from 'sonner';
 import { SWRegister } from './sw-register';
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -20,6 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={client}>
         <SWRegister />
         {children}
+        <Toaster position="top-center" richColors closeButton />
       </QueryClientProvider>
     </ThemeProvider>
   );
