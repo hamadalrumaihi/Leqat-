@@ -167,7 +167,8 @@
     "masterSchedule": "Master Schedule",
     "announcements": "Announcements",
     "issues": "Issues",
-    "opsBoard": "Ops Board"
+    "opsBoard": "Ops Board",
+    "transfers": "Group Transfers"
   },
   "attendance": {
     "title": "Attendance",
@@ -416,5 +417,22 @@
     "noAnnouncements": "No announcements.",
     "conflictsNote": "{count} conflict(s) in today’s schedule",
     "noTeacherNote": "{count} activity without a teacher"
+  },
+  "transfers": {
+    "title": "Group Transfers",
+    "noProgram": "No programs yet.",
+    "roster": "Enrolled students",
+    "noStudents": "No assigned students.",
+    "transfer": "Transfer",
+    "toGroup": "To group",
+    "reason": "Reason (optional)",
+    "confirm": "Confirm transfer",
+    "mismatch": "Destination group is in another program.",
+    "already": "Student is already in this group.",
+    "history": "Transfer history",
+    "noHistory": "No transfers yet.",
+    "from": "From",
+    "to": "To",
+    "unassigned": "Unassigned"
   }
 }
