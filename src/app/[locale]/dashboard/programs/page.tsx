@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { Link } from '@/i18n/routing';
 import { CreateProgram, EditProgram } from '@/components/program-forms';
+import { quotientLabel } from '@/lib/utils';
+import { AGE_LABEL_AR, type AgeGroup } from '@/lib/age-groups';
 
 const STATUS_LABEL: Record<string, string> = {
   draft: 'مسودة',
@@ -13,7 +15,7 @@ export default async function ProgramsPage() {
   const supabase = await createClient();
   const { data: programs } = await supabase
     .from('programs')
-    .select('id, name_ar, type, age_grp, quotient, value_ar, value_en, ramadan_mode, status')
+    .select('id, name_ar, type, age_grp, age_grps, quotient, value_ar, value_en, ramadan_mode, status')
     .order('created_at', { ascending: false });
 
   return (
@@ -33,7 +35,10 @@ export default async function ProgramsPage() {
                 <span className="font-semibold">{p.name_ar as string}</span>
                 <span className="ms-2 text-xs text-muted-foreground">
                   {p.type === 'daily' ? 'يومي' : 'أسبوعي'}
-                  {p.quotient ? ` · ${p.quotient as string}` : ''}
+                  {((p.age_grps as AgeGroup[]) ?? []).length > 0
+                    ? ` · ${((p.age_grps as AgeGroup[]) ?? []).map((g) => AGE_LABEL_AR[g] ?? g).join(' + ')}`
+                    : ''}
+                  {p.quotient ? ` · ${quotientLabel(p.quotient as string)}` : ''}
                   {p.value_ar ? ` · ${p.value_ar as string}` : ''}
                 </span>
               </div>
@@ -52,6 +57,8 @@ export default async function ProgramsPage() {
             <EditProgram
               program={{
                 id: p.id as string,
+                name_ar: (p.name_ar as string) ?? '',
+                age_grps: (p.age_grps as AgeGroup[]) ?? [],
                 quotient: (p.quotient as string) ?? '',
                 value_ar: (p.value_ar as string) ?? '',
                 value_en: (p.value_en as string) ?? '',

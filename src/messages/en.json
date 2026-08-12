@@ -67,9 +67,8 @@
   },
   "ageGroups": {
     "title": "Age Groups",
-    "children": "Children between 5–6 years",
-    "boys": "Boys between 7–13 years",
-    "youth": "Youth between 14–17 years"
+    "nashia": "Nashia — the younger participants",
+    "fityan": "Fityan — the older participants"
   },
   "packages": {
     "title": "Program Packages",
@@ -130,7 +129,6 @@
     "attendance": "Attendance",
     "reports": "Reports",
     "chat": "Chat",
-    "books": "Digital Library",
     "gallery": "Gallery",
     "consent": "Photo consent",
     "registerChild": "Register a child",
@@ -213,14 +211,6 @@
     "pickupMaid": "Maid coming",
     "pickupDelayed": "Delayed",
     "moderationPending": "Awaiting supervisor approval"
-  },
-  "books": {
-    "title": "Digital Library",
-    "assigned": "Assigned to your group",
-    "due": "Due date",
-    "progress": "Reading progress",
-    "open": "Open book",
-    "audio": "Listen"
   },
   "gallery": {
     "title": "Gallery",
@@ -458,6 +448,7 @@
     "level": "Level",
     "status": "Status",
     "enrolled": "Enrolled",
+    "price": "Fee",
     "search": "Search name…"
   },
   "enrollStatus": {

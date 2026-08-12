@@ -77,7 +77,7 @@ values ('a0000000-0000-0000-0000-0000000000a1',
   'الفصل الدراسي — فتيان (الإحسان)', 'Semester — Fityan (Ihsan)',
   'برنامج فصلي مدته ١٠ أسابيع، جلسة أسبوعية ٤ ساعات، يركّز على البعد الروحي (SQ) وقيمة الإحسان.',
   '10-week semester, weekly 4-hour session, focused on the spiritual quotient (SQ) and the value of Ihsan.',
-  'weekly','boys','male','SQ','الإحسان','Ihsan',
+  'weekly','fityan','male','SQ','الإحسان','Ihsan',
   date '2025-09-06', date '2025-11-15', 10, 15, 1500.00, 'open',
   '11111111-1111-1111-1111-111111111111')
 on conflict (id) do nothing;
@@ -132,7 +132,7 @@ begin
     insert into students (id, parent_id, full_name_ar, full_name_en, dob, gender, age_grp, photo_consent)
     values (sid, '66666666-6666-6666-6666-666666666666',
             'طالب ' || i, 'Student ' || i,
-            date '2013-01-01' + (i * 20), 'male', 'boys', (i % 2 = 0));
+            date '2013-01-01' + (i * 20), 'male', 'fityan', (i % 2 = 0));
     insert into enrollments (student_id, program_id, group_id, status, tier)
     values (sid, 'a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1','active','full_semester');
   end loop;
@@ -140,7 +140,7 @@ begin
   -- The seeded student test account
   insert into students (id, profile_id, parent_id, full_name_ar, full_name_en, dob, gender, age_grp, photo_consent)
   values ('d0000000-0000-0000-0000-0000000000d1','77777777-7777-7777-7777-777777777777',
-          '66666666-6666-6666-6666-666666666666','الطالب','Student', date '2013-05-01','male','boys', true)
+          '66666666-6666-6666-6666-666666666666','الطالب','Student', date '2013-05-01','male','fityan', true)
   on conflict (id) do nothing;
   insert into enrollments (student_id, program_id, group_id, status, tier)
   values ('d0000000-0000-0000-0000-0000000000d1','a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1','active','full_semester')
@@ -230,8 +230,8 @@ on conflict do nothing;
 -- ════════════════════════════════════════════════════════════════
 
 insert into stories (title_ar, title_en, body_ar, value_ar, age_grp, quotient, created_by) values
-  ('قصة الإحسان في الطريق','Kindness on the road','قصة تربوية قصيرة عن الإحسان للمارة وكبار السن.','الإحسان','boys','SQ','11111111-1111-1111-1111-111111111111'),
-  ('الفريق الواحد','One team','قصة عن التعاون والعمل الجماعي في الرياضة.','التعاون','boys','EQ','11111111-1111-1111-1111-111111111111')
+  ('قصة الإحسان في الطريق','Kindness on the road','قصة تربوية قصيرة عن الإحسان للمارة وكبار السن.','الإحسان','fityan','SQ','11111111-1111-1111-1111-111111111111'),
+  ('الفريق الواحد','One team','قصة عن التعاون والعمل الجماعي في الرياضة.','التعاون','fityan','EQ','11111111-1111-1111-1111-111111111111')
 on conflict do nothing;
 
 -- More chat history for a realistic demo
@@ -326,9 +326,9 @@ on conflict (id) do nothing;
 
 insert into activities
   (id, title_ar, title_en, category, objective_ar, duration_min, age_grp, max_group_size, materials_ar, status, proposed_by, reviewed_by) values
-  ('ac000000-0000-0000-0000-000000000001','تحدي الروبوتيك','Robotics Challenge','STEM','بناء وبرمجة روبوت بسيط ضمن فريق',40,'boys',12,'مجموعات ليغو، حواسيب','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
-  ('ac000000-0000-0000-0000-000000000002','ورشة المهارات الحياتية','Life Skills Workshop','life-skills','تنمية مهارات التواصل واتخاذ القرار',40,'boys',15,'بطاقات، سبورة','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
-  ('ac000000-0000-0000-0000-000000000003','حل المشكلات الإبداعي','Creative Problem Solving','life-skills','التفكير الناقد وحل المشكلات',45,'youth',15,null,'proposed','88888888-8888-8888-8888-888888888888',null)
+  ('ac000000-0000-0000-0000-000000000001','تحدي الروبوتيك','Robotics Challenge','STEM','بناء وبرمجة روبوت بسيط ضمن فريق',40,'fityan',12,'مجموعات ليغو، حواسيب','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
+  ('ac000000-0000-0000-0000-000000000002','ورشة المهارات الحياتية','Life Skills Workshop','life-skills','تنمية مهارات التواصل واتخاذ القرار',40,'fityan',15,'بطاقات، سبورة','approved','88888888-8888-8888-8888-888888888888','11111111-1111-1111-1111-111111111111'),
+  ('ac000000-0000-0000-0000-000000000003','حل المشكلات الإبداعي','Creative Problem Solving','life-skills','التفكير الناقد وحل المشكلات',45,'fityan',15,null,'proposed','88888888-8888-8888-8888-888888888888',null)
 on conflict (id) do nothing;
 
 -- Program operating hours + location (MVP example: 4pm–8pm, Sun–Thu).
@@ -366,7 +366,7 @@ insert into issues (program_id, group_id, reporter_id, kind, location_ar, descri
 insert into programs (id, name_ar, name_en, type, age_grp, gender, quotient, value_ar, weeks, capacity, price_qar, status, created_by)
 values ('a0000000-0000-0000-0000-0000000000b0',
   'النادي الصيفي — أولاد (القيادة)', 'Summer Club — Boys (Leadership)',
-  'weekly','boys','male','PQ','القيادة', 8, 20, 1200.00, 'open',
+  'weekly','fityan','male','PQ','القيادة', 8, 20, 1200.00, 'open',
   '11111111-1111-1111-1111-111111111111')
 on conflict (id) do nothing;
 
@@ -378,3 +378,8 @@ on conflict do nothing;
 insert into groups (id, program_id, name_ar, name_en, color, capacity, division)
 values ('b0000000-0000-0000-0000-0000000000c0','a0000000-0000-0000-0000-0000000000b0','مجموعة القادة','Leaders Group','#3FA34D',20,'teen')
 on conflict (id) do nothing;
+
+-- ── 0028: programs now carry a multi-age array — mirror the single
+--    legacy value for the seeded programs above.
+update programs set age_grps = array[age_grp]
+where age_grps = '{}'::age_group[] and age_grp is not null;

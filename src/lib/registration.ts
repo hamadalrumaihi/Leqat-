@@ -2,19 +2,36 @@ import 'server-only';
 import { createAdminClient } from '@/lib/supabase/server';
 import type { AgeGroup } from '@/lib/age';
 
+/**
+ * True when the server has the service-role key the registration flow
+ * needs. Without it the register page must show a friendly
+ * "temporarily unavailable" card instead of crashing with a server
+ * exception (createAdminClient throws synchronously on a missing key).
+ */
+export function registrationConfigured(): boolean {
+  return Boolean(
+    process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.NEXT_PUBLIC_SUPABASE_URL,
+  );
+}
+
 /** Returns the invite row (with its program) if valid and unconsumed. */
 export async function lookupInvite(token: string) {
-  if (!token) return null;
-  const admin = createAdminClient();
-  const { data, error } = await admin
-    .from('registration_invites')
-    .select('*, programs(id, name_ar, name_en, age_grp, price_qar)')
-    .eq('token', token)
-    .is('consumed_at', null)
-    .gt('expires_at', new Date().toISOString())
-    .single();
-  if (error) return null;
-  return data;
+  if (!token || !registrationConfigured()) return null;
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin
+      .from('registration_invites')
+      .select('*, programs(id, name_ar, name_en, age_grps)')
+      .eq('token', token)
+      .is('consumed_at', null)
+      .gt('expires_at', new Date().toISOString())
+      .single();
+    if (error) return null;
+    return data;
+  } catch {
+    // Never let a lookup failure 500 the public register page.
+    return null;
+  }
 }
 
 export type RedeemInput = {
@@ -25,6 +42,7 @@ export type RedeemInput = {
   childName: string;
   childDob: string; // YYYY-MM-DD
   childAgeGroup: AgeGroup;
+  priceNote?: string; // agreed fee, free text — varies per booking
   medicalNotes?: string;
   photoConsent: boolean;
   emergencyContacts?: { name: string; phone: string; relation: string }[];
@@ -61,6 +79,7 @@ async function findParentIdByEmail(
  * the claim is released so the parent can retry.
  */
 export async function redeemInvite(input: RedeemInput) {
+  if (!registrationConfigured()) throw new Error('registration_unavailable');
   const sb = createAdminClient();
 
   // 1. Atomically claim the invite.
@@ -171,6 +190,7 @@ async function completeRedemption(
       student_id: student.id,
       program_id: invite.program_id,
       status,
+      price_note: input.priceNote?.trim() || null,
     });
   }
 

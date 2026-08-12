@@ -30,7 +30,7 @@ export function InviteRegisterForm({
   phoneHint: string | null;
 }) {
   const [state, action] = useFormState(redeemInviteAction, null as null | { ok?: boolean; error?: string });
-  const [age, setAge] = useState<AgeGroup>('boys');
+  const [age, setAge] = useState<AgeGroup>('nashia');
   const [contacts, setContacts] = useState([{ id: 1 }]);
   const [nextId, setNextId] = useState(2);
 
@@ -92,6 +92,13 @@ export function InviteRegisterForm({
               <option key={g.value} value={g.value}>{g.ar}</option>
             ))}
           </select>
+        </div>
+        <div>
+          <label className="label">الرسوم المتفق عليها (اختياري)</label>
+          <input name="price_note" className="input" placeholder="مثال: ١٥٠٠ ر.ق على دفعتين" />
+          <p className="mt-1 text-xs text-muted-foreground">
+            الرسوم قد تختلف حسب الحجز — اكتبها كما اتُّفق عليها.
+          </p>
         </div>
         <div>
           <label className="label">ملاحظات طبية (اختياري)</label>

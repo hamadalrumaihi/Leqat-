@@ -1,5 +1,7 @@
 // Per-child exposure across the four quotients this semester.
 // Pure SVG radar — no deps.
+import { QUOTIENT_NAME } from '@/lib/utils';
+
 const AXES = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
 
 export function QuotientRadar({
@@ -33,9 +35,14 @@ export function QuotientRadar({
       {AXES.map((q, i) => {
         const [x, y] = point(i, 1.18);
         return (
-          <text key={q} x={x} y={y} textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[10px] font-bold">
-            {q}
-          </text>
+          <g key={q}>
+            <text x={x} y={y - 4} textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[10px] font-bold">
+              {q}
+            </text>
+            <text x={x} y={y + 6} textAnchor="middle" dominantBaseline="middle" className="fill-foreground text-[7px] opacity-70">
+              {QUOTIENT_NAME[q]?.ar}
+            </text>
+          </g>
         );
       })}
     </svg>

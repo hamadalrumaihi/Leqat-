@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { aiDraftAction, saveReportAction } from '@/app/[locale]/dashboard/reports/actions';
-import { REPEAT_LETTERS } from '@/lib/utils';
+import { REPEAT_LETTERS, quotientLabel } from '@/lib/utils';
 
 const QUOTIENTS = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
 const SKILLS = ['critical', 'creative', 'collaboration', 'communication'] as const;
@@ -109,8 +109,8 @@ export function ReportEditor({
           <legend className="label">{t('quotientTags')}</legend>
           <div className="flex flex-wrap gap-3">
             {QUOTIENTS.map((q) => (
-              <label key={q} className="latin-term flex items-center gap-1.5 text-sm">
-                <input type="checkbox" name="quotient_tags" value={q} /> {q}
+              <label key={q} className="flex items-center gap-1.5 text-sm">
+                <input type="checkbox" name="quotient_tags" value={q} /> {quotientLabel(q)}
               </label>
             ))}
           </div>

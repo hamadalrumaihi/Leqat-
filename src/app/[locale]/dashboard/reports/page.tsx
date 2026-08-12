@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { effectiveRole } from '@/lib/utils';
+import { effectiveRole, quotientLabel } from '@/lib/utils';
 import { Link } from '@/i18n/routing';
 import { ReportAdvance } from '@/components/report-advance';
 import { GroupSwatch } from '@/components/group-swatch';
@@ -78,8 +78,8 @@ export default async function ReportsPage() {
                 </span>
               ))}
               {((r.quotient_tags as string[]) ?? []).map((q) => (
-                <span key={q} className="latin-term rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                  {q}
+                <span key={q} className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  {quotientLabel(q)}
                 </span>
               ))}
               {((r.skill_tags as string[]) ?? []).map((s) => (

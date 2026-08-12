@@ -16,7 +16,7 @@ export async function searchUnassignedStudents(
 
   const { data: group } = await supabase
     .from('groups')
-    .select('program_id, programs(age_grp)')
+    .select('program_id, programs(age_grp, age_grps)')
     .eq('id', groupId)
     .single();
   if (!group) return [];
@@ -28,12 +28,15 @@ export async function searchUnassignedStudents(
     .is('group_id', null);
 
   if (!showAllAges) {
-    const prog = (group as { programs: unknown }).programs as
-      | { age_grp: string | null }
-      | { age_grp: string | null }[]
-      | null;
-    const age = Array.isArray(prog) ? prog[0]?.age_grp : prog?.age_grp;
-    if (age) q = q.eq('students.age_grp', age);
+    type Prog = { age_grp: string | null; age_grps: string[] | null };
+    const prog = (group as { programs: unknown }).programs as Prog | Prog[] | null;
+    const p = Array.isArray(prog) ? prog[0] : prog;
+    // A program may target several age categories; fall back to the
+    // legacy single value for rows created before the array existed.
+    const ages = (p?.age_grps?.length ? p.age_grps : [p?.age_grp]).filter(
+      (a): a is string => Boolean(a),
+    );
+    if (ages.length > 0) q = q.in('students.age_grp', ages);
   }
 
   const term = query.trim().replace(/[%,]/g, '');

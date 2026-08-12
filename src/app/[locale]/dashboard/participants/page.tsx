@@ -34,7 +34,7 @@ export default async function ParticipantsPage() {
 
   const { data } = await supabase
     .from('enrollments')
-    .select('id, status, created_at, students(full_name_ar, full_name_en, age_grp), groups(name_ar)')
+    .select('id, status, created_at, price_note, students(full_name_ar, full_name_en, age_grp), groups(name_ar)')
     .eq('program_id', program.id as string)
     .order('created_at', { ascending: true });
 
@@ -49,6 +49,7 @@ export default async function ParticipantsPage() {
       group: g?.name_ar ?? '—',
       level: ageLabel(s?.age_grp ?? null),
       status: ts(e.status as string),
+      price: (e.price_note as string | null) ?? '—',
       enrolled: dualDate((e.created_at as string).slice(0, 10), locale as 'ar' | 'en'),
     };
   });

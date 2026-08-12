@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { dualDate, timeRange, QUOTIENT_COLOR } from '@/lib/utils';
+import { dualDate, timeRange, QUOTIENT_COLOR, quotientLabel } from '@/lib/utils';
 import { can } from '@/lib/roles';
 import { GroupSwatch } from '@/components/group-swatch';
 import { SessionCreate, PublishButton, StationForm } from '@/components/schedule-forms';
@@ -101,15 +101,15 @@ export default async function SchedulePage() {
                     <div className="flex flex-wrap items-center gap-1">
                       {st.quotient ? (
                         <span
-                          className="latin-term rounded px-2 py-0.5 text-xs font-medium text-white"
+                          className="rounded px-2 py-0.5 text-xs font-medium text-white"
                           style={{ backgroundColor: QUOTIENT_COLOR[st.quotient as string] }}
                         >
-                          {String(st.quotient)}
+                          {quotientLabel(st.quotient as string)}
                         </span>
                       ) : null}
                       {((st.secondary_quotients as string[]) ?? []).map((sq) => (
-                        <span key={sq} className="latin-term rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                          {sq}
+                        <span key={sq} className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                          {quotientLabel(sq)}
                         </span>
                       ))}
                       {st.repeat_letter ? (

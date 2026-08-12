@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { quotientLabel } from '@/lib/utils';
 
 type Station = {
   title: string;
@@ -72,15 +73,15 @@ export function LiveScreen({
                 <div className="mt-1 flex flex-wrap items-center gap-1">
                   {s.quotient ? (
                     <span
-                      className="latin-term rounded px-1.5 py-0.5 text-[11px] font-bold"
+                      className="rounded px-1.5 py-0.5 text-[11px] font-bold"
                       style={{ backgroundColor: Q_COLOR[s.quotient] ?? '#3FA34D', color: '#fff' }}
                     >
-                      {s.quotient}
+                      {quotientLabel(s.quotient)}
                     </span>
                   ) : null}
                   {(s.secondary ?? []).map((sq) => (
-                    <span key={sq} className="latin-term rounded bg-white/20 px-1.5 py-0.5 text-[10px]">
-                      {sq}
+                    <span key={sq} className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]">
+                      {quotientLabel(sq)}
                     </span>
                   ))}
                   {s.repeat ? (

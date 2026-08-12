@@ -7,7 +7,7 @@ import {
   publishSessionAction,
   createStationAction,
 } from '@/app/[locale]/dashboard/schedule/actions';
-import { REPEAT_LETTERS, QUOTIENT_COLOR, cn } from '@/lib/utils';
+import { REPEAT_LETTERS, QUOTIENT_COLOR, QUOTIENT_NAME, cn } from '@/lib/utils';
 
 const QUOTIENTS = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
 
@@ -153,10 +153,11 @@ export function StationForm({
                     setPrimary(q);
                     setSecondary((s) => s.filter((x) => x !== q));
                   }}
-                  className={cn('latin-term rounded-md px-3 py-1.5 text-sm font-semibold', primary === q ? 'text-white' : 'bg-muted')}
+                  className={cn('flex flex-col items-center rounded-md px-3 py-1.5 text-sm font-semibold', primary === q ? 'text-white' : 'bg-muted')}
                   style={primary === q ? { backgroundColor: QUOTIENT_COLOR[q] } : undefined}
                 >
-                  {q}
+                  <span className="latin-term">{q}</span>
+                  <span className="text-[10px] font-normal">{QUOTIENT_NAME[q]?.ar}</span>
                 </button>
               ))}
             </div>
@@ -174,9 +175,9 @@ export function StationForm({
                     onClick={() =>
                       setSecondary((s) => (on ? s.filter((x) => x !== q) : [...s, q]))
                     }
-                    className={cn('latin-term rounded-full border px-3 py-1 text-xs', on ? 'border-accent bg-accent/15 text-accent' : 'text-muted-foreground')}
+                    className={cn('rounded-full border px-3 py-1 text-xs', on ? 'border-accent bg-accent/15 text-accent' : 'text-muted-foreground')}
                   >
-                    {q}
+                    {q} — {QUOTIENT_NAME[q]?.ar}
                   </button>
                 );
               })}

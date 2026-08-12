@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { EditProgram } from '@/components/program-forms';
 import { InvitesManager, type InviteRow } from '@/components/invites-manager';
+import type { AgeGroup } from '@/lib/age-groups';
 
 export default async function ProgramDetailPage({
   params,
@@ -12,7 +13,7 @@ export default async function ProgramDetailPage({
 
   const { data: program } = await supabase
     .from('programs')
-    .select('id, name_ar, quotient, value_ar, value_en, ramadan_mode, status')
+    .select('id, name_ar, age_grps, quotient, value_ar, value_en, ramadan_mode, status')
     .eq('id', id)
     .maybeSingle();
 
@@ -47,6 +48,8 @@ export default async function ProgramDetailPage({
         <EditProgram
           program={{
             id: program.id as string,
+            name_ar: (program.name_ar as string) ?? '',
+            age_grps: (program.age_grps as AgeGroup[]) ?? [],
             quotient: (program.quotient as string) ?? '',
             value_ar: (program.value_ar as string) ?? '',
             value_en: (program.value_en as string) ?? '',

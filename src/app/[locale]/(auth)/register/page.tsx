@@ -3,7 +3,7 @@ import { Link } from '@/i18n/routing';
 import { Logo } from '@/components/logo';
 import { AuthForm } from '@/components/auth-form';
 import { InviteRegisterForm } from '@/components/invite-register-form';
-import { lookupInvite } from '@/lib/registration';
+import { lookupInvite, registrationConfigured } from '@/lib/registration';
 
 export default async function RegisterPage({
   params,
@@ -27,6 +27,19 @@ export default async function RegisterPage({
 
   // ── Invite mode (WhatsApp registration link) ──────────────────
   if (invite) {
+    // Missing service-role key would otherwise crash the page — show
+    // an honest "temporarily unavailable" instead of "invalid link".
+    if (!registrationConfigured()) {
+      return (
+        <div className="container flex min-h-screen max-w-md flex-col justify-center py-12">
+          {Header}
+          <div className="card p-8 text-center">
+            <p className="font-semibold text-destructive">التسجيل غير متاح مؤقتًا.</p>
+            <p className="mt-2 text-sm text-muted-foreground">تواصل عبر واتساب 72054558.</p>
+          </div>
+        </div>
+      );
+    }
     const row = await lookupInvite(invite);
     if (!row) {
       return (
