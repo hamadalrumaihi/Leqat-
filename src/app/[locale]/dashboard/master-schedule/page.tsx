@@ -15,6 +15,7 @@ import { DeleteEntryButton, PublishDayButton } from '@/components/schedule-actio
 import { ActivityStatusControls } from '@/components/activity-status-controls';
 import { ScheduleBuilder } from '@/components/schedule-builder';
 import { EXEC_STATUS_STYLE } from '@/lib/exec-status';
+import { getActiveProgram } from '@/lib/program-context';
 
 const toMin = (t: string) => {
   const [h, m] = t.split(':').map(Number);
@@ -47,7 +48,11 @@ export default async function MasterSchedulePage({
     .select('id, name_ar, daily_start, daily_end')
     .order('created_at', { ascending: true });
   const programList = programs ?? [];
-  const program = programList.find((x) => x.id === p) ?? programList[0];
+  const active = await getActiveProgram();
+  const program =
+    programList.find((x) => x.id === p) ??
+    programList.find((x) => x.id === active?.id) ??
+    programList[0];
   const date = d ?? qatarToday();
 
   if (!program) {

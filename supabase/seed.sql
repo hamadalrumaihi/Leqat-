@@ -359,3 +359,22 @@ insert into announcements (program_id, title_ar, body_ar, audience, target_group
 insert into issues (program_id, group_id, reporter_id, kind, location_ar, description_ar, priority, status, assigned_to) values
   ('a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1','44444444-4444-4444-4444-444444444444','missing_materials','قاعة الابتكار','ينقص جهازا حاسب لنشاط الروبوتيك.','high','new',null),
   ('a0000000-0000-0000-0000-0000000000a1','b0000000-0000-0000-0000-0000000000b1','99999999-9999-9999-9999-999999999999','teacher_delay','المدخل','سأتأخر ٥ دقائق عن الحصة القادمة.','normal','acknowledged','11111111-1111-1111-1111-111111111111');
+
+-- ── Second program to demonstrate per-program roles (0028-era) ──
+-- pmgr is a Manager in program A and a Group Supervisor in program B:
+-- the same user holds different roles in different programs.
+insert into programs (id, name_ar, name_en, type, age_grp, gender, quotient, value_ar, weeks, capacity, price_qar, status, created_by)
+values ('a0000000-0000-0000-0000-0000000000b0',
+  'النادي الصيفي — أولاد (القيادة)', 'Summer Club — Boys (Leadership)',
+  'weekly','boys','male','PQ','القيادة', 8, 20, 1200.00, 'open',
+  '11111111-1111-1111-1111-111111111111')
+on conflict (id) do nothing;
+
+insert into program_staff (program_id, profile_id, role) values
+  ('a0000000-0000-0000-0000-0000000000b0','33333333-3333-3333-3333-333333333333','group_supervisor'),
+  ('a0000000-0000-0000-0000-0000000000b0','22222222-2222-2222-2222-222222222222','manager')
+on conflict do nothing;
+
+insert into groups (id, program_id, name_ar, name_en, color, capacity, division)
+values ('b0000000-0000-0000-0000-0000000000c0','a0000000-0000-0000-0000-0000000000b0','مجموعة القادة','Leaders Group','#3FA34D',20,'teen')
+on conflict (id) do nothing;

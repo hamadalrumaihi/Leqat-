@@ -6,6 +6,7 @@ import { useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Logo } from '@/components/logo';
 import { NotificationBell } from '@/components/notification-bell';
+import { ProgramSwitcher, type SwitcherProgram } from '@/components/program-switcher';
 import { cn, BRAND_GREEN } from '@/lib/utils';
 import { logoutAction } from '@/app/[locale]/(auth)/actions';
 
@@ -65,6 +66,9 @@ export function DashboardChrome({
   roleLabel,
   userName,
   userId,
+  programs,
+  activeProgramId,
+  programsLabel,
   welcome,
   logoutLabel,
   menuLabel,
@@ -76,6 +80,9 @@ export function DashboardChrome({
   roleLabel: string;
   userName: string;
   userId: string;
+  programs: SwitcherProgram[];
+  activeProgramId: string;
+  programsLabel: string;
   welcome: string;
   logoutLabel: string;
   menuLabel: string;
@@ -164,7 +171,8 @@ export function DashboardChrome({
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
+            <ProgramSwitcher programs={programs} activeId={activeProgramId} label={programsLabel} />
             <NotificationBell userId={userId} label={notificationsLabel} />
             <Link
               href={pathname}

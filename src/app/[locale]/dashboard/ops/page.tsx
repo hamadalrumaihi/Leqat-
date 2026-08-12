@@ -6,6 +6,7 @@ import { isManagement } from '@/lib/roles';
 import { qatarToday, formatTime12 } from '@/lib/utils';
 import { detectConflicts, type ScheduleEntry } from '@/lib/schedule';
 import { EXEC_STATUS_STYLE } from '@/lib/exec-status';
+import { getActiveProgram } from '@/lib/program-context';
 
 function Stat({ label, value, tone }: { label: string; value: number | string; tone?: string }) {
   return (
@@ -28,12 +29,14 @@ export default async function OpsBoardPage() {
   const supabase = await createClient();
   const today = qatarToday();
 
-  const { data: program } = await supabase
-    .from('programs')
-    .select('id, name_ar, status, daily_start, daily_end')
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const activeProgram = await getActiveProgram();
+  const { data: program } = activeProgram
+    ? await supabase
+        .from('programs')
+        .select('id, name_ar, status, daily_start, daily_end')
+        .eq('id', activeProgram.id)
+        .maybeSingle()
+    : { data: null };
 
   if (!program) {
     return (

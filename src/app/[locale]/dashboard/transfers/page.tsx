@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { isManagement } from '@/lib/roles';
 import { dualDate } from '@/lib/utils';
+import { getActiveProgram } from '@/lib/program-context';
 import { GroupSwatch } from '@/components/group-swatch';
 import { TransferControl } from '@/components/transfer-control';
 
@@ -15,12 +16,10 @@ export default async function TransfersPage() {
   const t = await getTranslations('transfers');
   const supabase = await createClient();
 
-  const { data: program } = await supabase
-    .from('programs')
-    .select('id, name_ar')
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const active = await getActiveProgram();
+  const { data: program } = active
+    ? await supabase.from('programs').select('id, name_ar').eq('id', active.id).maybeSingle()
+    : { data: null };
 
   if (!program) {
     return (

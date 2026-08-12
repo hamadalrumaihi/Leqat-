@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { getCurrentUser } from '@/lib/auth';
 import { ROLE_LABELS } from '@/lib/utils';
 import { navGroupsFor } from '@/lib/nav';
+import { getMyPrograms, getActiveProgram } from '@/lib/program-context';
 import { DashboardChrome } from '@/components/dashboard-chrome';
 
 export default async function DashboardLayout({
@@ -33,8 +34,14 @@ export default async function DashboardLayout({
     items: g.items.map((i) => ({ href: i.href, label: t(i.key) })),
   }));
 
-  const roleLabel = ROLE_LABELS[user!.role]?.[isAr ? 'ar' : 'en'] ?? user!.role;
+  const label = (role: string) => ROLE_LABELS[role]?.[isAr ? 'ar' : 'en'] ?? role;
   const name = isAr ? user!.fullNameAr : user!.fullNameEn || user!.fullNameAr;
+
+  // Program-specific role: the sidebar label reflects the user's role in
+  // the ACTIVE program; falls back to the global role.
+  const [programs, active] = await Promise.all([getMyPrograms(), getActiveProgram()]);
+  const roleLabel = active ? label(active.role) : label(user!.role);
+  const switcherPrograms = programs.map((p) => ({ id: p.id, name: p.name_ar, roleLabel: label(p.role) }));
 
   return (
     <DashboardChrome
@@ -43,6 +50,9 @@ export default async function DashboardLayout({
       roleLabel={roleLabel}
       userName={name}
       userId={user!.id}
+      programs={switcherPrograms}
+      activeProgramId={active?.id ?? ''}
+      programsLabel={t('switchProgram')}
       welcome={t('welcome')}
       logoutLabel={tn('logout')}
       menuLabel={t('menu')}
