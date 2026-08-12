@@ -2,10 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 
 export async function addAuthorizedAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
   const supabase = await createClient();
   const { error } = await supabase.from('authorized_pickup_persons').insert({
@@ -21,7 +21,7 @@ export async function addAuthorizedAction(_: unknown, formData: FormData) {
 }
 
 export async function toggleAuthorizedAction(formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return;
   const supabase = await createClient();
   await supabase

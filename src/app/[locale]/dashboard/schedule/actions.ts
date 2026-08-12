@@ -2,11 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 
 export async function createSessionAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const supabase = await createClient();
 
@@ -25,7 +26,7 @@ export async function createSessionAction(_: unknown, formData: FormData) {
 }
 
 export async function publishSessionAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const supabase = await createClient();
   const sessionId = String(formData.get('session_id'));
@@ -40,7 +41,7 @@ export async function publishSessionAction(_: unknown, formData: FormData) {
 }
 
 export async function createStationAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const supabase = await createClient();
 

@@ -1,6 +1,7 @@
 'use server';
 
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { signSubstituteToken } from '@/lib/token';
 import { can } from '@/lib/roles';
 
@@ -8,7 +9,7 @@ export async function createSubstituteLinkAction(
   _: unknown,
   formData: FormData,
 ): Promise<{ url?: string; error?: string }> {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!can(user?.role, 'manageSubstitute')) return { error: 'forbidden' };
 
   const sessionId = String(formData.get('session_id'));

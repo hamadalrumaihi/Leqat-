@@ -2,12 +2,13 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 
 // Registration + payment stay on WhatsApp for v1; this is a manual,
 // executive-only ledger of WhatsApp-confirmed transfers (§13).
 export async function addPaymentAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || user.role !== 'executive') return { error: 'forbidden' };
   const supabase = await createClient();
 

@@ -2,11 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 
 export async function awardRecognitionAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'awardRecognition')) return { error: 'forbidden' };
 
   const studentId = String(formData.get('student_id'));

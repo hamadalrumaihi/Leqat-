@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { isManagement } from '@/lib/roles';
 import { AGE_LABEL_AR, AGE_LABEL_EN, type AgeGroup } from '@/lib/age-groups';
 import { dualDate } from '@/lib/utils';
@@ -9,7 +9,7 @@ import { getActiveProgram } from '@/lib/program-context';
 import { ParticipantsTable, type ParticipantRow } from '@/components/participants-table';
 
 export default async function ParticipantsPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !isManagement(user.role)) redirect({ href: '/dashboard', locale });
 

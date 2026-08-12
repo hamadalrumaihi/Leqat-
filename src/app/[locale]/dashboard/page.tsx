@@ -1,5 +1,5 @@
 import { getTranslations, getLocale } from 'next-intl/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { createClient } from '@/lib/supabase/server';
 import { effectiveRole, ROLE_LABELS } from '@/lib/utils';
 import { MissingPhoneAlerts } from '@/components/missing-phone-alerts';
@@ -9,7 +9,7 @@ import { AttentionCard } from '@/components/attention-card';
 // Group supervisor's roster students whose parent phone is missing.
 async function missingPhones() {
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { items: [], total: 0 };
   const role = effectiveRole(user.role);
   if (role !== 'group_supervisor' && role !== 'assistant_supervisor') {
@@ -59,7 +59,7 @@ async function counts() {
 export default async function Overview() {
   const t = await getTranslations('dashboard');
   const locale = await getLocale();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const c = await counts();
   const alerts = await missingPhones();
 

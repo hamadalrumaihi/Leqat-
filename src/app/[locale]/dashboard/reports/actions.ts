@@ -2,7 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { draftReportArabic, type StationLite } from '@/lib/ai';
 import { effectiveRole } from '@/lib/utils';
 
@@ -77,7 +78,7 @@ export async function saveReportAction(_: unknown, formData: FormData) {
 
 export async function advanceReportAction(_: unknown, formData: FormData) {
   const reportId = String(formData.get('report_id'));
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
 
   const supabase = await createClient();

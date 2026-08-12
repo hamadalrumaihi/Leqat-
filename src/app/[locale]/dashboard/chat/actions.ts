@@ -1,12 +1,13 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 
 /** Staff toggle: allow parents to post in a channel (§11). */
 export async function setParentsCanPostAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!can(user?.role, 'moderateChat')) return { error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase
@@ -22,7 +23,7 @@ export async function setParentsCanPostAction(_: unknown, formData: FormData) {
  * in the session's album, or a default "متفرقات / Misc" album.
  */
 export async function mirrorToGalleryAction(groupId: string, path: string) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!can(user?.role, 'moderateChat') || !groupId) return;
   const supabase = await createClient();
 
@@ -59,7 +60,7 @@ export async function mirrorToGalleryAction(groupId: string, path: string) {
  * approves it — nothing reaches the group feed unmoderated.
  */
 export async function sendMessageAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
 
   const channelId = String(formData.get('channel_id'));
@@ -86,7 +87,7 @@ export async function sendMessageAction(_: unknown, formData: FormData) {
 }
 
 export async function moderateMessageAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!can(user?.role, 'moderateChat')) return { error: 'forbidden' };
 
   const messageId = String(formData.get('message_id'));
@@ -105,7 +106,7 @@ export async function moderateMessageAction(_: unknown, formData: FormData) {
 }
 
 export async function reactAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
   const supabase = await createClient();
   const { error } = await supabase.from('message_reactions').upsert(

@@ -2,10 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 
 export async function markNotificationReadAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
   const id = String(formData.get('id') ?? '');
   const supabase = await createClient();
@@ -21,7 +21,7 @@ export async function markNotificationReadAction(_: unknown, formData: FormData)
 }
 
 export async function markAllReadAction() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
   const supabase = await createClient();
   const { error } = await supabase

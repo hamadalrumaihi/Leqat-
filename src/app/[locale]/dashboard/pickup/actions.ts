@@ -1,11 +1,12 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 
 export async function arriveAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
   const supabase = await createClient();
   const { error } = await supabase.from('pickup_status').insert({
@@ -26,7 +27,7 @@ export async function arriveAction(_: unknown, formData: FormData) {
 }
 
 export async function releaseAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'staffPickup')) return { error: 'forbidden' };
   const supabase = await createClient();
   const id = String(formData.get('pickup_id'));

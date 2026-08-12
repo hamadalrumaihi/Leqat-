@@ -28,7 +28,14 @@ export default async function DashboardLayout({
     settings: t('secSettings'),
   };
 
-  const groups = navGroupsFor(user!.role).map((g) => ({
+  // Program-specific role: the sidebar (both its items and the role
+  // label) reflects the user's role in the ACTIVE program; falls back
+  // to the global role. Page/action gates resolve the same way via
+  // getActiveUser, so what the nav shows is what the gates allow.
+  const [programs, active] = await Promise.all([getMyPrograms(), getActiveProgram()]);
+  const effRole = active ? active.role : user!.role;
+
+  const groups = navGroupsFor(effRole).map((g) => ({
     key: g.key,
     label: sectionLabel[g.key] ?? g.key,
     items: g.items.map((i) => ({ href: i.href, label: t(i.key) })),
@@ -37,10 +44,7 @@ export default async function DashboardLayout({
   const label = (role: string) => ROLE_LABELS[role]?.[isAr ? 'ar' : 'en'] ?? role;
   const name = isAr ? user!.fullNameAr : user!.fullNameEn || user!.fullNameAr;
 
-  // Program-specific role: the sidebar label reflects the user's role in
-  // the ACTIVE program; falls back to the global role.
-  const [programs, active] = await Promise.all([getMyPrograms(), getActiveProgram()]);
-  const roleLabel = active ? label(active.role) : label(user!.role);
+  const roleLabel = label(effRole);
   const switcherPrograms = programs.map((p) => ({ id: p.id, name: p.name_ar, roleLabel: label(p.role) }));
 
   return (

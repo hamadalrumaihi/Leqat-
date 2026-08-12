@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { effectiveRole, quotientLabel } from '@/lib/utils';
 import { Link } from '@/i18n/routing';
 import { ReportAdvance } from '@/components/report-advance';
@@ -27,7 +27,7 @@ const ADVANCE: Record<string, { role: string; label: string }> = {
 export default async function ReportsPage() {
   const t = await getTranslations('reports');
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
 
   const { data: reports } = await supabase
     .from('reports')

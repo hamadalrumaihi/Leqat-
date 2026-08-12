@@ -1,12 +1,12 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect, Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { dualDate } from '@/lib/utils';
 import { MarkReadButton, MarkAllReadButton } from '@/components/notification-actions';
 
 export default async function NotificationsPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user) redirect({ href: '/login', locale });
 

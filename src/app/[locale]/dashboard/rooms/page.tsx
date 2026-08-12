@@ -2,12 +2,12 @@ import { getTranslations } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 import { RoomForm } from '@/components/room-form';
 
 export default async function RoomsPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !can(user.role, 'manageRooms')) redirect({ href: '/dashboard', locale });
 

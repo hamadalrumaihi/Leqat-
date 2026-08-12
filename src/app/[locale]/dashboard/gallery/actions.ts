@@ -2,7 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 
 export async function createAlbumAction(_: unknown, formData: FormData) {
   const supabase = await createClient();
@@ -47,7 +48,7 @@ export async function addMediaAction(_: unknown, formData: FormData) {
 /** Year-end highlights: one album per group with its recent media. */
 export async function generateHighlightsAction(_: unknown, formData: FormData) {
   const groupId = String(formData.get('group_id'));
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || (user.role !== 'executive' && user.role !== 'group_supervisor' && user.role !== 'program_supervisor')) {
     return { error: 'forbidden' };
   }

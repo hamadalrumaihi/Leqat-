@@ -1,6 +1,6 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { dualDate, timeRange, QUOTIENT_COLOR, quotientLabel } from '@/lib/utils';
 import { can } from '@/lib/roles';
 import { GroupSwatch } from '@/components/group-swatch';
@@ -11,7 +11,7 @@ export default async function SchedulePage() {
   const locale = (await getLocale()) as 'ar' | 'en';
   const pref = locale === 'ar' ? 'arabic' : 'latin';
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const canPlan = can(user?.role, 'planSchedule');
 
   let q = supabase

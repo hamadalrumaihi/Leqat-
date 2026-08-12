@@ -2,12 +2,13 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 
 export async function setConsentAction(_: unknown, formData: FormData) {
   const studentId = String(formData.get('student_id'));
   const grant = formData.get('grant') === 'true';
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user) return { error: 'unauthenticated' };
 
   const supabase = await createClient();

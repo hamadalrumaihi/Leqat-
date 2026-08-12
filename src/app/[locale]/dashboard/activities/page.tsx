@@ -1,13 +1,13 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 import { ActivityForm } from '@/components/activity-form';
 import { ActivityList, type ActivityRow } from '@/components/activity-list';
 
 export default async function ActivitiesPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !can(user.role, 'viewActivities')) redirect({ href: '/dashboard', locale });
 

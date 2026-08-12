@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 import { VISIBLE_AGE_GROUPS, type AgeGroup } from '@/lib/age-groups';
 
@@ -17,7 +17,7 @@ function readAgeGroups(formData: FormData): AgeGroup[] {
 }
 
 export async function createProgramAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'managePrograms')) return { error: 'forbidden' };
   const supabase = await createClient();
 
@@ -46,7 +46,7 @@ export async function createProgramAction(_: unknown, formData: FormData) {
 }
 
 export async function updateProgramAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'managePrograms')) return { error: 'forbidden' };
   const supabase = await createClient();
 

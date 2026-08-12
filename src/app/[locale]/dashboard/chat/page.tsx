@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { Link } from '@/i18n/routing';
 import { ChatRoom } from '@/components/chat-room';
 import { GroupSwatch } from '@/components/group-swatch';
@@ -17,7 +17,7 @@ export default async function ChatPage({
   const { c } = await searchParams;
   const t = await getTranslations('chat');
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const isStaff = can(user?.role, 'moderateChat');
 
   const { data: memberships } = await supabase

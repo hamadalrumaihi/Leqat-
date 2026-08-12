@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { isManagement } from '@/lib/roles';
 
 const ERR: Record<string, string> = {
@@ -14,7 +14,7 @@ const ERR: Record<string, string> = {
 };
 
 export async function transferStudentAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !isManagement(user.role)) return { error: 'forbidden' };
 
   const enrollment = String(formData.get('enrollment_id') ?? '');

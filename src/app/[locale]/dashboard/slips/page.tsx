@@ -1,6 +1,6 @@
 import { getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { dualDate } from '@/lib/utils';
 import { can } from '@/lib/roles';
 import { SlipCreate } from '@/components/slip-create';
@@ -9,7 +9,7 @@ import { SlipSign } from '@/components/slip-sign';
 export default async function SlipsPage() {
   const locale = (await getLocale()) as 'ar' | 'en';
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const isStaff = can(user?.role, 'manageSlips');
 
   const { data: slips } = await supabase

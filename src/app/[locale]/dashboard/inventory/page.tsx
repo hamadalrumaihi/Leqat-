@@ -1,10 +1,10 @@
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { AddItem, Checkout, ReturnBtn } from '@/components/inventory-controls';
 
 export default async function InventoryPage() {
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
 
   const { data: items } = await supabase
     .from('inventory_items')

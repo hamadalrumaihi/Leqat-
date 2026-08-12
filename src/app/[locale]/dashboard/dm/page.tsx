@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { Link } from '@/i18n/routing';
 import { ChatRoom } from '@/components/chat-room';
 import { StartDm } from '@/components/start-dm';
@@ -12,7 +12,7 @@ export default async function DmPage({
 }) {
   const { c } = await searchParams;
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const isStaff = can(user?.role, 'useDm');
 
   // DM channels the user is a member of.

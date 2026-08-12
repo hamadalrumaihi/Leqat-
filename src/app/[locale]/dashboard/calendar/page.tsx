@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect, Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { isStaff } from '@/lib/roles';
 import { qatarToday } from '@/lib/utils';
 import { ScheduleCalendar, type CalEvent } from '@/components/schedule-calendar';
@@ -13,7 +13,7 @@ function addDays(date: string, delta: number): string {
 }
 
 export default async function CalendarPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !isStaff(user.role)) redirect({ href: '/dashboard', locale });
 

@@ -2,7 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser, audit } from '@/lib/auth';
+import { audit } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { ROSTER_SELECT, mapRosterRows, type RosterStudent } from '@/lib/roster';
 import { can } from '@/lib/roles';
 
@@ -76,7 +77,7 @@ export async function removeStudentFromGroup(enrollmentId: string, groupId: stri
 // the caller staffs a group/program containing one of that parent's
 // children — no service role, no all-parents write surface.
 export async function updateParentPhone(parentId: string, phone: string) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!can(user?.role, 'manageRoster')) {
     return { error: 'forbidden' };
   }
