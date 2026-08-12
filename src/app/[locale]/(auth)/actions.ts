@@ -5,6 +5,24 @@ import { createClient } from '@/lib/supabase/server';
 import { redeemInvite } from '@/lib/registration';
 import type { AgeGroup } from '@/lib/age';
 
+const AUTH_UNREACHABLE = 'تعذّر الوصول إلى الخادم. حاول مجددًا بعد قليل.';
+
+// Bound an auth call so an unreachable Supabase (paused project, outage)
+// returns a readable error instead of hanging the action into a 504.
+async function bounded<T>(p: Promise<T>, ms = 8000): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race<T>([
+      p,
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error('auth timed out')), ms);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const REDEEM_ERRORS: Record<string, string> = {
   invite_invalid_or_expired: 'الرابط غير صالح أو انتهت صلاحيته.',
   email_in_use_or_invalid: 'البريد الإلكتروني مستخدم بالفعل أو غير صالح.',
@@ -48,16 +66,22 @@ export async function sendMagicLinkAction(_: unknown, formData: FormData) {
   if (!email) return { error: 'البريد الإلكتروني مطلوب' };
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      shouldCreateUser: false,
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/auth/callback?next=/dashboard`,
-    },
-  });
-  if (error) {
-    console.error('[magic-link] error:', error.message);
-    return { error: 'تعذّر إرسال الرابط. تحقّق من البريد.' };
+  try {
+    const { error } = await bounded(
+      supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false,
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/auth/callback?next=/dashboard`,
+        },
+      }),
+    );
+    if (error) {
+      console.error('[magic-link] error:', error.message);
+      return { error: 'تعذّر إرسال الرابط. تحقّق من البريد.' };
+    }
+  } catch {
+    return { error: AUTH_UNREACHABLE };
   }
   return { ok: true };
 }
@@ -67,8 +91,12 @@ export async function loginAction(_: unknown, formData: FormData) {
   const password = String(formData.get('password'));
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message };
+  try {
+    const { error } = await bounded(supabase.auth.signInWithPassword({ email, password }));
+    if (error) return { error: error.message };
+  } catch {
+    return { error: AUTH_UNREACHABLE };
+  }
   redirect('/dashboard');
 }
 
@@ -79,12 +107,18 @@ export async function registerAction(_: unknown, formData: FormData) {
   const phone = String(formData.get('phone') ?? '');
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { full_name_ar: fullNameAr, role: 'parent', phone } },
-  });
-  if (error) return { error: error.message };
+  try {
+    const { error } = await bounded(
+      supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name_ar: fullNameAr, role: 'parent', phone } },
+      }),
+    );
+    if (error) return { error: error.message };
+  } catch {
+    return { error: AUTH_UNREACHABLE };
+  }
   redirect('/dashboard');
 }
 
