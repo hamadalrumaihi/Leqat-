@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 
 type ActivityStatus =
@@ -25,7 +25,7 @@ const ALLOWED: ActivityStatus[] = [
 ];
 
 export async function proposeActivityAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'manageActivities')) return { error: 'forbidden' };
 
   const titleAr = String(formData.get('title_ar') ?? '').trim();
@@ -59,7 +59,7 @@ export async function proposeActivityAction(_: unknown, formData: FormData) {
 }
 
 export async function setActivityStatusAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'manageActivities')) return { error: 'forbidden' };
 
   const id = String(formData.get('id') ?? '');

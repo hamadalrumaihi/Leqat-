@@ -2,13 +2,13 @@ import { getTranslations } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { getLocale } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { PaymentLedgerForm } from '@/components/payment-ledger-form';
 
 export default async function PaymentsPage() {
   const t = await getTranslations('payments');
   const locale = await getLocale();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || user.role !== 'executive') redirect({ href: '/dashboard', locale });
 
   const supabase = await createClient();

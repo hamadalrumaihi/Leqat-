@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { Link } from '@/i18n/routing';
 import { GroupSwatch } from '@/components/group-swatch';
 import { GroupRoster } from '@/components/group-roster';
@@ -7,7 +7,7 @@ import { ROSTER_SELECT, mapRosterRows } from '@/lib/roster';
 
 export default async function MyGroupPage() {
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
 
   const { data: staffRows } = await supabase
     .from('group_staff')

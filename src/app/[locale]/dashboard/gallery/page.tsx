@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { childrenConsentForParent } from '@/lib/consent';
 import { GalleryAdmin } from '@/components/gallery-admin';
 import { GalleryUploader } from '@/components/gallery-uploader';
@@ -9,7 +9,7 @@ import { can } from '@/lib/roles';
 export default async function GalleryPage() {
   const t = await getTranslations('gallery');
   const supabase = await createClient();
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const isStaff = can(user?.role, 'staffGallery');
 
   const { data: albums } = await supabase

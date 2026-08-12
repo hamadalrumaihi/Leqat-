@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import type { AppRole } from '@/lib/supabase/database.types';
 
@@ -10,7 +11,9 @@ export type CurrentUser = {
   locale: string;
 };
 
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+// Memoized per request: the layout, page, and helpers all ask for the
+// current user during one render — resolve the profile once.
+export const getCurrentUser = cache(async function getCurrentUser(): Promise<CurrentUser | null> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -33,7 +36,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     fullNameEn: (profile.full_name_en as string) ?? null,
     locale: (profile.locale as string) ?? 'ar',
   };
-}
+});
 
 /** Log a PII / sensitive access event (constraint: log on access). */
 export async function audit(

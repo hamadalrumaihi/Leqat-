@@ -2,10 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 
 export async function createStoryAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || user.role === 'parent' || user.role === 'student') {
     return { error: 'forbidden' };
   }

@@ -1,14 +1,14 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can, isStaff } from '@/lib/roles';
 import { dualDate } from '@/lib/utils';
 import { AnnouncementForm } from '@/components/announcement-form';
 import { DeleteAnnouncementButton } from '@/components/announcement-delete';
 
 export default async function AnnouncementsPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !isStaff(user.role)) redirect({ href: '/dashboard', locale });
 

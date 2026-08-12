@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { isManagement } from '@/lib/roles';
 import { dualDate } from '@/lib/utils';
 import { getActiveProgram } from '@/lib/program-context';
@@ -9,7 +9,7 @@ import { GroupSwatch } from '@/components/group-swatch';
 import { TransferControl } from '@/components/transfer-control';
 
 export default async function TransfersPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !isManagement(user.role)) redirect({ href: '/dashboard', locale });
 

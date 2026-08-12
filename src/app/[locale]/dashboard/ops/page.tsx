@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect, Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { isManagement } from '@/lib/roles';
 import { qatarToday, formatTime12 } from '@/lib/utils';
 import { detectConflicts, type ScheduleEntry } from '@/lib/schedule';
@@ -18,7 +18,7 @@ function Stat({ label, value, tone }: { label: string; value: number | string; t
 }
 
 export default async function OpsBoardPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !isManagement(user.role)) redirect({ href: '/dashboard', locale });
 

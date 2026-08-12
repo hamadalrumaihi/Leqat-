@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 import { notify, announcementRecipients } from '@/lib/notify';
 
@@ -17,7 +17,7 @@ const AUDIENCES = [
 ] as const;
 
 export async function createAnnouncementAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   // manageActivities is the management gate; announcements are a
   // management action too (planning folded into Manager).
   if (!user || !can(user.role, 'manageActivities')) return { error: 'forbidden' };
@@ -58,7 +58,7 @@ export async function createAnnouncementAction(_: unknown, formData: FormData) {
 }
 
 export async function deleteAnnouncementAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'manageActivities')) return { error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase

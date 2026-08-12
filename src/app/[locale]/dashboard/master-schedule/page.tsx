@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect, Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can, isStaff } from '@/lib/roles';
 import { qatarToday, formatTime12 } from '@/lib/utils';
 import {
@@ -33,7 +33,7 @@ export default async function MasterSchedulePage({
 }: {
   searchParams: Promise<{ p?: string; d?: string }>;
 }) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !isStaff(user.role)) redirect({ href: '/dashboard', locale });
 

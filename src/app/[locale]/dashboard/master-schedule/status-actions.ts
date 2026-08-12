@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { isStaff } from '@/lib/roles';
 
 const STATUSES = [
@@ -16,7 +16,7 @@ const STATUSES = [
 ] as const;
 
 export async function updateActivityStatusAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !isStaff(user.role)) return { error: 'forbidden' };
 
   const entry = String(formData.get('id') ?? '');

@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server';
 import { redirect } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can, isStaff } from '@/lib/roles';
 import { IssueForm } from '@/components/issue-form';
 import { IssueTriage } from '@/components/issue-triage';
@@ -20,7 +20,7 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 export default async function IssuesPage() {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   const locale = await getLocale();
   if (!user || !isStaff(user.role)) redirect({ href: '/dashboard', locale });
 

@@ -2,11 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 
 export async function addItemAction(formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || user.role !== 'executive') return;
   const supabase = await createClient();
   await supabase.from('inventory_items').insert({
@@ -18,7 +18,7 @@ export async function addItemAction(formData: FormData) {
 }
 
 export async function checkoutItemAction(formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'manageInventory')) return;
   const supabase = await createClient();
   await supabase.from('inventory_checkouts').insert({
@@ -30,7 +30,7 @@ export async function checkoutItemAction(formData: FormData) {
 }
 
 export async function returnCheckoutAction(formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'manageInventory')) return;
   const supabase = await createClient();
   await supabase

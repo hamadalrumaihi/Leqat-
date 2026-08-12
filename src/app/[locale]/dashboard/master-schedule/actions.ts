@@ -2,11 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can } from '@/lib/roles';
 
 export async function createScheduleEntryAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
 
   const programId = String(formData.get('program_id') ?? '');
@@ -41,7 +41,7 @@ export async function createScheduleEntryAction(_: unknown, formData: FormData) 
 }
 
 export async function deleteScheduleEntryAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const supabase = await createClient();
   const { error } = await supabase
@@ -57,7 +57,7 @@ export async function deleteScheduleEntryAction(_: unknown, formData: FormData) 
 // UI as a warning but never block — the soft-gate philosophy — so
 // publishing an imperfect day is the planner's informed choice.
 export async function publishDayAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   const programId = String(formData.get('program_id') ?? '');
   const date = String(formData.get('date') ?? '');
@@ -91,7 +91,7 @@ export async function reorderScheduleDayAction(
   date: string,
   orderedIds: string[],
 ) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'planSchedule')) return { error: 'forbidden' };
   if (!programId || !date || !Array.isArray(orderedIds) || orderedIds.length < 2) {
     return { ok: true };

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getActiveUser } from '@/lib/program-context';
 import { can, isStaff } from '@/lib/roles';
 import { notify } from '@/lib/notify';
 
@@ -15,7 +15,7 @@ const PRIORITIES = ['low', 'normal', 'high', 'urgent'] as const;
 const STATUSES = ['new', 'acknowledged', 'in_progress', 'resolved'] as const;
 
 export async function reportIssueAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !isStaff(user.role)) return { error: 'forbidden' };
 
   const description = String(formData.get('description_ar') ?? '').trim();
@@ -41,7 +41,7 @@ export async function reportIssueAction(_: unknown, formData: FormData) {
 // Management-only triage: status, priority, assignment. RLS ("management
 // triages issues") is the real guard.
 export async function triageIssueAction(_: unknown, formData: FormData) {
-  const user = await getCurrentUser();
+  const user = await getActiveUser();
   if (!user || !can(user.role, 'manageActivities')) return { error: 'forbidden' };
 
   const id = String(formData.get('id') ?? '');
