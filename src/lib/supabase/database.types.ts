@@ -16,14 +16,14 @@ export type AppRole =
   | 'student';
 
 export type AgeGroup =
-  // current groups
+  // current categories: الناشئة (younger) and الفتيان (older)
+  | 'nashia'
+  | 'fityan'
+  // legacy — retained so historical rows still type-check, never selectable
   | 'children'
   | 'boys'
   | 'youth'
-  // legacy — retained so historical rows still type-check, never selectable
   | 'baraem'
-  | 'nashia'
-  | 'fityan'
   | 'shabab'
   | 'university'
   | 'parents';

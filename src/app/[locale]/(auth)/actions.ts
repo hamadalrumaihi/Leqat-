@@ -27,6 +27,7 @@ const REDEEM_ERRORS: Record<string, string> = {
   invite_invalid_or_expired: 'الرابط غير صالح أو انتهت صلاحيته.',
   email_in_use_or_invalid: 'البريد الإلكتروني مستخدم بالفعل أو غير صالح.',
   student_create_failed: 'تعذّر إنشاء سجل الطالب. حاول مجددًا.',
+  registration_unavailable: 'التسجيل غير متاح مؤقتًا. تواصل عبر واتساب 72054558.',
 };
 
 export async function redeemInviteAction(_: unknown, formData: FormData) {
@@ -50,6 +51,7 @@ export async function redeemInviteAction(_: unknown, formData: FormData) {
       childName: String(formData.get('child_name')),
       childDob: String(formData.get('child_dob')),
       childAgeGroup: String(formData.get('child_age_group')) as AgeGroup,
+      priceNote: String(formData.get('price_note') ?? '') || undefined,
       medicalNotes: String(formData.get('medical_notes') ?? '') || undefined,
       photoConsent: formData.get('photo_consent') === 'on',
       emergencyContacts: contacts,

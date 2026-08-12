@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { createProgramAction, updateProgramAction } from '@/app/[locale]/dashboard/programs/actions';
-import { QUOTIENT_VALUE } from '@/lib/utils';
-import { VISIBLE_AGE_GROUPS, AGE_LABEL_AR } from '@/lib/age-groups';
+import { QUOTIENT_VALUE, quotientLabel } from '@/lib/utils';
+import { VISIBLE_AGE_GROUPS, AGE_LABEL_AR, type AgeGroup } from '@/lib/age-groups';
 
 const QUOTIENTS = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
 
@@ -14,6 +14,23 @@ function Btn({ label }: { label: string }) {
     <button type="submit" className="btn-primary h-10 px-4" disabled={pending}>
       {pending ? '…' : label}
     </button>
+  );
+}
+
+// A program can target one or both age categories.
+function AgeGroupsPicker({ defaults }: { defaults: AgeGroup[] }) {
+  return (
+    <div>
+      <span className="label">الفئات العمرية</span>
+      <div className="flex flex-wrap gap-4 pt-2">
+        {VISIBLE_AGE_GROUPS.map((g) => (
+          <label key={g} className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="age_grps" value={g} defaultChecked={defaults.includes(g)} />
+            {AGE_LABEL_AR[g]}
+          </label>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -49,11 +66,11 @@ function QuotientValue({
               setAuto(true);
             }
           }}
-          className="input latin-term"
+          className="input"
         >
           <option value="">—</option>
           {QUOTIENTS.map((x) => (
-            <option key={x} value={x}>{x}</option>
+            <option key={x} value={x}>{quotientLabel(x)}</option>
           ))}
         </select>
       </div>
@@ -89,13 +106,8 @@ export function CreateProgram() {
           <option value="daily">يومي</option>
         </select>
       </div>
-      <div>
-        <label className="label">الفئة</label>
-        <select name="age_grp" className="input">
-          {VISIBLE_AGE_GROUPS.map((g) => (
-            <option key={g} value={g}>{AGE_LABEL_AR[g]}</option>
-          ))}
-        </select>
+      <div className="sm:col-span-3">
+        <AgeGroupsPicker defaults={[...VISIBLE_AGE_GROUPS]} />
       </div>
       <QuotientValue quotient="" valueAr="" valueEn="" />
       <div>
@@ -106,13 +118,12 @@ export function CreateProgram() {
         <label className="label">السعة</label>
         <input name="capacity" type="number" min="1" defaultValue={15} className="input" />
       </div>
-      <div>
-        <label className="label">السعر (ر.ق)</label>
-        <input name="price_qar" type="number" min="0" defaultValue={0} className="input" />
-      </div>
       <label className="flex items-center gap-2 text-sm sm:col-span-3">
         <input type="checkbox" name="ramadan_mode" /> وضع رمضان (جلسات أقصر، صلاة بدل الوجبة)
       </label>
+      <p className="text-xs text-muted-foreground sm:col-span-3">
+        الرسوم تُتّفق عليها عند الحجز وتُكتب نصًا حرًا أثناء تسجيل الطالب.
+      </p>
       <div className="sm:col-span-3">
         <Btn label="إنشاء برنامج" />
       </div>
@@ -123,13 +134,25 @@ export function CreateProgram() {
 export function EditProgram({
   program,
 }: {
-  program: { id: string; quotient: string; value_ar: string; value_en: string; ramadan_mode: boolean; status: string };
+  program: {
+    id: string;
+    name_ar: string;
+    age_grps: AgeGroup[];
+    quotient: string;
+    value_ar: string;
+    value_en: string;
+    ramadan_mode: boolean;
+    status: string;
+  };
 }) {
   const [, action] = useFormState(updateProgramAction, null);
   return (
     <form action={action} className="grid gap-3 sm:grid-cols-3">
       <input type="hidden" name="program_id" value={program.id} />
-      <QuotientValue quotient={program.quotient} valueAr={program.value_ar} valueEn={program.value_en} />
+      <div className="sm:col-span-2">
+        <label className="label">اسم البرنامج (عربي)</label>
+        <input name="name_ar" defaultValue={program.name_ar} className="input" required />
+      </div>
       <div>
         <label className="label">الحالة</label>
         <select name="status" defaultValue={program.status} className="input">
@@ -139,6 +162,10 @@ export function EditProgram({
           <option value="archived">مؤرشف</option>
         </select>
       </div>
+      <div className="sm:col-span-3">
+        <AgeGroupsPicker defaults={program.age_grps} />
+      </div>
+      <QuotientValue quotient={program.quotient} valueAr={program.value_ar} valueEn={program.value_en} />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="ramadan_mode" defaultChecked={program.ramadan_mode} /> وضع رمضان
       </label>

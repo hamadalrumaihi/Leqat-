@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { QUOTIENT_NAME } from '@/lib/utils';
 
 export default async function AnalyticsPage() {
   const t = await getTranslations('dashboard');
@@ -59,6 +60,7 @@ export default async function AnalyticsPage() {
                   style={{ height: `${Math.max((v / max) * 140, 4)}px` }}
                 />
                 <span className="latin-term text-xs text-muted-foreground">{q}</span>
+                <span className="text-[10px] text-muted-foreground">{QUOTIENT_NAME[q]?.ar}</span>
               </div>
             );
           })}

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { StoryCreate } from '@/components/story-create';
+import { quotientLabel } from '@/lib/utils';
 
 export default async function StoriesPage({
   searchParams,
@@ -46,8 +47,8 @@ export default async function StoriesPage({
             <div className="flex items-center justify-between">
               <h2 className="font-semibold">{s.title_ar as string}</h2>
               {s.quotient ? (
-                <span className="latin-term rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                  {s.quotient as string}
+                <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  {quotientLabel(s.quotient as string)}
                 </span>
               ) : null}
             </div>

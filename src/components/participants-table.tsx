@@ -10,6 +10,7 @@ export type ParticipantRow = {
   group: string;
   level: string;
   status: string;
+  price: string;
   enrolled: string;
 };
 
@@ -28,6 +29,7 @@ export function ParticipantsTable({ rows }: { rows: ParticipantRow[] }) {
           <span className="rounded-full bg-secondary/60 px-2 py-0.5 text-xs">{getValue() as string}</span>
         ),
       },
+      { accessorKey: 'price', header: t('price') },
       { accessorKey: 'enrolled', header: t('enrolled') },
     ],
     [t],

@@ -133,6 +133,23 @@ export const QUOTIENT_VALUE: Record<string, { ar: string; en: string }> = {
   PQ: { ar: 'الصحة', en: 'Health' },
 };
 
+// Human name of each quotient — the abbreviation alone (IQ/EQ/…)
+// means nothing to most users, so every place a quotient code is
+// shown must pair it with this name via quotientLabel().
+export const QUOTIENT_NAME: Record<string, { ar: string; en: string }> = {
+  SQ: { ar: 'البعد الروحي', en: 'Spiritual' },
+  EQ: { ar: 'البعد العاطفي', en: 'Emotional' },
+  IQ: { ar: 'البعد العقلي', en: 'Intellectual' },
+  PQ: { ar: 'البعد الجسدي', en: 'Physical' },
+};
+
+/** "SQ — البعد الروحي" (falls back to the raw code for unknown values). */
+export function quotientLabel(q: string | null | undefined, locale: 'ar' | 'en' = 'ar'): string {
+  if (!q) return '';
+  const name = QUOTIENT_NAME[q]?.[locale];
+  return name ? `${q} — ${name}` : q;
+}
+
 export const QUOTIENT_COLOR: Record<string, string> = {
   SQ: '#1F5C3A',
   EQ: '#3FA34D',

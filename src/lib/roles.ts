@@ -31,7 +31,6 @@ export type Capability =
   | 'manageInventory' // checkout/return, add items
   | 'useDm' // start staff↔student DMs
   | 'moderateChat' // approve media, toggle parents_can_post
-  | 'staffBooks' // workbook progress editor, signed PDF
   | 'staffPickup' // pickup queue + release
   | 'awardRecognition' // award معنوي tokens
   | 'manageRooms' // create/edit program rooms
@@ -61,7 +60,6 @@ const CAPABILITY_ROLES: Record<Capability, readonly string[]> = {
   manageInventory: [...MGMT, GS, AS],
   useDm: [...MGMT, GS, AS],
   moderateChat: [...MGMT, GS, AS],
-  staffBooks: [...MGMT, GS, AS],
   staffPickup: [...MGMT, GS, AS],
   awardRecognition: [EXEC, FOUNDER, GS, AS],
   // Ops platform:

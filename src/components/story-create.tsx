@@ -3,6 +3,7 @@
 import { useFormState, useFormStatus } from 'react-dom';
 import { createStoryAction } from '@/app/[locale]/dashboard/stories/actions';
 import { VISIBLE_AGE_GROUPS, AGE_LABEL_AR } from '@/lib/age-groups';
+import { quotientLabel } from '@/lib/utils';
 
 function Btn() {
   const { pending } = useFormStatus();
@@ -41,10 +42,9 @@ export function StoryCreate() {
         <div>
           <label className="label">البُعد</label>
           <select name="quotient" className="input">
-            <option value="SQ">SQ</option>
-            <option value="EQ">EQ</option>
-            <option value="IQ">IQ</option>
-            <option value="PQ">PQ</option>
+            {(['SQ', 'EQ', 'IQ', 'PQ'] as const).map((q) => (
+              <option key={q} value={q}>{quotientLabel(q)}</option>
+            ))}
           </select>
         </div>
       </div>
