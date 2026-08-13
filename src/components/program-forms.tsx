@@ -1,12 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import { toast } from 'sonner';
 import { createProgramAction, updateProgramAction } from '@/app/[locale]/dashboard/programs/actions';
 import { QUOTIENT_VALUE, quotientLabel } from '@/lib/utils';
 import { VISIBLE_AGE_GROUPS, AGE_LABEL_AR, type AgeGroup } from '@/lib/age-groups';
 
 const QUOTIENTS = ['SQ', 'EQ', 'IQ', 'PQ'] as const;
+
+const ERROR_TEXT: Record<string, string> = {
+  forbidden: 'ليست لديك صلاحية لهذا الإجراء.',
+  name_required: 'اسم البرنامج مطلوب.',
+};
+
+type ActionState = { ok?: boolean; error?: string } | null;
+
+// Never let a save fail silently — a swallowed error here once made a
+// created program "disappear" in production. Surface every outcome.
+function useActionFeedback(state: ActionState, successMsg: string) {
+  useEffect(() => {
+    if (!state) return;
+    if (state.error) toast.error(ERROR_TEXT[state.error] ?? `تعذّر الحفظ: ${state.error}`);
+    else if (state.ok) toast.success(successMsg);
+  }, [state, successMsg]);
+}
 
 function Btn({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -92,7 +110,8 @@ function QuotientValue({
 }
 
 export function CreateProgram() {
-  const [, action] = useFormState(createProgramAction, null);
+  const [state, action] = useFormState(createProgramAction, null as ActionState);
+  useActionFeedback(state, 'تم إنشاء البرنامج');
   return (
     <form action={action} className="card grid gap-3 p-5 sm:grid-cols-3">
       <div className="sm:col-span-2">
@@ -145,7 +164,8 @@ export function EditProgram({
     status: string;
   };
 }) {
-  const [, action] = useFormState(updateProgramAction, null);
+  const [state, action] = useFormState(updateProgramAction, null as ActionState);
+  useActionFeedback(state, 'تم حفظ التعديلات');
   return (
     <form action={action} className="grid gap-3 sm:grid-cols-3">
       <input type="hidden" name="program_id" value={program.id} />
